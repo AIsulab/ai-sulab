@@ -60,3 +60,5 @@ export default function App() {
 // DEPLOY_CHECK_MARKER: 배포 확인용 문구 업데이트
 
 // LIVE_BADGE: [LIVE 자동 배포 확인]
+
+// LIVE_BADGE: [LIVE: dist output 확인]
