@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="256" height="256" rx="32" fill="#0D2347"/>
-  <path d="M48 72C48 58.745 58.745 48 72 48H208V80H80C75.582 80 72 83.582 72 88C72 92.418 75.582 96 80 96H136C167.137 96 192 120.863 192 152C192 183.137 167.137 208 136 208H48V176H136C150.359 176 162 164.359 162 150C162 135.641 150.359 124 136 124H80C58.327 124 40 105.673 40 84C40 81.951 40.161 79.945 40.467 78H48V72Z" fill="#122B57"/>
-  <path d="M152 116H202V156C202 165.941 210.059 174 220 174H240V208H208C177.49 208 152 182.51 152 152V116Z" fill="#FF1B1B"/>
-  <text x="128" y="232" text-anchor="middle" fill="#FFFFFF" font-family="'Segoe UI', sans-serif" font-weight="600" font-size="36">SULAB</text>
-</svg>
-

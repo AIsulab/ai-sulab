@@ -1,6 +1,0 @@
-node_modules/
-build/
-backups/
-package-lock.json
-
-.vercel

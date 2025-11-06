@@ -1,0 +1,59 @@
+﻿name: Design Sync PR
+on:
+  push:
+    branches: [ design-sync ]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-or-merge-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed files
+        id: changes
+        run: |
+          git fetch origin main
+          git diff --name-only origin/main...HEAD > changed.txt
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          cat changed.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Check if only allowed paths changed
+        id: allow
+        run: |
+          if grep -Ev '^(apps/web/public/figma-assets/|packages/design-tokens/raw/)' changed.txt >/dev/null 2>&1; then
+            echo "only_allowed=false" >> $GITHUB_OUTPUT
+          else
+            echo "only_allowed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create or update PR
+        id: pr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore(figma): sync from design-sync"
+          title: "chore(figma): sync from design-sync"
+          body: |
+            자동 생성된 Figma 동기화 PR입니다.
+            변경 경로가 허용 범위를 벗어나면 자동 머지되지 않습니다.
+          branch: design-sync
+          base: main
+          labels: "figma-sync"
+          draft: false
+
+      - name: Auto-merge when safe
+        if: steps.allow.outputs.only_allowed == 'true'
+        uses: pascalgn/automerge-action@v0.16.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          mergeMethod: squash
+          title: "chore(figma): sync from design-sync"
