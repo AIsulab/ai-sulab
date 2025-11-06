@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useRef, useState } from "react";
+﻿import React, { useEffect, useMemo, useRef, useState } from "react";\nimport { createPortal } from "react-dom";
 
 export type ChatMessage = {
   role: "user" | "assistant";
@@ -57,12 +57,11 @@ const AIAgentWidget: React.FC = () => {
   };
 
   return (
-    <>
-      {/* Floating Button */}
+    {createPortal((<><div className="fixed inset-0 pointer-events-none z-[99998]"></div> */}
       <button
         aria-label="Open SULAB AI Agent"
         onClick={toggle}
-        className="fixed bottom-6 right-6 z-[9999] h-14 w-14 rounded-full bg-[#00B6F0] text-2xl shadow-lg transition-transform hover:scale-[1.05] hover:shadow-cyan-500/30 focus:outline-none focus:ring-4 focus:ring-cyan-300 flex items-center justify-center select-none"
+        className="fixed bottom-6 right-6 z-[99999] h-14 w-14 rounded-full bg-[#00B6F0] text-2xl shadow-lg transition-transform hover:scale-[1.05] hover:shadow-cyan-500/30 focus:outline-none focus:ring-4 focus:ring-cyan-300 flex items-center justify-center select-none"
       >
         <span className="pointer-events-none">🤖</span>
       </button>
