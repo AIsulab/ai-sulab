@@ -15,11 +15,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          
 
       - name: Install
         run: |
-          if [ -f package-lock.json ]; then npm ci; else npm i; fi
+          if [ -f package-lock.json ]; then npm ci || npm i; else npm i; fi
 
       - name: Lint
         run: npm run lint --if-present

@@ -62,7 +62,7 @@ const AIAgentWidget: React.FC = () => {
       <button
         aria-label="Open SULAB AI Agent"
         onClick={toggle}
-        className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-[#00B6F0] text-2xl shadow-lg transition-transform hover:scale-[1.05] hover:shadow-cyan-500/30 focus:outline-none focus:ring-4 focus:ring-cyan-300 flex items-center justify-center select-none"
+        className="fixed bottom-6 right-6 z-[9999] h-14 w-14 rounded-full bg-[#00B6F0] text-2xl shadow-lg transition-transform hover:scale-[1.05] hover:shadow-cyan-500/30 focus:outline-none focus:ring-4 focus:ring-cyan-300 flex items-center justify-center select-none"
       >
         <span className="pointer-events-none">🤖</span>
       </button>
@@ -70,7 +70,7 @@ const AIAgentWidget: React.FC = () => {
       {/* Chat Window */}
       <div
         ref={containerRef}
-        className={`fixed bottom-24 right-6 z-50 w-[350px] max-w-[90vw] ${
+        className={`fixed bottom-24 right-6 z-[9999] w-[350px] max-w-[90vw] ${
           open ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
         } transition-all duration-200`}
       >
