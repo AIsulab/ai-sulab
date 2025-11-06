@@ -1,1 +1,17 @@
-﻿{"buildCommand":"npm run build","outputDirectory":"build"}
+﻿{
+    // 배포 환경 설정
+    "version": 2,
+    "builds": [
+        {
+            "src": "package.json",
+            "use": "@vercel/static-build"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/index.html"
+        }
+    ],
+    "outputDirectory": "build"
+}
