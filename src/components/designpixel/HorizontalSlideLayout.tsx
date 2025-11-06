@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { FileText, Play, MapPin, MessageSquare, X } from "lucide-react";
 import logo from "figma:asset/abf9816ebaecbe448905f80cd9fb228c25413530.png";
@@ -19,7 +19,7 @@ const slides: SlideData[] = [
     linkText: "Go to site",
     linkUrl: "#",
     backgroundImage: "https://images.unsplash.com/photo-1626908013943-df94de54984c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWNoJTIwaW5ub3ZhdGlvbiUyMGFic3RyYWN0fGVufDF8fHx8MTc2MjI4NTE0Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    additionalInfo: "상호명 SULAB | 대표자 이진수 | T. 010 7707 7057 | F. 0504 436 7057",
+    additionalInfo: "?곹샇紐?SULAB | ??쒖옄 ?댁쭊??| T. 010 7707 7057 | F. 0504 436 7057",
   },
   {
     outlineText: "HR Platform.",
@@ -27,7 +27,7 @@ const slides: SlideData[] = [
     linkText: "Go to site",
     linkUrl: "#portfolio",
     backgroundImage: "https://images.unsplash.com/photo-1738003946582-aabeabf5e009?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBSSUyMHRlY2hub2xvZ3klMjBkaWdpdGFsfGVufDF8fHx8MTc2MjMyMTAzN3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    additionalInfo: "상호명 SULAB | 대표자 이진수 | T. 010 7707 7057 | F. 0504 436 7057",
+    additionalInfo: "?곹샇紐?SULAB | ??쒖옄 ?댁쭊??| T. 010 7707 7057 | F. 0504 436 7057",
   },
   {
     outlineText: "Record.",
@@ -35,7 +35,7 @@ const slides: SlideData[] = [
     linkText: "Go to site",
     linkUrl: "#mobile",
     backgroundImage: "https://images.unsplash.com/flagged/photo-1576485436509-a7d286952b65?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHRlYW0lMjB3b3Jrc3BhY2V8ZW58MXx8fHwxNzYyMzIxMDM3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    additionalInfo: "상호명 SULAB | 대표자 이진수 | T. 010 7707 7057 | F. 0504 436 7057",
+    additionalInfo: "?곹샇紐?SULAB | ??쒖옄 ?댁쭊??| T. 010 7707 7057 | F. 0504 436 7057",
   },
   {
     outlineText: "Brand Identity.",
@@ -43,7 +43,7 @@ const slides: SlideData[] = [
     linkText: "Go to site",
     linkUrl: "#cibi",
     backgroundImage: "https://images.unsplash.com/photo-1633250391894-397930e3f5f2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBkZXZlbG9wbWVudHxlbnwxfHx8fDE3NjIyNTA4MzR8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    additionalInfo: "상호명 SULAB | 대표자 이진수 | T. 010 7707 7057 | F. 0504 436 7057",
+    additionalInfo: "?곹샇紐?SULAB | ??쒖옄 ?댁쭊??| T. 010 7707 7057 | F. 0504 436 7057",
   },
   {
     outlineText: "Marketing.",
@@ -51,7 +51,7 @@ const slides: SlideData[] = [
     linkText: "Go to site",
     linkUrl: "#overview",
     backgroundImage: "https://images.unsplash.com/photo-1644725701777-0740945ebe7d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxicmFuZCUyMGRlc2lnbiUyMGNyZWF0aXZlfGVufDF8fHx8MTc2MjI5OTA2M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    additionalInfo: "상호명 SULAB | 대표자 이진수 | T. 010 7707 7057 | F. 0504 436 7057",
+    additionalInfo: "?곹샇紐?SULAB | ??쒖옄 ?댁쭊??| T. 010 7707 7057 | F. 0504 436 7057",
   },
 ];
 
@@ -257,10 +257,10 @@ export function HorizontalSlideLayout() {
           {/* Icons */}
           <div className="hidden lg:flex flex-col gap-3">
             {[
-              { icon: FileText, label: "회사개요" },
-              { icon: Play, label: "소개영상" },
-              { icon: MapPin, label: "오시는길" },
-              { icon: MessageSquare, label: "블로그" },
+              { icon: FileText, label: "?뚯궗媛쒖슂" },
+              { icon: Play, label: "?뚭컻?곸긽" },
+              { icon: MapPin, label: "?ㅼ떆?붽만" },
+              { icon: MessageSquare, label: "釉붾줈洹? },
             ].map((item, i) => {
               const Icon = item.icon;
               return (
@@ -373,8 +373,7 @@ export function HorizontalSlideLayout() {
       >
         <div className="flex flex-col gap-1">
           <p className="text-white/70" style={{ fontSize: "0.75rem", letterSpacing: "0.05em" }}>
-            상호명 SULAB | 대표자 이진수
-          </p>
+            ?곹샇紐?SULAB | ??쒖옄 ?댁쭊??          </p>
           <p className="text-white/50" style={{ fontSize: "0.625rem", letterSpacing: "0.05em" }}>
             (C) 2025 SULAB.CO.KR ALL RIGHTS RESERVED T.010.7707.7057
           </p>
@@ -505,8 +504,8 @@ export function HorizontalSlideLayout() {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.4 }}
                   >
-                    <p>상호명: SULAB | 대표자: 이진수</p>
-                    <p>© 2025 SULAB.CO.KR ALL RIGHTS RESERVED T.010.7707.7057</p>
+                    <p>?곹샇紐? SULAB | ??쒖옄: ?댁쭊??/p>
+                    <p>짤 2025 SULAB.CO.KR ALL RIGHTS RESERVED T.010.7707.7057</p>
                   </motion.div>
                 </nav>
               </div>
@@ -576,7 +575,7 @@ export function HorizontalSlideLayout() {
                   className="w-full py-4 border border-white/30 text-white hover:bg-white hover:text-black transition-all"
                   style={{ fontSize: "0.875rem", fontWeight: 600, letterSpacing: "0.1em" }}
                 >
-                  프로젝트 의뢰
+                  ?꾨줈?앺듃 ?섎ː
                 </button>
 
                 {/* Note */}
@@ -584,8 +583,8 @@ export function HorizontalSlideLayout() {
                   className="mt-6 text-white/40"
                   style={{ fontSize: "0.625rem", lineHeight: 1.6 }}
                 >
-                  견적 노출이 ZERO인 프로젝트는 수정과정이나<br />
-                  옵션이 적용되지 않습니다.
+                  寃ъ쟻 ?몄텧??ZERO???꾨줈?앺듃???섏젙怨쇱젙?대굹<br />
+                  ?듭뀡???곸슜?섏? ?딆뒿?덈떎.
                 </p>
               </motion.div>
             </div>
