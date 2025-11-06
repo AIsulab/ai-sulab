@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import logo from "figma:asset/abf9816ebaecbe448905f80cd9fb228c25413530.png";
 
@@ -103,7 +103,7 @@ export function FullScreenHeader() {
                 <motion.button
                   key={item.name}
                   onClick={() => handleNavigation(item.path)}
-                  className="block text-white hover:text-[#3C89FF] transition-colors mb-6 lg:mb-8"
+                  className={`block ${window.location.hash.slice(1)===item.path?"text-[#3C89FF]":"text-white"} hover:text-[#3C89FF] transition-colors mb-6 lg:mb-8"
                   style={{
                     fontSize: "clamp(2rem, 5vw, 4rem)",
                     fontWeight: 700,
