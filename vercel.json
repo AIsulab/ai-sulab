@@ -1,17 +1,1 @@
-﻿{
-    // 배포 환경 설정
-    "version": 2,
-    "builds": [
-        {
-            "src": "package.json",
-            "use": "@vercel/static-build"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "/index.html"
-        }
-    ],
-    "outputDirectory": "build"
-}
+﻿{"$schema":"https://openapi.vercel.sh/vercel.json","version":2,"framework":"vite","buildCommand":"npm run build","outputDirectory":"build","devCommand":"npm run dev","cleanUrls":true}
