@@ -1,4 +1,5 @@
-﻿import { useEffect, useState } from "react";
+﻿import AIAgentWidget from '@/components/AIAgent/AIAgentWidget';
+import { useEffect, useState } from "react";
 import { DesignPixelHomePage } from "./pages/DesignPixelHomePage";
 import { OverviewPage } from "./pages/OverviewPage";
 import { PortfolioPage } from "./pages/PortfolioPage";
@@ -64,3 +65,5 @@ export default function App() {
 // LIVE_BADGE: [LIVE: dist output 확인]
 
 // LIVE_BADGE: [LIVE 배포 검증 v2 @ 2025-11-07 03:49:25]
+
+function __SulabAIAgentMount() { return (<AIAgentWidget />); }
