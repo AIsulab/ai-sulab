@@ -1,0 +1,4 @@
+/* rotating ring animation */
+.rotate-ring { display:inline-block; will-change: transform; transform-origin: 50% 50%; animation: ring-spin 12s linear infinite; }
+.rotate-ring.pause-on-hover:hover { animation-play-state: paused; }
+@keyframes ring-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
