@@ -1,0 +1,144 @@
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import logo from "figma:asset/abf9816ebaecbe448905f80cd9fb228c25413530.png";
+
+export function FullScreenHeader() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [isMenuOpen]);
+
+  const menuItems = [
+    { name: "Home", path: "/" },
+    { name: "Overview", path: "/overview" },
+    { name: "Portfolio", path: "/portfolio" },
+    { name: "Mobile", path: "/mobile" },
+    { name: "CI/BI", path: "/cibi" },
+    { name: "Request", path: "/request" },
+    { name: "Contact", path: "/contact" },
+    { name: "Notice", path: "/notice" },
+  ];
+
+  const handleNavigation = (path: string) => {
+    window.location.hash = path;
+    setIsMenuOpen(false);
+  };
+
+  return (
+    <>
+      {/* Fixed Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
+        <div className="flex items-center justify-between px-8 lg:px-16 py-8">
+          {/* Logo */}
+          <motion.button
+            onClick={() => handleNavigation("/")}
+            className="pointer-events-auto"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
+            <img
+              src={logo}
+              alt="SULAB"
+              className="h-8 w-auto brightness-0 invert"
+            />
+          </motion.button>
+
+          {/* Hamburger Menu */}
+          <motion.button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="pointer-events-auto w-14 h-14 flex flex-col items-end justify-center gap-2"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            whileHover={{ scale: 1.1 }}
+          >
+            <motion.span
+              className="block w-10 h-[2px] bg-white"
+              animate={{
+                rotate: isMenuOpen ? 45 : 0,
+                y: isMenuOpen ? 6 : 0,
+                width: isMenuOpen ? "2.5rem" : "2.5rem",
+              }}
+              transition={{ duration: 0.35, ease: [0.8, 0, 0.2, 1] }}
+            />
+            <motion.span
+              className="block w-7 h-[2px] bg-white"
+              animate={{
+                opacity: isMenuOpen ? 0 : 1,
+                width: "1.75rem",
+              }}
+              transition={{ duration: 0.35, ease: [0.8, 0, 0.2, 1] }}
+            />
+            <motion.span
+              className="block w-10 h-[2px] bg-white"
+              animate={{
+                rotate: isMenuOpen ? -45 : 0,
+                y: isMenuOpen ? -6 : 0,
+                width: isMenuOpen ? "2.5rem" : "2.5rem",
+              }}
+              transition={{ duration: 0.35, ease: [0.8, 0, 0.2, 1] }}
+            />
+          </motion.button>
+        </div>
+      </header>
+
+      {/* Full Screen Menu Overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            className="fixed inset-0 z-40 bg-black flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.8, 0, 0.2, 1] }}
+          >
+            <nav className="text-center">
+              {menuItems.map((item, index) => (
+                <motion.button
+                  key={item.name}
+                  onClick={() => handleNavigation(item.path)}
+                  className="block text-white hover:text-[#3C89FF] transition-colors mb-6 lg:mb-8"
+                  style={{
+                    fontSize: "clamp(2rem, 5vw, 4rem)",
+                    fontWeight: 700,
+                    letterSpacing: "0.05em",
+                  }}
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -50 }}
+                  transition={{
+                    delay: index * 0.05,
+                    duration: 0.5,
+                    ease: [0.8, 0, 0.2, 1],
+                  }}
+                  whileHover={{ x: 20, scale: 1.05 }}
+                >
+                  {item.name}
+                </motion.button>
+              ))}
+
+              {/* Contact Info */}
+              <motion.div
+                className="mt-12 lg:mt-20 text-white/40"
+                style={{ fontSize: "0.875rem", letterSpacing: "0.1em" }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <p className="mb-2">T. 02 587 1152</p>
+                <p>sulabstore@naver.com</p>
+              </motion.div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
