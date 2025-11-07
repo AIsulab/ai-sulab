@@ -142,8 +142,8 @@ export function HorizontalSlideLayout() {
   return (
     <div className="fixed inset-0 bg-black overflow-hidden">
       {/* Fixed Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none leading-none overflow-hidden select-none">
-        <div className="flex items-center justify-between leading-none px-6 lg:px-12 py-6 lg:py-8">
+      <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
+        <div className="flex items-center justify-between px-6 lg:px-12 py-6 lg:py-8">
           {/* Logo */}
           <motion.button
             onClick={() => handleNavigation("/")}
@@ -257,10 +257,10 @@ export function HorizontalSlideLayout() {
           {/* Icons */}
           <div className="hidden lg:flex flex-col gap-3">
             {[
-              { icon: FileText, label: "문서" },
-              { icon: Play, label: "동영상" },
-              { icon: MapPin, label: "위치" },
-              { icon: MessageSquare, label: "문의" },
+              { icon: FileText, label: "?뚯궗媛쒖슂" },
+              { icon: Play, label: "?뚭컻?곸긽" },
+              { icon: MapPin, label: "?ㅼ떆?붽만" },
+              { icon: MessageSquare, label: "釉붾줈洹? },
             ].map((item, i) => {
               const Icon = item.icon;
               return (
@@ -594,4 +594,3 @@ export function HorizontalSlideLayout() {
     </div>
   );
 }
-
