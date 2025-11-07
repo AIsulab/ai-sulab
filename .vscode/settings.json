@@ -1,5 +1,0 @@
-﻿{
-  "git.autofetch": true,
-  "git.postCommitCommand": "sync",
-  "editor.formatOnSave": true
-}

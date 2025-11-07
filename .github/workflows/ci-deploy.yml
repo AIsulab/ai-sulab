@@ -1,1 +1,0 @@
-﻿on:\n  workflow_dispatch:\n\njobs:\n  build-test:\n    if: false\n    runs-on: ubuntu-latest\n    steps:\n      - run: echo 'CI disabled for skeleton repo'\n
