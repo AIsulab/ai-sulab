@@ -1,14 +1,11 @@
-﻿# SULAB Platform-Linked Skeleton
 
-This repo keeps only platform linkage files (GitHub Actions, Vercel, VSCode). All app code has been removed.
+  # SULAB 공식 웹사이트
 
-- GitHub Actions: .github/workflows/*
-- Vercel config: vercel.json
-- VSCode config: .vscode/*
-- Git: .gitignore
+  This is a code bundle for SULAB 공식 웹사이트. The original project is available at https://www.figma.com/design/4bmhZLfTaBUdN4o8FwEuKz/SULAB-%EA%B3%B5%EC%8B%9D-%EC%9B%B9%EC%82%AC%EC%9D%B4%ED%8A%B8.
 
-Next steps:
-1) Add or import your app code (e.g., Vite/Next).
-2) Ensure vite.config.ts outDir matches vercel.json outputDirectory (currently build).
-3) Push to main to trigger Vercel deployment.
+  ## Running the code
 
+  Run `npm i` to install the dependencies.
+
+  Run `npm run dev` to start the development server.
+  
