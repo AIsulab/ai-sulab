@@ -3,42 +3,63 @@ import path from "path";
 import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react-swc";
 
-function headFromConfig(): Plugin {
+function headFromConfigAppend(): Plugin {
   return {
-    name: "html-head-from-config",
+    name: "html-head-append-from-config",
     transformIndexHtml(html) {
       try {
         const cfgPath = path.resolve(process.cwd(), "site.config.json");
-        const raw = fs.readFileSync(cfgPath, "utf8");
-        const cfg = JSON.parse(raw);
+        const raw = fs.existsSync(cfgPath) ? fs.readFileSync(cfgPath, "utf8") : "{}";
+        const cfg = JSON.parse(raw || "{}");
         const lang = cfg.lang || "ko";
         const ga = cfg.googleAnalyticsId;
-        const title = cfg.title || "";
+        const title = cfg.title || "SULAB";
         const desc = cfg.description || "";
         const favicon = cfg.favicon || "/favicon.png";
+        const faviconIco = cfg.faviconIco || "/favicon.ico";
+        const appleTouch = cfg.appleTouchIcon || "/apple-touch-icon.png";
+        const siteUrl = cfg.siteUrl || "/";
         const social = cfg.socialImage || "/social-1200x630.png";
+        const robots = cfg.robots || "index, follow";
 
-        const head = [
-          '<meta charset="UTF-8" />',
-          '<meta name="viewport" content="width=device-width, initial-scale=1.0" />',
-          `<title>${title}</title>`,
+        const chunk = [
+          `<link rel="canonical" href="${siteUrl.endsWith('/')?siteUrl:siteUrl + '/'}" />`,
+          `<meta name="robots" content="${robots}" />`,
           `<meta name="description" content="${desc}" />`,
-          `<link rel="icon" type="image/png" sizes="48x48" href="${favicon}" />`,
           `<meta property="og:type" content="website" />`,
+          `<meta property="og:url" content="${siteUrl}" />`,
           `<meta property="og:title" content="${title}" />`,
           `<meta property="og:description" content="${desc}" />`,
           `<meta property="og:image" content="${social}" />`,
-          ga
-            ? [
-                `<script async src="https://www.googletagmanager.com/gtag/js?id=${ga}"></script>`,
-                `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${ga}');</script>`,
-              ].join("")
-            : "",
-        ].join("\n    ");
+          `<meta property="og:image:width" content="1200" />`,
+          `<meta property="og:image:height" content="630" />`,
+          `<meta name="twitter:card" content="summary_large_image" />`,
+          `<meta name="twitter:title" content="${title}" />`,
+          `<meta name="twitter:description" content="${desc}" />`,
+          `<meta name="twitter:image" content="${social}" />`,
+          `<link rel="icon" type="image/png" href="${favicon}" />`,
+          `<link rel="icon" href="${faviconIco}" sizes="any" />`,
+          `<link rel="apple-touch-icon" href="${appleTouch}" />`,
+          ga ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${ga}"></script>` : "",
+          ga ? `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${ga}');</script>` : "",
+        ].filter(Boolean).join('\n    ');
 
-        let out = html.replace(/<html[^>]*>/i, () => `<html lang="${lang}">`);
-        out = out.replace(/<head>[\s\S]*?<\/head>/i, `<head>\n    ${head}\n  </head>`);
-        out = out.replace(/(<\/html>\s*){2,}$/i, '</html>');
+        let out = html;
+        // Ensure lang exists
+        if (!/<html[^>]*lang=/i.test(out)) {
+          out = out.replace(/<html(.*?)>/i, `<html lang="${lang}"$1>`);
+        }
+        // Append chunk before </head>
+        if (/<\/head>/i.test(out)) {
+          out = out.replace(/<\/head>/i, `    ${chunk}\n  </head>`);
+        } else {
+          // If no head, create one after <html>
+          out = out.replace(/<html[^>]*>/i, (m)=> `${m}\n  <head>\n    ${chunk}\n  </head>`);
+        }
+        // Title: if none present, add a basic one
+        if (!/<title>/i.test(out)) {
+          out = out.replace(/<head>/i, `<head>\n    <title>${title}</title>`);
+        }
         return out;
       } catch {
         return html;
@@ -48,7 +69,7 @@ function headFromConfig(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), headFromConfig()],
+  plugins: [react(), headFromConfigAppend()],
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {
