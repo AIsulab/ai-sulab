@@ -29,6 +29,7 @@ export function DesignPixelHeader({ currentPage = "home" }: DesignPixelHeaderPro
     { name: "Home", path: "/" },
     { name: "Overview", path: "/overview" },
     { name: "Portfolio", path: "/portfolio" },
+    { name: "Design Works", path: "/design-portfolio" },
     { name: "Mobile", path: "/mobile" },
     { name: "CI/BI", path: "/cibi" },
     { name: "Request", path: "/request" },

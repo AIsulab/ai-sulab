@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { DesignPixelHomePage } from "./pages/DesignPixelHomePage";
 import { OverviewPage } from "./pages/OverviewPage";
 import { PortfolioPage } from "./pages/PortfolioPage";
+import { DesignPortfolioPage } from "./pages/DesignPortfolioPage";
 import { MobilePage } from "./pages/MobilePage";
 import { CIBIPage } from "./pages/CIBIPage";
 import { RequestPage } from "./pages/RequestPage";
@@ -34,6 +35,8 @@ export default function App() {
         return <OverviewPage />;
       case "/portfolio":
         return <PortfolioPage />;
+      case "/design-portfolio":
+        return <DesignPortfolioPage />;
       case "/mobile":
         return <MobilePage />;
       case "/cibi":

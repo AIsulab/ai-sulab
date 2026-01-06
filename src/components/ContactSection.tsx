@@ -25,7 +25,9 @@ export function ContactSection() {
       // Reset success message after 5 seconds
       setTimeout(() => setIsSubmitted(false), 5000);
     } catch (error) {
-      console.error("Error submitting form:", error);
+      // Error handling - in production, this would be logged to a service
+      // console.error("Error submitting form:", error);
+      alert("문의 전송 중 오류가 발생했습니다. 다시 시도해 주세요.");
     } finally {
       setIsSubmitting(false);
     }

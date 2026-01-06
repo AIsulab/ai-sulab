@@ -30,6 +30,14 @@ const slides: SlideData[] = [
     additionalInfo: "상호명 SULAB | 대표자 이진수 | T. 010 7707 7057 | F. 0504 436 7057",
   },
   {
+    outlineText: "Creative Design.",
+    mainTitle: "Design Works",
+    linkText: "Go to site",
+    linkUrl: "#design-portfolio",
+    backgroundImage: "https://images.unsplash.com/photo-1561070791-2526d30994b5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxncmFwaGljJTIwZGVzaWduJTIwd29ya3NwYWNlfGVufDF8fHx8MTc2MjMyMTAzN3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    additionalInfo: "상호명 SULAB | 대표자 이진수 | T. 010 7707 7057 | F. 0504 436 7057",
+  },
+  {
     outlineText: "Record.",
     mainTitle: "Mobile Apps",
     linkText: "Go to site",
@@ -66,6 +74,7 @@ export function HorizontalSlideLayout() {
     { name: "Home", path: "/" },
     { name: "Overview", path: "/overview" },
     { name: "Portfolio", path: "/portfolio" },
+    { name: "Design Works", path: "/design-portfolio" },
     { name: "Mobile", path: "/mobile" },
     { name: "CI/BI", path: "/cibi" },
     { name: "Request", path: "/request" },

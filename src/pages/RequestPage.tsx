@@ -44,7 +44,8 @@ export function RequestPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    // Form submission - in production, this would call an API
+    // console.log("Form submitted:", formData);
     setIsSubmitted(true);
     setTimeout(() => {
       setIsSubmitted(false);
