@@ -151,7 +151,7 @@ function ServiceCard({
         <Icon className="h-6 w-6" />
       </div>
       <h3 className="mt-5 text-xl font-black text-slate-900">{title}</h3>
-      <p className="mt-3 text-sm leading-7 text-slate-600">{desc}</p>
+      <p className="mt-3 text-sm leading-[1.6] text-slate-600">{desc}</p>
     </div>
   )
 }
@@ -344,7 +344,7 @@ export default function App() {
                     <br />
                     AI로 자동화합니다.
                   </h1>
-                  <p className="mt-6 max-w-xl text-lg font-light leading-8 text-white/68">
+                  <p className="mt-6 max-w-xl text-lg font-light leading-[1.6] text-white/68">
                     상담, 견적, 콘텐츠, 예약, 응답까지 하나의 시스템으로 묶어 운영을 가볍게 만듭니다.
                   </p>
                   <div className="mt-10 flex flex-wrap gap-4">
@@ -439,7 +439,7 @@ export default function App() {
                   <ScrollReveal
                     key={item.title}
                     delay={index * 0.05}
-                    className="col-span-12 sm:col-span-6 lg:col-span-3"
+                    className="col-span-12 md:col-span-3"
                   >
                     <ServiceCard icon={item.icon} title={item.title} desc={item.desc} />
                   </ScrollReveal>
@@ -461,7 +461,7 @@ export default function App() {
                     실제 사례로 보여주는 설득력
                   </h2>
                 </div>
-                <p className="max-w-2xl text-lg font-light leading-8 text-white/68 lg:col-span-8">
+                <p className="max-w-2xl text-lg font-light leading-[1.6] text-white/68 lg:col-span-8">
                   상담형 홈페이지, 무인 운영 시스템, 교육 업종, 소상공인 랜딩까지 다양한 사례를
                   시안과 함께 정리했습니다.
                 </p>
@@ -470,7 +470,7 @@ export default function App() {
 
             <div className="col-span-12 grid grid-cols-12 gap-6">
               {portfolioItems.map((item, index) => (
-                <div key={item.title} className="col-span-12 lg:col-span-6">
+                <div key={item.title} className="col-span-12 md:col-span-6">
                   <PortfolioCard
                     item={item}
                     index={index}
@@ -487,7 +487,7 @@ export default function App() {
                   <img
                     src={activePortfolio.image}
                     alt={activePortfolio.title}
-                    className="aspect-[4/5] w-full object-cover"
+                    className="aspect-[4/3] w-full object-cover"
                   />
                   <div className="p-8">
                     <div className="text-xs uppercase tracking-[0.35em] text-emerald-400">
@@ -496,7 +496,7 @@ export default function App() {
                     <h3 className="mt-4 text-3xl font-black tracking-[-0.04em] text-white">
                       {activePortfolio.title}
                     </h3>
-                    <p className="mt-4 text-base font-light leading-8 text-white/70">
+                    <p className="mt-4 text-base font-light leading-[1.6] text-white/70">
                       {activePortfolio.tag} 형태로 정리된 사례입니다. 대표 업종에 맞춰 구조와 CTA를
                       다르게 설계합니다.
                     </p>
@@ -517,7 +517,7 @@ export default function App() {
                 <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] md:text-5xl">
                   믿고 맡길 수 있는 완성도
                 </h2>
-                <p className="mt-5 font-light text-white/72">
+                <p className="mt-5 font-light leading-[1.6] text-white/72">
                   프로젝트 수, 파트너 수, 만족도 중심으로 실적을 한 번에 보여줍니다.
                 </p>
               </div>
@@ -545,7 +545,7 @@ export default function App() {
                 <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white md:text-4xl">
                   SULAB과 함께하는 기업들
                 </h2>
-                <p className="mx-auto mt-4 max-w-2xl font-light text-white/65">
+                <p className="mx-auto mt-4 max-w-2xl font-light leading-[1.6] text-white/65">
                   다양한 업종에서 쌓은 협업 흐름을 로고 티커로 보여줍니다.
                 </p>
               </div>
