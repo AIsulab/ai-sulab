@@ -1,16 +1,3 @@
-// 1. JSON 파일 임포트
-import siteConfig from '../site.config.json'; 
-
-// 2. 컴포넌트 내부에서 사용 예시
-const HeroSection = () => {
-  return (
-    <section>
-      {/* 이제 텍스트를 직접 안 쓰고 JSON에서 가져옵니다 */}
-      <h1>{siteConfig.content.heroTitle}</h1>
-      <p>{siteConfig.content.heroSubtitle}</p>
-    </section>
-  );
-};
 import { useEffect, useState } from "react";
 import { DesignPixelHomePage } from "./pages/DesignPixelHomePage";
 import { OverviewPage } from "./pages/OverviewPage";
@@ -20,6 +7,8 @@ import { CIBIPage } from "./pages/CIBIPage";
 import { RequestPage } from "./pages/RequestPage";
 import { ContactPage } from "./pages/ContactPage";
 import { NoticePage } from "./pages/NoticePage";
+// JSON 파일을 불러옵니다
+import siteConfig from '../site.config.json';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState("/");
@@ -28,21 +17,20 @@ export default function App() {
     const handleHashChange = () => {
       const hash = window.location.hash.slice(1) || "/";
       setCurrentPage(hash);
-      window.scrollTo({ top: 0, behavior: "instant" });
     };
 
-    handleHashChange();
     window.addEventListener("hashchange", handleHashChange);
+    handleHashChange();
 
-    return () => {
-      window.removeEventListener("hashchange", handleHashChange);
-    };
+    return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
 
+  // 여기서 JSON 데이터를 하위 페이지로 전달할 준비가 끝났습니다.
   const renderPage = () => {
     switch (currentPage) {
       case "/":
-        return <DesignPixelHomePage />;
+        // 메인 페이지에 JSON 데이터를 전달합니다
+        return <DesignPixelHomePage data={siteConfig} />;
       case "/overview":
         return <OverviewPage />;
       case "/portfolio":
@@ -58,12 +46,12 @@ export default function App() {
       case "/notice":
         return <NoticePage />;
       default:
-        return <DesignPixelHomePage />;
+        return <DesignPixelHomePage data={siteConfig} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-black antialiased">
+    <div className="min-h-screen bg-white">
       {renderPage()}
     </div>
   );
