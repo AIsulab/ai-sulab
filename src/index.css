@@ -21,7 +21,6 @@
 
   html {
     scroll-behavior: smooth;
-    scrollbar-gutter: stable;
   }
 
   body {
@@ -55,10 +54,6 @@
 
   .ring-spin {
     animation: ring-spin var(--ring-speed, 16s) linear infinite;
-  }
-
-  .spin-slow {
-    animation: ring-spin var(--ring-speed, 18s) linear infinite;
   }
 }
 
