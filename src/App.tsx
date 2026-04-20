@@ -52,6 +52,8 @@ type SiteData = {
 
 const data = siteData as SiteData
 
+const KAKAO_OPENCHAT_URL = 'https://open.kakao.com/o/siMggc8f'
+
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
   visible: { opacity: 1, y: 0 },
@@ -205,6 +207,35 @@ function InstagramIcon() {
   )
 }
 
+function ChatBubbleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 fill-current">
+      <path d="M12 3C6.477 3 2 6.582 2 11c0 2.646 1.617 4.99 4.103 6.45L5 22l4.272-2.33c.88.154 1.79.23 2.728.23 5.523 0 10-3.582 10-8S17.523 3 12 3Z" />
+    </svg>
+  )
+}
+
+function KakaoLinkButton({
+  href,
+  className,
+  children,
+}: {
+  href: string
+  className: string
+  children: ReactNode
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className={`${className} transition-all hover:-translate-y-1 hover:scale-105`}
+    >
+      {children}
+    </a>
+  )
+}
+
 export default function App() {
   const tickerItems = useMemo(() => [...data.tickerLogos, ...data.tickerLogos], [])
   const [industry, setIndustry] = useState('')
@@ -267,12 +298,12 @@ export default function App() {
               </a>
             ))}
           </nav>
-          <a
-            href="#contact"
-            className="rounded-full bg-emerald-500 px-5 py-2 text-sm font-semibold text-white transition hover:bg-emerald-600"
+          <KakaoLinkButton
+            href={KAKAO_OPENCHAT_URL}
+            className="rounded-full bg-emerald-500 px-5 py-2 text-sm font-semibold text-white hover:bg-emerald-600"
           >
-            문의하기
-          </a>
+            상담하기
+          </KakaoLinkButton>
         </div>
       </header>
 
@@ -298,12 +329,12 @@ export default function App() {
                 >
                   {data.hero.primaryCta}
                 </a>
-                <a
-                  href="#contact"
-                  className="rounded-full bg-emerald-500 px-7 py-4 text-sm font-semibold text-white transition hover:bg-emerald-600"
+                <KakaoLinkButton
+                  href={KAKAO_OPENCHAT_URL}
+                  className="rounded-full bg-emerald-500 px-7 py-4 text-sm font-semibold text-white hover:bg-emerald-600"
                 >
-                  {data.hero.secondaryCta}
-                </a>
+                  지금 상담하기
+                </KakaoLinkButton>
               </div>
             </SectionReveal>
 
@@ -581,12 +612,20 @@ export default function App() {
                     이 구성은 현재 아임웹 전문가 시장에서 약 {formatPrice(marketValue)} 상당의
                     가치를 가집니다.
                   </p>
-                  <a
-                    href="#contact"
-                    className="mt-6 inline-flex rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition hover:bg-emerald-100"
-                  >
-                    이 견적으로 10분 만에 기획안 초안 받기
-                  </a>
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <KakaoLinkButton
+                      href={KAKAO_OPENCHAT_URL}
+                      className="inline-flex rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-900 hover:bg-emerald-100"
+                    >
+                      이 견적대로 오픈톡 상담하기
+                    </KakaoLinkButton>
+                    <KakaoLinkButton
+                      href={KAKAO_OPENCHAT_URL}
+                      className="inline-flex rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
+                    >
+                      이 견적으로 10분 만에 기획안 초안 받기
+                    </KakaoLinkButton>
+                  </div>
                 </div>
               </div>
             </SectionReveal>
@@ -604,12 +643,12 @@ export default function App() {
                   고퀄리티 홈페이지로 브랜드 경쟁력을 높이고 싶다면?
                 </h2>
               </div>
-              <a
-                href="mailto:hello@sulab.kr"
-                className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white px-8 py-4 text-sm font-semibold text-slate-900 transition hover:bg-slate-900 hover:text-white"
+              <KakaoLinkButton
+                href={KAKAO_OPENCHAT_URL}
+                className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white px-8 py-4 text-sm font-semibold text-slate-900 hover:bg-slate-900 hover:text-white"
               >
                 지금 상담하기
-              </a>
+              </KakaoLinkButton>
             </SectionReveal>
           </div>
         </section>
@@ -649,6 +688,14 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      <KakaoLinkButton
+        href={KAKAO_OPENCHAT_URL}
+        className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 rounded-full bg-[#FEE500] px-5 py-4 text-sm font-semibold text-slate-900 shadow-[0_18px_40px_rgba(15,23,42,0.18)] hover:shadow-[0_22px_50px_rgba(15,23,42,0.22)]"
+      >
+        <ChatBubbleIcon />
+        문의하기
+      </KakaoLinkButton>
     </div>
   )
 }
