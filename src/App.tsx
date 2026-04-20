@@ -143,7 +143,7 @@ const faqItems = [
 ]
 
 const classCourses = [
-  '누끼토끼 AI 웹클래스',
+  'AI 웹클래스',
   '고단가 견적서 전략',
   '아임웹 실전 제작',
   'AI 자동화 콘텐츠 설계',
@@ -436,10 +436,10 @@ export default function App() {
               </div>
               <div className="mt-6 rounded-[1.5rem] bg-slate-900 px-6 py-6 text-white">
                 <div className="text-sm uppercase tracking-[0.18em] text-emerald-300">
-                  NOOKITOKKI STYLE
+                  AI SULAB STYLE
                 </div>
                 <p className="mt-3 text-base leading-7 text-slate-200">
-                  누끼토끼에서 확인되는 신뢰감 있는 구조와 기능을 AI 수튜디오 기준으로 재해석했습니다.
+                  AI 수튜디오에서 확인되는 신뢰감 있는 구조와 기능을 기준으로 재해석했습니다.
                 </p>
               </div>
             </div>
@@ -468,7 +468,7 @@ export default function App() {
             <SectionTitle
               eyebrow="왜 선택할까요"
               title="신뢰감 있는 구조와 설득력 있는 흐름으로"
-              description="누끼토끼처럼 훑어보기만 해도 믿음이 생기는 레이아웃을 유지하면서, AI 수튜디오의 자동화 역량과 상담 전환 기능을 함께 넣었습니다."
+              description="훑어보기만 해도 믿음이 생기는 레이아웃을 유지하면서, AI 수튜디오의 자동화 역량과 상담 전환 기능을 함께 넣었습니다."
             />
 
             <div className="mt-14 grid gap-6 md:grid-cols-3">
@@ -524,7 +524,7 @@ export default function App() {
           <div className="mx-auto max-w-7xl">
             <SectionTitle
               eyebrow="미디어"
-              title="누끼토끼가 선택받는 이유를 숫자와 후기, 로고로 보여드립니다"
+              title="AI 수튜디오가 선택받는 이유를 숫자와 후기, 로고로 보여드립니다"
               description="대표 페이지에 들어가면 먼저 보이는 신뢰 섹션과 고객 후기 흐름을 그대로 재현했습니다."
             />
 
@@ -560,7 +560,7 @@ export default function App() {
           <div className="mx-auto max-w-7xl">
             <SectionTitle
               eyebrow="신뢰받는 선택"
-              title="누끼토끼와 함께하는 기업들"
+              title="AI 수튜디오와 함께하는 기업들"
               description="업종을 불문하고 다양한 브랜드와 협력하는 느낌을 그대로 살렸습니다."
             />
             <div className="logo-marquee mt-12">
@@ -597,7 +597,7 @@ export default function App() {
           <div className="mx-auto max-w-7xl">
             <SectionTitle
               eyebrow="Class"
-              title="누끼토끼 AI 웹 클래스 느낌의 교육/상품 영역"
+              title="AI 웹 클래스 느낌의 교육/상품 영역"
               description="교육과 상품 카테고리를 하단에 두어 실제 사이트처럼 확장 가능한 구조로 만들었습니다."
             />
             <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
