@@ -1,3 +1,16 @@
+// 1. JSON 파일 임포트
+import siteConfig from '../site.config.json'; 
+
+// 2. 컴포넌트 내부에서 사용 예시
+const HeroSection = () => {
+  return (
+    <section>
+      {/* 이제 텍스트를 직접 안 쓰고 JSON에서 가져옵니다 */}
+      <h1>{siteConfig.content.heroTitle}</h1>
+      <p>{siteConfig.content.heroSubtitle}</p>
+    </section>
+  );
+};
 import { useEffect, useState } from "react";
 import { DesignPixelHomePage } from "./pages/DesignPixelHomePage";
 import { OverviewPage } from "./pages/OverviewPage";
