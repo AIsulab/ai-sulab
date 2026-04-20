@@ -103,7 +103,7 @@ function OutlineHeadline() {
 function RotatingSignature() {
   const text = 'SULAB AI AUTOMATION SYSTEM'
   return (
-    <div className="fixed bottom-6 right-6 z-40 hidden md:block">
+    <div className="fixed left-1/2 top-1/2 z-40 hidden -translate-x-1/2 -translate-y-1/2 md:block">
       <div className="relative h-40 w-40">
         <div
           className="ring-spin absolute inset-0 rounded-full border border-white/15 bg-white/5 backdrop-blur-md"
@@ -120,8 +120,11 @@ function RotatingSignature() {
                 d="M 100, 100 m -72, 0 a 72,72 0 1,1 144,0 a 72,72 0 1,1 -144,0"
               />
             </defs>
-            <text className="fill-white/70 text-[14px] uppercase tracking-[0.42em]">
-              <textPath href="#ring-path" startOffset="0%">
+            <text
+              className="fill-white/70 text-[14px] uppercase tracking-[0.42em]"
+              textAnchor="middle"
+            >
+              <textPath href="#ring-path" startOffset="50%">
                 {`${text}   `.repeat(2)}
               </textPath>
             </text>
