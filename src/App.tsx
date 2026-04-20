@@ -29,57 +29,46 @@ const serviceCards = [
   {
     icon: SquareTerminal,
     title: 'Automation Build',
-    desc: '문의, 예약, 알림, 반복 업무를 하나의 흐름으로 묶어 운영 부담을 줄입니다.',
+    desc: 'Merges inquiries, booking, notifications, and repeat work into one flow.',
   },
   {
     icon: ShoppingCart,
     title: 'Conversion Landing',
-    desc: '상담과 구매 전환을 위한 구조를 설계해 브랜드 메시지를 선명하게 만듭니다.',
+    desc: 'Shapes the page structure for stronger consult and purchase conversion.',
   },
   {
     icon: Boxes,
     title: 'AI Assistant',
-    desc: '초보 고객도 쉽게 질문할 수 있는 챗봇과 견적 안내 흐름을 제공합니다.',
+    desc: 'Adds chatbot and pricing guidance so first-time users can move faster.',
   },
   {
     icon: ChartNoAxesCombined,
     title: 'Performance Review',
-    desc: '유입, 문의, 전환을 숫자로 확인할 수 있는 성과 관점의 화면을 설계합니다.',
+    desc: 'Presents traffic, inquiry, and conversion as clear business metrics.',
   },
 ]
 
 const portfolioItems = [
   {
-    title: '강남역 24시 무인 스터디카페',
-    tag: '랜딩페이지 / 예약',
+    title: 'Gangnam 24H Study Cafe',
+    tag: 'Landing / Booking',
     image:
       'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&q=80&w=1600',
   },
   {
-    title: 'AI 음악 학원',
-    tag: '브랜딩 / 자동응답',
+    title: 'AI Music Academy',
+    tag: 'Brand / Automation',
     image:
       'https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&q=80&w=1600',
   },
 ]
 
-const partnerLogos = [
-  'Meta',
-  'Lotte',
-  'IMWEB',
-  'KOSA',
-  'Studio',
-  'Clinic',
-  'Academy',
-  'Agency',
-  'Retail',
-  'Cafe',
-]
+const partnerLogos = ['Meta', 'Lotte', 'IMWEB', 'KOSA', 'Studio', 'Clinic', 'Academy', 'Agency', 'Retail', 'Cafe']
 
 const stats = [
-  { value: '150+', label: '누적 프로젝트 구축' },
-  { value: '80+', label: '함께한 파트너' },
-  { value: '99%', label: '고객 만족도' },
+  { value: '150+', label: 'Projects Built' },
+  { value: '80+', label: 'Partners' },
+  { value: '99%', label: 'Satisfaction' },
 ]
 
 function useBodyLock(locked: boolean) {
@@ -95,6 +84,7 @@ function useBodyLock(locked: boolean) {
 
 function CountUpStat({ value, label }: { value: string; label: string }) {
   const [count, setCount] = useState(0)
+
   useEffect(() => {
     const number = Number.parseInt(value.replace(/[^0-9]/g, ''), 10)
     let current = 0
@@ -109,6 +99,7 @@ function CountUpStat({ value, label }: { value: string; label: string }) {
         setCount(current)
       }
     }, 16)
+
     return () => window.clearInterval(timer)
   }, [value])
 
@@ -183,10 +174,7 @@ function RotatingSignature() {
                 d="M 100, 100 m -76, 0 a 76,76 0 1,1 152,0 a 76,76 0 1,1 -152,0"
               />
             </defs>
-            <text
-              className="fill-white/20 text-[14px] uppercase tracking-[0.44em]"
-              textAnchor="middle"
-            >
+            <text className="fill-white/20 text-[14px] uppercase tracking-[0.44em]" textAnchor="middle">
               <textPath href="#ring-path" startOffset="50%">
                 {`${text}   `.repeat(2)}
               </textPath>
@@ -221,6 +209,38 @@ function RightRail() {
   )
 }
 
+function PortfolioCard({
+  item,
+  index,
+  active,
+  onClick,
+}: {
+  item: (typeof portfolioItems)[number]
+  index: number
+  active: boolean
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`overflow-hidden rounded-[2rem] border text-left transition hover:-translate-y-1 hover:shadow-xl ${
+        active ? 'border-emerald-500/30 shadow-lg' : 'border-white/10'
+      }`}
+    >
+      <div className="relative aspect-[4/3]">
+        <img src={item.image} alt={item.title} className="h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 p-6 text-white">
+          <div className="text-xs uppercase tracking-[0.3em] text-white/75">0{index + 1}</div>
+          <div className="mt-2 text-2xl font-black">{item.title}</div>
+          <div className="mt-2 text-sm font-light text-white/75">{item.tag}</div>
+        </div>
+      </div>
+    </button>
+  )
+}
+
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [activePortfolio, setActivePortfolio] = useState(portfolioItems[0])
@@ -236,24 +256,26 @@ export default function App() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#0f172a] text-white">
       <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0f172a]/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
+        <div className="mx-auto grid max-w-7xl grid-cols-12 items-center gap-6 px-6 py-4 lg:px-8">
           <a
             href="#top"
-            className="flex items-center gap-3 text-sm font-black uppercase tracking-[0.35em] text-white"
+            className="col-span-6 flex items-center gap-3 text-sm font-black uppercase tracking-[0.35em] text-white"
           >
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/20 text-emerald-400">
               S
             </span>
             <span>SULAB AI</span>
           </a>
-          <button
-            type="button"
-            onClick={() => setMenuOpen(true)}
-            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2 text-sm font-semibold text-white transition hover:border-emerald-500/40 hover:bg-white/10"
-          >
-            <Menu className="h-4 w-4" />
-            MENU
-          </button>
+          <div className="col-span-6 flex justify-end">
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2 text-sm font-semibold text-white transition hover:border-emerald-500/40 hover:bg-white/10"
+            >
+              <Menu className="h-4 w-4" />
+              MENU
+            </button>
+          </div>
         </div>
       </header>
 
@@ -302,15 +324,15 @@ export default function App() {
       <main id="top">
         <section className="relative overflow-hidden bg-[#0f172a] text-white">
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:36px_36px] opacity-20" />
-          <div className="relative mx-auto flex max-w-7xl flex-col px-6 pb-16 pt-8 lg:px-8 lg:pt-10">
-            <div className="flex items-center justify-between text-xs uppercase tracking-[0.35em] text-white/60">
+          <div className="relative mx-auto grid max-w-7xl grid-cols-12 gap-6 px-6 pb-16 pt-8 lg:px-8 lg:pt-10">
+            <div className="col-span-12 flex items-center justify-between text-xs uppercase tracking-[0.35em] text-white/60">
               <span>AI AUTOMATION STUDIO</span>
               <span>1:1 Open Chat</span>
             </div>
 
-            <div className="mt-14 grid items-center gap-12 lg:grid-cols-[1.08fr_0.92fr]">
+            <div className="col-span-12 mt-10 grid grid-cols-12 items-center gap-6 lg:mt-14">
               <ScrollReveal>
-                <div className="max-w-2xl">
+                <div className="col-span-12 lg:col-span-7">
                   <p className="text-sm font-light uppercase tracking-[0.35em] text-white/60">
                     Premium AI automation for business growth
                   </p>
@@ -343,7 +365,7 @@ export default function App() {
               </ScrollReveal>
 
               <ScrollReveal delay={0.08}>
-                <div className="mx-auto flex max-w-sm justify-center">
+                <div className="col-span-12 flex justify-center lg:col-span-5 lg:justify-end">
                   <div className="rounded-full border border-white/15 bg-[#0b1220] p-10 shadow-[0_28px_80px_rgba(0,0,0,0.35)]">
                     <div className="flex h-48 w-48 items-center justify-center rounded-full border-[12px] border-emerald-500/75 text-center">
                       <div className="text-3xl font-black leading-none tracking-[-0.06em] text-white">
@@ -358,7 +380,7 @@ export default function App() {
             </div>
 
             <ScrollReveal delay={0.12}>
-              <div className="mx-auto mt-16 grid max-w-4xl grid-cols-2 gap-px overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/10 shadow-[0_24px_60px_rgba(0,0,0,0.25)] lg:grid-cols-4">
+              <div className="col-span-12 mx-auto mt-8 grid w-full max-w-5xl grid-cols-2 gap-px overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/10 shadow-[0_24px_60px_rgba(0,0,0,0.25)] lg:grid-cols-4">
                 {serviceCards.map((item) => (
                   <div key={item.title} className="bg-[#fbfbf8] p-6 text-center text-slate-900">
                     <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl border border-emerald-500/15 text-emerald-600">
@@ -375,9 +397,9 @@ export default function App() {
         </section>
 
         <section id="services" className="bg-[#0f172a] px-6 py-24 lg:px-8">
-          <div className="mx-auto max-w-7xl">
+          <div className="mx-auto grid max-w-7xl grid-cols-12 gap-6">
             <ScrollReveal>
-              <div className="max-w-xl">
+              <div className="col-span-12 lg:col-span-4">
                 <p className="text-sm font-light uppercase tracking-[0.35em] text-white/60">
                   Services
                 </p>
@@ -387,42 +409,44 @@ export default function App() {
               </div>
             </ScrollReveal>
 
-            <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-              {[
-                {
-                  icon: PenTool,
-                  title: '기획 정리',
-                  desc: '복잡한 요구사항을 상담 질문지로 정리합니다.',
-                },
-                {
-                  icon: Rocket,
-                  title: '빠른 구축',
-                  desc: '필요한 기능만 묶어 빠르게 런칭합니다.',
-                },
-                {
-                  icon: CircleCheckBig,
-                  title: '견적 안내',
-                  desc: '단가와 옵션을 쉽게 확인할 수 있게 구성합니다.',
-                },
-                {
-                  icon: Building2,
-                  title: '신뢰 설계',
-                  desc: '후기, 실적, 로고를 배치해 신뢰를 만듭니다.',
-                },
-              ].map((item, index) => (
-                <ScrollReveal key={item.title} delay={index * 0.05}>
-                  <ServiceCard icon={item.icon} title={item.title} desc={item.desc} />
-                </ScrollReveal>
-              ))}
+            <div className="col-span-12 lg:col-span-8">
+              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+                {[
+                  {
+                    icon: PenTool,
+                    title: '기획 정리',
+                    desc: '복잡한 요구사항을 상담 질문지로 정리합니다.',
+                  },
+                  {
+                    icon: Rocket,
+                    title: '빠른 구축',
+                    desc: '필요한 기능만 묶어 빠르게 런칭합니다.',
+                  },
+                  {
+                    icon: CircleCheckBig,
+                    title: '견적 안내',
+                    desc: '단가와 옵션을 쉽게 확인할 수 있게 구성합니다.',
+                  },
+                  {
+                    icon: Building2,
+                    title: '신뢰 설계',
+                    desc: '후기, 실적, 로고를 배치해 신뢰를 만듭니다.',
+                  },
+                ].map((item, index) => (
+                  <ScrollReveal key={item.title} delay={index * 0.05}>
+                    <ServiceCard icon={item.icon} title={item.title} desc={item.desc} />
+                  </ScrollReveal>
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
         <section id="portfolio" className="bg-[#0f172a] px-6 py-24 lg:px-8">
-          <div className="mx-auto max-w-7xl">
+          <div className="mx-auto grid max-w-7xl grid-cols-12 gap-6">
             <ScrollReveal>
-              <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
-                <div>
+              <div className="col-span-12 grid gap-6 lg:grid-cols-12 lg:items-end">
+                <div className="lg:col-span-4">
                   <p className="text-sm font-light uppercase tracking-[0.35em] text-white/60">
                     Portfolio
                   </p>
@@ -430,47 +454,28 @@ export default function App() {
                     실제 사례로 보여주는 설득력
                   </h2>
                 </div>
-                <p className="max-w-2xl text-lg font-light leading-8 text-white/68">
+                <p className="max-w-2xl text-lg font-light leading-8 text-white/68 lg:col-span-8">
                   상담형 홈페이지, 무인 운영 시스템, 교육 업종, 소상공인 랜딩까지 다양한 사례를
                   시안과 함께 정리했습니다.
                 </p>
               </div>
             </ScrollReveal>
 
-            <div className="mt-10 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-              <div className="grid gap-6">
+            <div className="col-span-12 grid gap-6 lg:grid-cols-12">
+              <div className="grid gap-6 lg:col-span-5">
                 {portfolioItems.map((item, index) => (
-                  <button
+                  <PortfolioCard
                     key={item.title}
-                    type="button"
+                    item={item}
+                    index={index}
+                    active={activePortfolio.title === item.title}
                     onClick={() => setActivePortfolio(item)}
-                    className={`overflow-hidden rounded-[2rem] border text-left transition hover:-translate-y-1 hover:shadow-xl ${
-                      activePortfolio.title === item.title
-                        ? 'border-emerald-500/30 shadow-lg'
-                        : 'border-white/10'
-                    }`}
-                  >
-                    <div className="relative aspect-[4/3]">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="h-full w-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
-                      <div className="absolute inset-x-0 bottom-0 p-6 text-white">
-                        <div className="text-xs uppercase tracking-[0.3em] text-white/75">
-                          0{index + 1}
-                        </div>
-                        <div className="mt-2 text-2xl font-black">{item.title}</div>
-                        <div className="mt-2 text-sm font-light text-white/75">{item.tag}</div>
-                      </div>
-                    </div>
-                  </button>
+                  />
                 ))}
               </div>
 
               <ScrollReveal delay={0.08}>
-                <div className="sticky top-28 overflow-hidden rounded-[2rem] border border-white/10 bg-[#111827] shadow-sm">
+                <div className="lg:col-span-7 overflow-hidden rounded-[2rem] border border-white/10 bg-[#111827] shadow-sm">
                   <img
                     src={activePortfolio.image}
                     alt={activePortfolio.title}
@@ -495,9 +500,9 @@ export default function App() {
         </section>
 
         <section id="proof" className="bg-[#111827] px-6 py-24 text-white lg:px-8">
-          <div className="mx-auto max-w-7xl rounded-[2rem] border border-white/10 bg-[#0b1220] px-8 py-14 shadow-[0_24px_60px_rgba(0,0,0,0.2)] lg:px-12">
+          <div className="mx-auto grid max-w-7xl grid-cols-12 gap-6 rounded-[2rem] border border-white/10 bg-[#0b1220] px-8 py-14 shadow-[0_24px_60px_rgba(0,0,0,0.2)] lg:px-12">
             <ScrollReveal>
-              <div className="mx-auto max-w-3xl text-center">
+              <div className="col-span-12 mx-auto max-w-3xl text-center">
                 <p className="text-sm font-light uppercase tracking-[0.35em] text-white/60">
                   Trust Indicator
                 </p>
@@ -510,7 +515,7 @@ export default function App() {
               </div>
             </ScrollReveal>
 
-            <div className="mt-12 grid gap-6 md:grid-cols-3">
+            <div className="col-span-12 mt-6 grid gap-6 md:grid-cols-3">
               {stats.map((item, index) => (
                 <ScrollReveal key={item.label} delay={index * 0.06}>
                   <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
@@ -523,9 +528,9 @@ export default function App() {
         </section>
 
         <section className="bg-[#0f172a] px-6 py-24 lg:px-8">
-          <div className="mx-auto max-w-7xl">
+          <div className="mx-auto grid max-w-7xl grid-cols-12 gap-6">
             <ScrollReveal>
-              <div className="text-center">
+              <div className="col-span-12 text-center">
                 <p className="text-sm font-light uppercase tracking-[0.35em] text-white/60">
                   Trusted by
                 </p>
@@ -538,11 +543,8 @@ export default function App() {
               </div>
             </ScrollReveal>
 
-            <div className="mt-10 overflow-hidden border-y border-white/10 py-8">
-              <div
-                className="flex w-max gap-6"
-                style={{ animation: 'ticker 26s linear infinite' }}
-              >
+            <div className="col-span-12 mt-4 overflow-hidden border-y border-white/10 py-8">
+              <div className="flex w-max gap-6" style={{ animation: 'ticker 26s linear infinite' }}>
                 {tickerItems.map((logo, index) => (
                   <div
                     key={`${logo}-${index}`}
@@ -557,9 +559,9 @@ export default function App() {
         </section>
 
         <section id="contact" className="bg-[#0f172a] px-6 py-24 lg:px-8">
-          <div className="mx-auto max-w-7xl rounded-[2rem] border border-white/10 bg-[#111827] px-8 py-14 text-white lg:px-12">
-            <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
-              <div>
+          <div className="mx-auto grid max-w-7xl grid-cols-12 gap-6 rounded-[2rem] border border-white/10 bg-[#111827] px-8 py-14 text-white lg:px-12">
+            <div className="col-span-12 grid gap-8 lg:grid-cols-12 lg:items-center">
+              <div className="lg:col-span-8">
                 <p className="text-sm font-light uppercase tracking-[0.35em] text-white/60">
                   Contact
                 </p>
@@ -567,15 +569,17 @@ export default function App() {
                   고퀄리티 홈페이지로 브랜드 경쟁력을 높이고 싶다면?
                 </h2>
               </div>
-              <a
-                href={KAKAO_OPENCHAT_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-emerald-500 px-8 py-4 text-sm font-semibold text-[#0f172a] transition hover:scale-105"
-              >
-                문의하기
-                <ArrowRight className="h-4 w-4" />
-              </a>
+              <div className="lg:col-span-4 lg:flex lg:justify-end">
+                <a
+                  href={KAKAO_OPENCHAT_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-emerald-500 px-8 py-4 text-sm font-semibold text-[#0f172a] transition hover:scale-105"
+                >
+                  문의하기
+                  <ArrowRight className="h-4 w-4" />
+                </a>
+              </div>
             </div>
           </div>
         </section>
@@ -585,9 +589,11 @@ export default function App() {
       <RotatingSignature />
 
       <footer className="border-t border-white/10 bg-[#0f172a] px-6 py-8 lg:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 text-sm text-white/45 md:flex-row md:items-center md:justify-between">
-          <span>SULAB AI</span>
-          <span>Premium AI automation studio for business growth.</span>
+        <div className="mx-auto grid max-w-7xl grid-cols-12 gap-6 text-sm text-white/45">
+          <span className="col-span-12 md:col-span-6">SULAB AI</span>
+          <span className="col-span-12 text-left md:col-span-6 md:text-right">
+            Premium AI automation studio for business growth.
+          </span>
         </div>
       </footer>
     </div>
