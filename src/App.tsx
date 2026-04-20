@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import type { CSSProperties, ComponentType, ReactNode } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
+  ArrowDown,
   ArrowRight,
   Boxes,
   Building2,
@@ -13,7 +14,6 @@ import {
   ShoppingCart,
   SquareTerminal,
   X,
-  ArrowDown,
 } from 'lucide-react'
 
 const KAKAO_OPENCHAT_URL = 'https://open.kakao.com/o/siMggc8f'
@@ -114,11 +114,11 @@ function CountUpStat({ value, label }: { value: string; label: string }) {
 
   return (
     <div className="text-center">
-      <div className="text-5xl font-black tracking-tight text-white md:text-6xl">
+      <div className="text-5xl font-black tracking-[-0.06em] text-white md:text-6xl">
         {count}
         {value.includes('%') ? '%' : '+'}
       </div>
-      <div className="mt-3 text-sm uppercase tracking-[0.3em] text-white/70">{label}</div>
+      <div className="mt-3 text-sm uppercase tracking-[0.28em] text-white/55">{label}</div>
     </div>
   )
 }
@@ -132,10 +132,10 @@ function ScrollReveal({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.65, delay }}
+      transition={{ duration: 0.55, delay }}
     >
       {children}
     </motion.div>
@@ -152,7 +152,7 @@ function ServiceCard({
   desc: string
 }) {
   return (
-    <div className="rounded-[1.75rem] border border-slate-800/10 bg-[#f8fafc] p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+    <div className="rounded-[1.75rem] border border-slate-800/10 bg-[#fbfbf8] p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
       <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
         <Icon className="h-6 w-6" />
       </div>
@@ -166,7 +166,7 @@ function RotatingSignature() {
   const text = 'SULAB AI AUTOMATION SYSTEM'
 
   return (
-    <div className="fixed right-[-96px] top-1/2 z-40 hidden -translate-y-1/2 md:block">
+    <div className="fixed right-[-104px] top-1/2 z-40 hidden -translate-y-1/2 md:block">
       <div className="relative h-56 w-56">
         <div
           className="ring-spin absolute inset-0 rounded-full border border-white/15 bg-white/5 backdrop-blur-md"
@@ -205,14 +205,14 @@ function RotatingSignature() {
 
 function RightRail() {
   return (
-    <div className="fixed right-6 top-1/2 z-30 hidden -translate-y-1/2 flex-col items-center gap-5 xl:flex">
+    <div className="fixed right-4 top-1/2 z-30 hidden -translate-y-1/2 flex-col items-center gap-5 xl:flex">
       <a
         href="#contact"
-        className="rounded-none border border-white/20 px-3 py-4 text-[0.68rem] font-medium uppercase tracking-[0.45em] text-white/85 [writing-mode:vertical-rl]"
+        className="rounded-none border border-white/20 px-3 py-4 text-[0.68rem] font-medium uppercase tracking-[0.45em] text-white/70 [writing-mode:vertical-rl]"
       >
         Project Request
       </a>
-      <div className="flex flex-col items-center gap-4 text-white/60">
+      <div className="flex flex-col items-center gap-4 text-white/50">
         <span className="h-3 w-3 rounded-full border border-white/60" />
         <span className="h-3 w-3 rounded-full border border-white/60" />
         <span className="h-3 w-3 rounded-full border border-white/60" />
@@ -303,21 +303,23 @@ export default function App() {
         <section className="relative overflow-hidden bg-[#0f172a] text-white">
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:36px_36px] opacity-20" />
           <div className="relative mx-auto flex max-w-7xl flex-col px-6 pb-16 pt-8 lg:px-8 lg:pt-10">
-            <div className="flex items-center justify-between text-xs uppercase tracking-[0.35em] text-white/70">
-              <span>대표님의 시간을 아껴드립니다.</span>
+            <div className="flex items-center justify-between text-xs uppercase tracking-[0.35em] text-white/60">
+              <span>AI AUTOMATION STUDIO</span>
               <span>1:1 Open Chat</span>
             </div>
 
-            <div className="mt-12 grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="mt-14 grid items-center gap-12 lg:grid-cols-[1.08fr_0.92fr]">
               <ScrollReveal>
                 <div className="max-w-2xl">
-                  <p className="text-sm font-light uppercase tracking-[0.35em] text-white/70">
-                    AI AUTOMATION STUDIO
+                  <p className="text-sm font-light uppercase tracking-[0.35em] text-white/60">
+                    Premium AI automation for business growth
                   </p>
-                  <h1 className="mt-6 text-[clamp(2.6rem,6vw,5rem)] font-black leading-[0.95] tracking-[-0.06em]">
-                    비즈니스의 모든 과정을 AI로 자동화합니다.
+                  <h1 className="mt-6 max-w-[12ch] text-[clamp(2.8rem,6vw,5.2rem)] font-black leading-[0.92] tracking-[-0.07em]">
+                    비즈니스의 모든 과정을
+                    <br />
+                    AI로 자동화합니다.
                   </h1>
-                  <p className="mt-6 max-w-xl text-lg font-light leading-8 text-white/75">
+                  <p className="mt-6 max-w-xl text-lg font-light leading-8 text-white/68">
                     상담, 견적, 콘텐츠, 예약, 응답까지 하나의 시스템으로 묶어 운영을 가볍게 만듭니다.
                   </p>
                   <div className="mt-10 flex flex-wrap gap-4">
@@ -342,9 +344,9 @@ export default function App() {
 
               <ScrollReveal delay={0.08}>
                 <div className="mx-auto flex max-w-sm justify-center">
-                  <div className="rounded-full border-4 border-white/90 bg-[#0b1220] p-8 shadow-2xl shadow-black/30">
-                    <div className="flex h-44 w-44 items-center justify-center rounded-full border-[10px] border-emerald-500/80 text-center">
-                      <div className="text-3xl font-black leading-none text-white">
+                  <div className="rounded-full border border-white/15 bg-[#0b1220] p-10 shadow-[0_28px_80px_rgba(0,0,0,0.35)]">
+                    <div className="flex h-48 w-48 items-center justify-center rounded-full border-[12px] border-emerald-500/75 text-center">
+                      <div className="text-3xl font-black leading-none tracking-[-0.06em] text-white">
                         S
                         <br />
                         AI
@@ -358,7 +360,7 @@ export default function App() {
             <ScrollReveal delay={0.12}>
               <div className="mx-auto mt-16 grid max-w-4xl grid-cols-2 gap-px overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/10 shadow-[0_24px_60px_rgba(0,0,0,0.25)] lg:grid-cols-4">
                 {serviceCards.map((item) => (
-                  <div key={item.title} className="bg-[#f8fafc] p-6 text-center text-slate-900">
+                  <div key={item.title} className="bg-[#fbfbf8] p-6 text-center text-slate-900">
                     <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl border border-emerald-500/15 text-emerald-600">
                       <item.icon className="h-6 w-6" />
                     </div>
@@ -379,7 +381,7 @@ export default function App() {
                 <p className="text-sm font-light uppercase tracking-[0.35em] text-white/60">
                   Services
                 </p>
-                <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] text-white md:text-5xl">
+                <h2 className="mt-4 max-w-[12ch] text-4xl font-black tracking-[-0.05em] text-white md:text-5xl">
                   초보 고객도 바로 이해하는 자동화 구조
                 </h2>
               </div>
@@ -419,16 +421,16 @@ export default function App() {
         <section id="portfolio" className="bg-[#0f172a] px-6 py-24 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <ScrollReveal>
-              <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+              <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
                 <div>
                   <p className="text-sm font-light uppercase tracking-[0.35em] text-white/60">
                     Portfolio
                   </p>
-                  <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] text-white md:text-5xl">
+                  <h2 className="mt-4 max-w-[12ch] text-4xl font-black tracking-[-0.05em] text-white md:text-5xl">
                     실제 사례로 보여주는 설득력
                   </h2>
                 </div>
-                <p className="max-w-2xl text-lg font-light leading-8 text-white/70">
+                <p className="max-w-2xl text-lg font-light leading-8 text-white/68">
                   상담형 홈페이지, 무인 운영 시스템, 교육 업종, 소상공인 랜딩까지 다양한 사례를
                   시안과 함께 정리했습니다.
                 </p>
@@ -460,7 +462,7 @@ export default function App() {
                           0{index + 1}
                         </div>
                         <div className="mt-2 text-2xl font-black">{item.title}</div>
-                        <div className="mt-2 text-sm font-light text-white/80">{item.tag}</div>
+                        <div className="mt-2 text-sm font-light text-white/75">{item.tag}</div>
                       </div>
                     </div>
                   </button>
@@ -502,7 +504,7 @@ export default function App() {
                 <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] md:text-5xl">
                   믿고 맡길 수 있는 완성도
                 </h2>
-                <p className="mt-5 font-light text-white/75">
+                <p className="mt-5 font-light text-white/72">
                   프로젝트 수, 파트너 수, 만족도 중심으로 실적을 한 번에 보여줍니다.
                 </p>
               </div>
