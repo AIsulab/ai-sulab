@@ -158,10 +158,7 @@ function InstagramIcon() {
 }
 
 export default function App() {
-  const tickerItems = useMemo(
-    () => [...data.tickerLogos, ...data.tickerLogos],
-    [],
-  )
+  const tickerItems = useMemo(() => [...data.tickerLogos, ...data.tickerLogos], [])
 
   useEffect(() => {
     document.title = data.site_info.site_name
@@ -175,8 +172,12 @@ export default function App() {
     <div className="min-h-screen bg-white text-slate-900">
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-8">
-          <a href="#top" className="font-heading text-xl font-bold tracking-tight text-slate-900">
-            SULAB
+          <a href="#top" className="flex items-center">
+            <img
+              src="/sulab-logo.png"
+              alt="SULAB"
+              className="h-10 w-auto object-contain md:h-12"
+            />
           </a>
           <nav className="hidden items-center gap-8 md:flex">
             {data.nav.map((item) => (
@@ -239,15 +240,21 @@ export default function App() {
                   <div className="mt-8 grid gap-4">
                     <div className="rounded-[1.5rem] bg-white/5 p-5 backdrop-blur">
                       <div className="text-sm font-semibold text-emerald-300">Automation</div>
-                      <div className="mt-2 text-2xl font-semibold">유튜브, 웹빌더, 마케팅 운영 자동화</div>
+                      <div className="mt-2 text-2xl font-semibold">
+                        유튜브, 웹빌더, 마케팅 운영 자동화
+                      </div>
                     </div>
                     <div className="rounded-[1.5rem] bg-white/5 p-5 backdrop-blur">
                       <div className="text-sm font-semibold text-emerald-300">Conversion</div>
-                      <div className="mt-2 text-2xl font-semibold">브랜드 카피와 전환 구조를 동시에 설계</div>
+                      <div className="mt-2 text-2xl font-semibold">
+                        브랜드 카피와 전환 구조를 동시에 설계
+                      </div>
                     </div>
                     <div className="rounded-[1.5rem] bg-white/5 p-5 backdrop-blur">
                       <div className="text-sm font-semibold text-emerald-300">Deployment</div>
-                      <div className="mt-2 text-2xl font-semibold">빠르게 완성하고 곧바로 운영 가능한 시스템</div>
+                      <div className="mt-2 text-2xl font-semibold">
+                        빠르게 완성하고 곧바로 운영 가능한 시스템
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -382,8 +389,12 @@ export default function App() {
       <footer className="border-t border-slate-200 bg-white px-6 py-10 lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div>
-            <div className="font-heading text-lg font-bold tracking-tight text-slate-900">SULAB</div>
-            <div className="mt-2 text-sm text-slate-600">
+            <img
+              src="/sulab-logo.png"
+              alt="SULAB"
+              className="h-10 w-auto object-contain"
+            />
+            <div className="mt-3 text-sm text-slate-600">
               상호명: {data.footer.company} | 대표자: {data.footer.owner}
             </div>
           </div>
