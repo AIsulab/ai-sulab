@@ -1,209 +1,153 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
-import { AnimatePresence, motion, useInView } from 'framer-motion'
-import { Bot, MessageCircleMore, X } from 'lucide-react'
-import siteData from '../site.config.json'
+import { motion, useInView } from 'framer-motion'
+import {
+  ArrowRight,
+  CheckCircle2,
+  Cpu,
+  MessageCircle,
+  Monitor,
+  Zap,
+} from 'lucide-react'
 
-type NavItem = {
-  id: string
-  label: string
-}
+const openChatUrl = 'https://open.kakao.com/o/siMggc8f'
 
-type Hero = {
-  title: string
-  subtitle: string
-  primaryCta: string
-  secondaryCta: string
-}
+const navItems = [
+  { href: '#about', label: 'About SULAB' },
+  { href: '#solutions', label: 'AI Solutions' },
+  { href: '#portfolio', label: 'Portfolio' },
+  { href: '#contact', label: 'Contact' },
+]
 
-type StatItem = {
-  value: number
-  suffix: string
-  label: string
-}
-
-type PortfolioItem = {
-  title: string
-  category: string
-  description: string
-  image: string
-}
-
-type Footer = {
-  company: string
-  owner: string
-  youtubeUrl: string
-  instagramUrl: string
-}
-
-type SiteData = {
-  site_info: {
-    site_name: string
-    main_color: string
-  }
-  meta_description: string
-  seo_keywords: string[]
-  nav: NavItem[]
-  hero: Hero
-  stats: StatItem[]
-  portfolio: PortfolioItem[]
-  tickerLogos: string[]
-  footer: Footer
-}
-
-type ChatIntent = 'pricing' | 'portfolio' | 'consult'
-
-const data = siteData as SiteData
-
-const KAKAO_OPENCHAT_URL = 'https://open.kakao.com/o/siMggc8f'
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0 },
-}
-
-const smoothEase = [0.22, 1, 0.36, 1] as const
-
-const pricingPlans = [
+const solutions = [
   {
-    id: 'standard',
-    name: 'Standard',
-    basePrice: 500000,
-    summary: '반응형 1페이지, 기본 SEO',
-  },
-  {
-    id: 'deluxe',
-    name: 'Deluxe',
-    basePrice: 1200000,
-    summary: '페이지 5개, 디자인 고도화',
-  },
-  {
-    id: 'premium',
-    name: 'Premium (AI 자동화)',
-    basePrice: 2500000,
-    summary: 'AI 기능 연동, 고급 자동화 로직',
-  },
-] as const
-
-const pricingOptions = [
-  {
-    id: 'pg',
-    name: 'PG 결제',
-    price: 300000,
-  },
-  {
-    id: 'booking',
-    name: '예약 시스템',
-    price: 400000,
-  },
-  {
-    id: 'assistant',
-    name: 'AI 비서',
-    price: 600000,
-  },
-  {
-    id: 'crm',
-    name: 'CRM 연동',
-    price: 350000,
-  },
-] as const
-
-const chatbotReplies: Record<
-  ChatIntent,
-  {
-    title: string
-    description: string
-    highlight: string
-  }
-> = {
-  pricing: {
-    title: '서비스 단가 확인',
+    icon: Monitor,
+    title: '전문가형 웹 구축',
     description:
-      '기본형은 50만 원부터, Deluxe는 120만 원부터, Premium AI 자동화형은 250만 원부터 시작합니다. 옵션에 따라 PG 결제, 예약 시스템, AI 비서 기능이 실시간으로 추가됩니다.',
-    highlight: '정확한 구성은 오픈톡에서 1:1로 바로 맞춤 안내해드립니다.',
+      '누끼토끼 같은 신뢰 구조와 프리미엄 여백 설계를 바탕으로 고관여 고객이 바로 이해하는 사이트를 만듭니다.',
   },
-  portfolio: {
-    title: '구축 사례 보기',
+  {
+    icon: Cpu,
+    title: 'AI 자동화 시스템',
     description:
-      '강남역 24시 무인 스터디카페, AI 음악 학원, 오토메이션 컨설팅 프로젝트처럼 브랜드 톤과 전환 구조를 함께 설계한 사례를 보실 수 있습니다.',
-    highlight: '원하시면 비슷한 업종 사례를 골라서 오픈톡에서 바로 추천해드립니다.',
+      '상담, 예약, 콘텐츠 운영, 리드 수집까지 반복 업무를 자동화해 대표님의 시간을 구조적으로 줄입니다.',
   },
-  consult: {
-    title: '대표님과 1:1 상담',
+  {
+    icon: Zap,
+    title: '전환 중심 운영 설계',
     description:
-      '반복 질문은 AI 비서가 빠르게 정리하고, 실제 상담은 대표님과 오픈톡에서 바로 이어집니다. 목표, 예산, 필요한 자동화를 알려주시면 가장 빠른 방향으로 잡아드립니다.',
-    highlight: '아래 버튼으로 바로 카카오 오픈톡 상담을 시작하실 수 있습니다.',
+      '오픈톡, 견적, 사례, CTA 동선을 하나의 흐름으로 정리해 문의 전환율을 높이는 방향으로 설계합니다.',
   },
-}
+]
 
-function formatPrice(value: number) {
-  return `${value.toLocaleString()}원`
-}
+const portfolioItems = [
+  {
+    title: '강남역 24시 무인 스터디카페',
+    tags: ['랜딩페이지', '예약시스템', 'AI자동화'],
+    image:
+      'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1400',
+  },
+  {
+    title: 'AI 교육 플랫폼 브랜딩',
+    tags: ['교육서비스', '브랜드사이트', '상담전환'],
+    image:
+      'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1400',
+  },
+  {
+    title: '병원 프리미엄 예약 페이지',
+    tags: ['의료', '예약시스템', '모바일최적화'],
+    image:
+      'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=1400',
+  },
+  {
+    title: 'AI 음악 학원 소개 사이트',
+    tags: ['교육', '상담유도', '브랜딩'],
+    image:
+      'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&q=80&w=1400',
+  },
+  {
+    title: '수익형 블로그 자동화 허브',
+    tags: ['콘텐츠자동화', '리드수집', '운영대시보드'],
+    image:
+      'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&q=80&w=1400',
+  },
+  {
+    title: 'B2B 에이전시 포트폴리오',
+    tags: ['회사소개', '포트폴리오', '세일즈'],
+    image:
+      'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1400',
+  },
+]
 
-function ensureMetaTag(
-  name: string,
-  content: string,
-  attribute: 'name' | 'property' = 'name',
-) {
-  let tag = document.head.querySelector(`meta[${attribute}="${name}"]`)
+const partnerLogos = [
+  'OPENAI',
+  'NOTION',
+  'SLACK',
+  'GOOGLE',
+  'YOUTUBE',
+  'COUPANG',
+  'IMWEB',
+  'FIGMA',
+  'META ADS',
+  'SHOPIFY',
+  'STRIPE',
+  'WEBFLOW',
+  'AIRTABLE',
+  'MAKE',
+  'ZAPIER',
+  'GA4',
+  'MAILCHIMP',
+  'TALLY',
+  'TYPEFORM',
+  'HUBSPOT',
+]
 
-  if (!tag) {
-    tag = document.createElement('meta')
-    tag.setAttribute(attribute, name)
-    document.head.appendChild(tag)
-  }
-
-  tag.setAttribute('content', content)
-}
-
-function SectionReveal({
+function FadeUp({
   children,
-  className = '',
   delay = 0,
 }: {
   children: ReactNode
-  className?: string
   delay?: number
 }) {
   return (
     <motion.div
-      className={className}
-      initial="hidden"
-      whileInView="visible"
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
-      variants={fadeUp}
-      transition={{ duration: 0.8, delay, ease: smoothEase }}
+      transition={{ duration: 0.7, delay }}
     >
       {children}
     </motion.div>
   )
 }
 
-function CountUpNumber({
-  value,
-  suffix,
+function StatCounter({
+  end,
+  suffix = '+',
+  label,
 }: {
-  value: number
-  suffix: string
+  end: number
+  suffix?: string
+  label: string
 }) {
-  const ref = useRef<HTMLSpanElement | null>(null)
-  const isInView = useInView(ref, { once: true, amount: 0.6 })
-  const [displayValue, setDisplayValue] = useState(0)
+  const ref = useRef<HTMLDivElement | null>(null)
+  const inView = useInView(ref, { once: true, amount: 0.6 })
+  const [count, setCount] = useState(0)
 
   useEffect(() => {
-    if (!isInView) {
+    if (!inView) {
       return
     }
 
     let frame = 0
     let animationFrame = 0
-    const totalFrames = 54
+    const totalFrames = 60
 
     const animate = () => {
       frame += 1
       const progress = frame / totalFrames
       const eased = 1 - Math.pow(1 - progress, 3)
-      setDisplayValue(Math.round(value * eased))
+      setCount(Math.round(end * eased))
 
       if (frame < totalFrames) {
         animationFrame = window.requestAnimationFrame(animate)
@@ -212,624 +156,227 @@ function CountUpNumber({
 
     animationFrame = window.requestAnimationFrame(animate)
     return () => window.cancelAnimationFrame(animationFrame)
-  }, [isInView, value])
+  }, [end, inView])
 
   return (
-    <span ref={ref}>
-      {displayValue.toLocaleString()}
-      {suffix}
-    </span>
-  )
-}
-
-function YoutubeIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 fill-current">
-      <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.7V8.3l6.5 3.7-6.5 3.7Z" />
-    </svg>
-  )
-}
-
-function InstagramIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 fill-current">
-      <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 1.8A3.7 3.7 0 0 0 3.8 7.5v9a3.7 3.7 0 0 0 3.7 3.7h9a3.7 3.7 0 0 0 3.7-3.7v-9a3.7 3.7 0 0 0-3.7-3.7h-9Zm9.7 1.4a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.8A3.2 3.2 0 1 0 12 15.2 3.2 3.2 0 0 0 12 8.8Z" />
-    </svg>
-  )
-}
-
-function KakaoLinkButton({
-  href,
-  className,
-  children,
-}: {
-  href: string
-  className: string
-  children: ReactNode
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className={`${className} transition-all hover:-translate-y-1 hover:scale-105`}
-    >
-      {children}
-    </a>
-  )
-}
-
-function Chatbot({
-  currentIntent,
-  onSelectIntent,
-}: {
-  currentIntent: ChatIntent
-  onSelectIntent: (intent: ChatIntent) => void
-}) {
-  const reply = chatbotReplies[currentIntent]
-  const [isOpen, setIsOpen] = useState(false)
-
-  return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
-      <AnimatePresence>
-        {isOpen ? (
-          <motion.div
-            initial={{ opacity: 0, y: 16, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 16, scale: 0.96 }}
-            transition={{ duration: 0.22, ease: smoothEase }}
-            className="w-[22rem] overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-[0_24px_60px_rgba(15,23,42,0.16)] sm:w-[24rem]"
-          >
-            <div className="bg-slate-900 px-5 py-4 text-white">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="rounded-full bg-emerald-500/20 p-2 text-emerald-300">
-                    <Bot className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <div className="font-semibold">SULAB AI 비서</div>
-                    <div className="text-xs text-slate-300">
-                      안녕하세요! SULAB의 AI 비서입니다. 무엇을 도와드릴까요?
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  className="rounded-full p-2 text-slate-300 transition hover:bg-white/10 hover:text-white"
-                  onClick={() => setIsOpen(false)}
-                  aria-label="챗봇 닫기"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-
-            <div className="space-y-4 px-5 py-5">
-              <div className="rounded-2xl bg-slate-50 px-4 py-4">
-                <div className="text-sm font-semibold text-emerald-600">{reply.title}</div>
-                <p className="mt-2 text-sm leading-6 text-slate-700">{reply.description}</p>
-                <p className="mt-3 text-sm leading-6 text-slate-500">{reply.highlight}</p>
-              </div>
-
-              <div>
-                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-                  추천 질문
-                </div>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                      currentIntent === 'pricing'
-                        ? 'bg-emerald-500 text-white'
-                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                    }`}
-                    onClick={() => onSelectIntent('pricing')}
-                  >
-                    서비스 단가 확인
-                  </button>
-                  <button
-                    type="button"
-                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                      currentIntent === 'portfolio'
-                        ? 'bg-emerald-500 text-white'
-                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                    }`}
-                    onClick={() => onSelectIntent('portfolio')}
-                  >
-                    구축 사례 보기
-                  </button>
-                  <button
-                    type="button"
-                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                      currentIntent === 'consult'
-                        ? 'bg-emerald-500 text-white'
-                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                    }`}
-                    onClick={() => onSelectIntent('consult')}
-                  >
-                    대표님과 1:1 상담
-                  </button>
-                </div>
-              </div>
-
-              <KakaoLinkButton
-                href={KAKAO_OPENCHAT_URL}
-                className="inline-flex w-full items-center justify-center rounded-full bg-[#FEE500] px-5 py-3 text-sm font-semibold text-slate-900 hover:bg-[#f8dc33]"
-              >
-                카카오 오픈톡으로 바로 상담하기
-              </KakaoLinkButton>
-            </div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-
-      <button
-        type="button"
-        className="inline-flex items-center gap-2 rounded-full bg-[#FEE500] px-5 py-4 text-sm font-semibold text-slate-900 shadow-[0_18px_40px_rgba(15,23,42,0.18)] transition-all hover:-translate-y-1 hover:scale-105 hover:shadow-[0_22px_50px_rgba(15,23,42,0.22)]"
-        onClick={() => setIsOpen((current) => !current)}
-      >
-        <MessageCircleMore className="h-5 w-5" />
-        AI 챗봇
-      </button>
+    <div ref={ref} className="text-center p-8">
+      <div className="mb-2 text-5xl font-black text-emerald-400 md:text-6xl">
+        {count}
+        {suffix}
+      </div>
+      <div className="text-lg text-slate-300">{label}</div>
     </div>
   )
 }
 
 export default function App() {
-  const tickerItems = useMemo(() => [...data.tickerLogos, ...data.tickerLogos], [])
-  const [industry, setIndustry] = useState('')
-  const [requestedFeatures, setRequestedFeatures] = useState('')
-  const [selectedPlan, setSelectedPlan] =
-    useState<(typeof pricingPlans)[number]['id']>('standard')
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([])
-  const [chatIntent, setChatIntent] = useState<ChatIntent>('pricing')
-
-  const activePlan = useMemo(
-    () => pricingPlans.find((plan) => plan.id === selectedPlan) ?? pricingPlans[0],
-    [selectedPlan],
-  )
-
-  const optionTotal = useMemo(
-    () =>
-      pricingOptions
-        .filter((option) => selectedOptions.includes(option.id))
-        .reduce((sum, option) => sum + option.price, 0),
-    [selectedOptions],
-  )
-
-  const totalEstimate = activePlan.basePrice + optionTotal
-  const marketValue = Math.round((totalEstimate * 1.2) / 100000) * 100000
+  const repeatedLogos = [...partnerLogos, ...partnerLogos]
 
   useEffect(() => {
-    document.title = data.site_info.site_name
-    ensureMetaTag('description', data.meta_description)
-    ensureMetaTag('keywords', data.seo_keywords.join(', '))
-    ensureMetaTag('og:title', data.site_info.site_name, 'property')
-    ensureMetaTag('og:description', data.meta_description, 'property')
+    document.title = 'SULAB AI | Premium Automation Studio'
   }, [])
 
-  function toggleOption(optionId: string) {
-    setSelectedOptions((current) =>
-      current.includes(optionId)
-        ? current.filter((item) => item !== optionId)
-        : [...current, optionId],
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-white text-slate-900">
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-8">
-          <a href="#top" className="flex items-center">
-            <img
-              src="/sulab-logo.png"
-              alt="SULAB"
-              className="h-10 w-auto object-contain md:h-12"
-            />
+    <div className="bg-white font-sans text-slate-900">
+      <nav className="fixed inset-x-0 top-0 z-50 border-b border-slate-200 bg-white/85 backdrop-blur-md">
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
+          <a href="#top" className="font-brand text-2xl uppercase tracking-[0.22em] text-slate-900">
+            SULAB AI
           </a>
-          <nav className="hidden items-center gap-8 md:flex">
-            {data.nav.map((item) => (
-              <a
-                key={item.id}
-                href={`#${item.id}`}
-                className="text-sm font-semibold text-slate-600 transition hover:text-slate-900"
-              >
+
+          <div className="hidden items-center gap-10 text-sm font-semibold text-slate-600 md:flex">
+            {navItems.map((item) => (
+              <a key={item.href} href={item.href} className="transition hover:text-emerald-500">
                 {item.label}
               </a>
             ))}
-          </nav>
-          <KakaoLinkButton
-            href={KAKAO_OPENCHAT_URL}
-            className="rounded-full bg-emerald-500 px-5 py-2 text-sm font-semibold text-white hover:bg-emerald-600"
+          </div>
+
+          <a
+            href={openChatUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-full bg-emerald-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-emerald-200 transition-all hover:scale-105 hover:bg-emerald-700"
           >
-            상담하기
-          </KakaoLinkButton>
+            시작하기
+          </a>
         </div>
-      </header>
+      </nav>
 
       <main id="top">
-        <section className="relative overflow-hidden bg-white px-6 pb-20 pt-24 lg:px-8 lg:pt-32">
-          <div className="absolute right-[-10%] top-12 h-72 w-72 rounded-full bg-emerald-100 blur-3xl" />
-          <div className="absolute left-[-8%] top-1/3 h-64 w-64 rounded-full bg-slate-100 blur-3xl" />
-          <div className="mx-auto grid max-w-7xl gap-16 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-            <SectionReveal>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-600">
-                Premium AI Automation Agency
-              </p>
-              <h1 className="font-heading mt-8 max-w-4xl text-5xl font-bold leading-[0.95] tracking-tight text-slate-900 md:text-7xl">
-                {data.hero.title}
-              </h1>
-              <p className="mt-8 max-w-2xl text-lg leading-8 text-slate-600">
-                {data.hero.subtitle}
-              </p>
-              <div className="mt-10 flex flex-wrap gap-4">
-                <a
-                  href="#portfolio"
-                  className="rounded-full border border-slate-900 px-7 py-4 text-sm font-semibold text-slate-900 transition hover:bg-slate-900 hover:text-white"
-                >
-                  {data.hero.primaryCta}
-                </a>
-                <KakaoLinkButton
-                  href={KAKAO_OPENCHAT_URL}
-                  className="rounded-full bg-emerald-500 px-7 py-4 text-sm font-semibold text-white hover:bg-emerald-600"
-                >
-                  지금 상담하기
-                </KakaoLinkButton>
-              </div>
-            </SectionReveal>
+        <section className="px-6 pb-20 pt-40">
+          <div className="mx-auto max-w-7xl text-center">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              className="mx-auto mb-8 max-w-6xl text-6xl font-black leading-[0.92] tracking-tight md:text-8xl"
+            >
+              대표님들의 <span className="text-emerald-500">시간</span>을
+              <br />
+              아껴드립니다.
+            </motion.h1>
 
-            <SectionReveal delay={0.08} className="lg:justify-self-end">
-              <div className="relative overflow-hidden rounded-[2rem] border border-emerald-200 bg-slate-900 p-10 text-white shadow-[0_30px_80px_rgba(15,23,42,0.18)]">
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:28px_28px]" />
-                <div className="relative">
-                  <div className="inline-flex rounded-full border border-white/15 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-emerald-300">
-                    SULAB SYSTEM
-                  </div>
-                  <div className="mt-8 grid gap-4">
-                    <div className="rounded-[1.5rem] bg-white/5 p-5 backdrop-blur">
-                      <div className="text-sm font-semibold text-emerald-300">Automation</div>
-                      <div className="mt-2 text-2xl font-semibold">
-                        유튜브, 웹빌더, 마케팅 운영 자동화
-                      </div>
-                    </div>
-                    <div className="rounded-[1.5rem] bg-white/5 p-5 backdrop-blur">
-                      <div className="text-sm font-semibold text-emerald-300">Conversion</div>
-                      <div className="mt-2 text-2xl font-semibold">
-                        브랜드 카피와 전환 구조를 동시에 설계
-                      </div>
-                    </div>
-                    <div className="rounded-[1.5rem] bg-white/5 p-5 backdrop-blur">
-                      <div className="text-sm font-semibold text-emerald-300">Deployment</div>
-                      <div className="mt-2 text-2xl font-semibold">
-                        빠르게 완성하고 곧바로 운영 가능한 시스템
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </SectionReveal>
+            <p className="mx-auto mb-12 max-w-3xl text-xl leading-9 text-slate-500">
+              고객 맞춤형 AI 자동화 시스템과 프리미엄 웹 디자인으로
+              <br />
+              비즈니스의 가치를 한 단계 더 높여드립니다.
+            </p>
+
+            <div className="flex justify-center gap-4">
+              <a
+                href="#solutions"
+                className="inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-8 py-4 font-bold text-white transition-all hover:scale-105"
+              >
+                서비스 알아보기 <ArrowRight size={20} />
+              </a>
+            </div>
           </div>
         </section>
 
-        <section className="overflow-hidden border-y border-slate-200 bg-white py-6">
-          <motion.div
-            className="flex w-max gap-4"
-            animate={{ x: ['0%', '-50%'] }}
-            transition={{ duration: 28, ease: 'linear', repeat: Infinity }}
-          >
-            {tickerItems.map((item, index) => (
+        <section id="about" className="overflow-hidden border-y border-slate-100 bg-slate-50 py-10">
+          <div className="flex whitespace-nowrap animate-infinite-scroll">
+            {repeatedLogos.map((logo, index) => (
               <div
-                key={`${item}-${index}`}
-                className="flex min-w-[11rem] items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-6 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-slate-500"
+                key={`${logo}-${index}`}
+                className="mx-12 flex items-center text-2xl font-bold tracking-[0.24em] text-slate-300 opacity-70"
               >
-                {item}
+                {logo}
               </div>
             ))}
-          </motion.div>
-        </section>
-
-        <section className="bg-slate-900 px-6 py-24 text-white lg:px-8">
-          <div className="mx-auto max-w-7xl">
-            <SectionReveal className="max-w-3xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-300">
-                Trust Indicator
-              </p>
-              <h2 className="font-heading mt-6 text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-                신뢰를 숫자로 증명하는
-                <br />
-                AI 자동화 에이전시
-              </h2>
-            </SectionReveal>
-
-            <div className="mt-14 grid gap-6 md:grid-cols-3">
-              {data.stats.map((item, index) => (
-                <SectionReveal
-                  key={item.label}
-                  delay={index * 0.08}
-                  className="rounded-[2rem] border border-white/10 bg-white/5 p-8 backdrop-blur"
-                >
-                  <div className="text-5xl font-bold tracking-tight text-white md:text-6xl">
-                    <CountUpNumber value={item.value} suffix={item.suffix} />
-                  </div>
-                  <div className="mt-4 text-xl font-semibold text-white">{item.label}</div>
-                </SectionReveal>
-              ))}
-            </div>
           </div>
         </section>
 
-        <section id="portfolio" className="bg-white px-6 py-28 lg:px-8">
+        <section className="bg-slate-900 py-24">
+          <div className="mx-auto grid max-w-7xl gap-8 px-6 md:grid-cols-3">
+            <StatCounter end={150} label="누적 프로젝트" />
+            <StatCounter end={80} label="함께한 파트너" />
+            <StatCounter end={99} suffix="%" label="고객 만족도" />
+          </div>
+        </section>
+
+        <section id="solutions" className="px-6 py-32">
           <div className="mx-auto max-w-7xl">
-            <SectionReveal className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr]">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-600">
-                  Portfolio Showcase
+            <FadeUp>
+              <div className="mb-16 max-w-3xl">
+                <p className="mb-4 text-sm font-bold uppercase tracking-[0.22em] text-emerald-600">
+                  AI Solutions
                 </p>
-                <h2 className="font-heading mt-6 text-4xl font-bold leading-tight tracking-tight text-slate-900 md:text-6xl">
-                  디자인과 성과를
+                <h2 className="text-4xl font-black tracking-tight md:text-6xl">
+                  AI 수튜디오의 핵심은
                   <br />
-                  동시에 보여주는 구축 사례
+                  보기 좋은 디자인에서 끝나지 않습니다.
                 </h2>
               </div>
-              <p className="max-w-2xl text-lg leading-8 text-slate-600">
-                누끼토끼의 큼직한 썸네일 쇼케이스와 노베이스 클래스의 정돈된 타이포 구조를
-                합쳐, 사례 하나하나가 바로 신뢰로 이어지도록 구성했습니다.
-              </p>
-            </SectionReveal>
+            </FadeUp>
 
-            <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {data.portfolio.map((item, index) => (
-                <SectionReveal key={item.title} delay={index * 0.08}>
-                  <article className="group relative overflow-hidden rounded-[2rem] bg-slate-100">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-black/0 transition duration-500 group-hover:bg-black/35" />
-                    <div className="absolute inset-x-0 bottom-0 translate-y-8 p-7 text-white opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-                      <div className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-200">
-                        {item.category}
+            <div className="grid gap-8 md:grid-cols-3">
+              {solutions.map((item, index) => {
+                const Icon = item.icon
+                return (
+                  <FadeUp key={item.title} delay={index * 0.08}>
+                    <div className="rounded-[2rem] border border-slate-200 bg-slate-50 p-8">
+                      <div className="mb-6 inline-flex rounded-2xl bg-emerald-100 p-4 text-emerald-600">
+                        <Icon size={28} />
                       </div>
-                      <h3 className="font-heading mt-3 text-2xl font-bold tracking-tight">
-                        {item.title}
-                      </h3>
+                      <h3 className="mb-4 text-2xl font-black tracking-tight">{item.title}</h3>
+                      <p className="leading-8 text-slate-600">{item.description}</p>
                     </div>
-                    <div className="border-t border-slate-200 bg-white p-7">
-                      <div className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">
-                        {item.category}
+                  </FadeUp>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section id="portfolio" className="px-6 py-32">
+          <div className="mx-auto max-w-7xl">
+            <FadeUp>
+              <div className="mb-16 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+                <div>
+                  <h2 className="mb-4 text-4xl font-black tracking-tight md:text-5xl">PORTFOLIO</h2>
+                  <p className="text-lg text-slate-500">
+                    SULAB이 완성한 전문가형 AI 웹 솔루션 사례입니다.
+                  </p>
+                </div>
+                <a
+                  href={openChatUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-fit border-b-2 border-emerald-600 pb-1 font-bold text-emerald-600"
+                >
+                  더 보기
+                </a>
+              </div>
+            </FadeUp>
+
+            <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+              {portfolioItems.map((item, index) => (
+                <FadeUp key={item.title} delay={index * 0.06}>
+                  <article className="group cursor-pointer">
+                    <div className="relative mb-6 aspect-[4/3] overflow-hidden rounded-3xl bg-slate-200">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/45 opacity-0 transition-all group-hover:opacity-100">
+                        <span className="text-lg font-bold text-white">자세히 보기</span>
                       </div>
-                      <h3 className="font-heading mt-3 text-2xl font-bold tracking-tight text-slate-900">
-                        {item.title}
-                      </h3>
-                      <p className="mt-4 text-base leading-7 text-slate-600">{item.description}</p>
                     </div>
+                    <h3 className="mb-2 text-2xl font-bold">{item.title}</h3>
+                    <p className="text-slate-400">
+                      {item.tags.map((tag) => `#${tag}`).join(' ')}
+                    </p>
                   </article>
-                </SectionReveal>
+                </FadeUp>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="bg-slate-50 px-6 py-28 lg:px-8">
-          <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.85fr_1.15fr]">
-            <SectionReveal>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-600">
-                AI Estimate System
-              </p>
-              <h2 className="font-heading mt-6 text-4xl font-bold leading-tight tracking-tight text-slate-900 md:text-6xl">
-                초보 고객도 바로 이해하는
-                <br />
-                AI 자동 견적 시스템
-              </h2>
-              <p className="mt-8 max-w-xl text-lg leading-8 text-slate-600">
-                크몽과 아임웹 전문가 시장 단가를 반영해 현재 구성의 대략적인 제작 범위를
-                실시간으로 보여줍니다. 업종과 필요한 기능만 입력해도 상담 전 단계에서 방향을
-                빠르게 잡을 수 있습니다.
-              </p>
-              <div className="mt-10 rounded-[2rem] border border-slate-200 bg-white p-6">
-                <div className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-600">
-                  Quick Guide
-                </div>
-                <ul className="mt-4 space-y-3 text-sm leading-7 text-slate-600">
-                  <li>Standard: 간단한 소개형 랜딩이나 테스트 런칭에 적합합니다.</li>
-                  <li>Deluxe: 서비스 소개와 세부 페이지가 필요한 브랜드형 구축에 맞습니다.</li>
-                  <li>Premium: AI 자동화, 운영 효율, 외부 연동이 필요한 경우 선택합니다.</li>
-                </ul>
-              </div>
-            </SectionReveal>
-
-            <SectionReveal delay={0.08}>
-              <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-[0_24px_60px_rgba(15,23,42,0.06)]">
-                <div className="grid gap-6">
-                  <label className="block">
-                    <span className="text-sm font-semibold text-slate-900">업종</span>
-                    <input
-                      className="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-base text-slate-900 outline-none transition focus:border-emerald-500"
-                      placeholder="예: 무인 카페"
-                      value={industry}
-                      onChange={(event) => setIndustry(event.target.value)}
-                    />
-                    <span className="mt-2 block text-sm text-slate-400">
-                      예시: 무인 카페, AI 교육 플랫폼, 수익형 블로그 등
-                    </span>
-                  </label>
-
-                  <label className="block">
-                    <span className="text-sm font-semibold text-slate-900">필요 기능</span>
-                    <textarea
-                      className="mt-3 min-h-32 w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-base text-slate-900 outline-none transition focus:border-emerald-500"
-                      placeholder="예: 카카오톡 알림톡 연동"
-                      value={requestedFeatures}
-                      onChange={(event) => setRequestedFeatures(event.target.value)}
-                    />
-                    <span className="mt-2 block text-sm text-slate-400">
-                      예시: 카카오톡 알림톡 연동, 자동 포스팅 시스템, 실시간 예약
-                    </span>
-                  </label>
-
-                  <div>
-                    <div className="text-sm font-semibold text-slate-900">패키지 선택</div>
-                    <div className="mt-3 grid gap-3">
-                      {pricingPlans.map((plan) => (
-                        <label
-                          key={plan.id}
-                          className={`cursor-pointer rounded-2xl border p-5 transition ${
-                            selectedPlan === plan.id
-                              ? 'border-emerald-500 bg-emerald-50'
-                              : 'border-slate-200 bg-slate-50'
-                          }`}
-                        >
-                          <div className="flex items-start justify-between gap-4">
-                            <div>
-                              <div className="text-lg font-semibold text-slate-900">{plan.name}</div>
-                              <div className="mt-1 text-sm text-slate-500">{plan.summary}</div>
-                            </div>
-                            <div className="text-right">
-                              <div className="text-lg font-bold text-slate-900">
-                                {formatPrice(plan.basePrice)}
-                              </div>
-                              <input
-                                type="radio"
-                                name="pricing-plan"
-                                className="mt-2 h-4 w-4 accent-emerald-500"
-                                checked={selectedPlan === plan.id}
-                                onChange={() => setSelectedPlan(plan.id)}
-                              />
-                            </div>
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="text-sm font-semibold text-slate-900">옵션 추가</div>
-                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                      {pricingOptions.map((option) => (
-                        <label
-                          key={option.id}
-                          className={`cursor-pointer rounded-2xl border p-4 transition ${
-                            selectedOptions.includes(option.id)
-                              ? 'border-emerald-500 bg-emerald-50'
-                              : 'border-slate-200 bg-slate-50'
-                          }`}
-                        >
-                          <div className="flex items-start justify-between gap-3">
-                            <div>
-                              <div className="font-semibold text-slate-900">{option.name}</div>
-                              <div className="mt-1 text-sm text-slate-500">
-                                + {formatPrice(option.price)}
-                              </div>
-                            </div>
-                            <input
-                              type="checkbox"
-                              className="mt-1 h-4 w-4 accent-emerald-500"
-                              checked={selectedOptions.includes(option.id)}
-                              onChange={() => toggleOption(option.id)}
-                            />
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-8 rounded-[1.75rem] bg-slate-900 p-7 text-white">
-                  <div className="text-sm uppercase tracking-[0.18em] text-emerald-300">
-                    Estimated Quote
-                  </div>
-                  <div className="mt-4 text-4xl font-bold tracking-tight">
-                    {formatPrice(totalEstimate)}
-                  </div>
-                  <div className="mt-3 text-sm leading-7 text-slate-300">
-                    선택 패키지: {activePlan.name}
-                    {industry.trim() ? ` | 업종: ${industry.trim()}` : ''}
-                    {requestedFeatures.trim() ? ` | 기능: ${requestedFeatures.trim()}` : ''}
-                  </div>
-                  <p className="mt-5 rounded-2xl bg-white/5 px-4 py-4 text-sm leading-7 text-slate-100">
-                    이 구성은 현재 아임웹 전문가 시장에서 약 {formatPrice(marketValue)} 상당의
-                    가치를 가집니다.
+        <section id="contact" className="px-6 pb-28">
+          <div className="mx-auto max-w-7xl rounded-[2.5rem] bg-gradient-to-r from-emerald-600 to-slate-900 px-8 py-14 text-white md:px-14 md:py-20">
+            <FadeUp>
+              <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <p className="mb-4 text-sm font-bold uppercase tracking-[0.22em] text-emerald-100">
+                    Contact
                   </p>
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    <KakaoLinkButton
-                      href={KAKAO_OPENCHAT_URL}
-                      className="inline-flex rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-900 hover:bg-emerald-100"
-                    >
-                      이 견적대로 오픈톡 상담하기
-                    </KakaoLinkButton>
-                    <KakaoLinkButton
-                      href={KAKAO_OPENCHAT_URL}
-                      className="inline-flex rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
-                    >
-                      이 견적으로 10분 만에 기획안 초안 받기
-                    </KakaoLinkButton>
+                  <h2 className="max-w-4xl text-4xl font-black leading-tight tracking-tight md:text-6xl">
+                    고퀄리티 홈페이지로 브랜드 경쟁력을 높이고 싶다면?
+                  </h2>
+                  <div className="mt-6 flex items-center gap-2 text-emerald-100">
+                    <CheckCircle2 size={18} />
+                    <span>오픈톡으로 바로 연결되는 1:1 상담 동선 포함</span>
                   </div>
                 </div>
-              </div>
-            </SectionReveal>
-          </div>
-        </section>
 
-        <section id="contact" className="bg-white px-6 pb-20 lg:px-8">
-          <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-emerald-600 via-emerald-500 to-slate-900 px-8 py-14 text-white lg:px-14 lg:py-20">
-            <SectionReveal className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-100">
-                  Final CTA
-                </p>
-                <h2 className="font-heading mt-6 max-w-4xl text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-                  고퀄리티 홈페이지로 브랜드 경쟁력을 높이고 싶다면?
-                </h2>
+                <a
+                  href={openChatUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center rounded-2xl bg-white px-8 py-4 font-bold text-slate-900 transition-all hover:scale-105"
+                >
+                  문의하기
+                </a>
               </div>
-              <KakaoLinkButton
-                href={KAKAO_OPENCHAT_URL}
-                className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white px-8 py-4 text-sm font-semibold text-slate-900 hover:bg-slate-900 hover:text-white"
-              >
-                지금 상담하기
-              </KakaoLinkButton>
-            </SectionReveal>
+            </FadeUp>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-slate-200 bg-white px-6 py-10 lg:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <div>
-            <img
-              src="/sulab-logo.png"
-              alt="SULAB"
-              className="h-10 w-auto object-contain"
-            />
-            <div className="mt-3 text-sm text-slate-600">
-              상호명: {data.footer.company} | 대표자: {data.footer.owner}
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <a
-              href={data.footer.youtubeUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full border border-slate-200 p-3 text-slate-700 transition hover:border-emerald-500 hover:text-emerald-600"
-              aria-label="YouTube"
-            >
-              <YoutubeIcon />
-            </a>
-            <a
-              href={data.footer.instagramUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full border border-slate-200 p-3 text-slate-700 transition hover:border-emerald-500 hover:text-emerald-600"
-              aria-label="Instagram"
-            >
-              <InstagramIcon />
-            </a>
-          </div>
-        </div>
-      </footer>
-
-      <Chatbot currentIntent={chatIntent} onSelectIntent={setChatIntent} />
+      <a
+        href={openChatUrl}
+        target="_blank"
+        rel="noreferrer"
+        className="group fixed bottom-10 right-10 z-[100] flex items-center gap-2 rounded-2xl bg-[#FAE100] p-4 shadow-2xl transition-transform hover:scale-110"
+      >
+        <MessageCircle fill="black" />
+        <span className="max-w-0 overflow-hidden font-bold text-black transition-all duration-500 group-hover:max-w-xs">
+          오픈톡 문의
+        </span>
+      </a>
     </div>
   )
 }

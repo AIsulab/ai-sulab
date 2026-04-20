@@ -61,6 +61,12 @@
 }
 
 @layer components {
+  .font-brand {
+    font-family:
+      'Syncopate', 'Gmarket Sans', 'Pretendard Variable', 'Pretendard', Inter,
+      ui-sans-serif, system-ui, sans-serif;
+  }
+
   .font-heading {
     font-family:
       'Gmarket Sans', 'Pretendard Variable', 'Pretendard', Inter, ui-sans-serif,
