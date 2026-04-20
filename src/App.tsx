@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import type { ReactNode } from 'react'
 import type { FormEvent } from 'react'
 import { motion, useInView } from 'framer-motion'
 import siteData from '../site.config.json'
@@ -9,21 +10,22 @@ type NavItem = {
 }
 
 type Hero = {
-  badge: string
+  label: string
   title: string
   subtitle: string
   primaryCta: string
   secondaryCta: string
 }
 
-type Intro = {
-  headline: string
-  mission: string
+type Story = {
+  label: string
+  title: string
   description: string
+  image: string
 }
 
 type ValueItem = {
-  icon: string
+  number: string
   title: string
   description: string
 }
@@ -35,12 +37,6 @@ type StatItem = {
   description: string
 }
 
-type AutomationItem = {
-  title: string
-  description: string
-  detail: string
-}
-
 type PortfolioItem = {
   title: string
   category: string
@@ -48,7 +44,12 @@ type PortfolioItem = {
   image: string
 }
 
-type ContactInfo = {
+type PartnerItem = {
+  name: string
+}
+
+type Contact = {
+  label: string
   title: string
   description: string
   email: string
@@ -64,25 +65,24 @@ type SiteData = {
   seo_keywords: string[]
   nav: NavItem[]
   hero: Hero
-  intro: Intro
+  story: Story
   values: ValueItem[]
   stats: StatItem[]
-  automation: AutomationItem[]
   portfolio: PortfolioItem[]
-  partners: string[]
-  contact: ContactInfo
+  partners: PartnerItem[]
+  contact: Contact
 }
 
-type ContactForm = {
+type InquiryForm = {
   company: string
   name: string
-  inquiry: string
+  message: string
 }
 
 const data = siteData as SiteData
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0, y: 32 },
   visible: { opacity: 1, y: 0 },
 }
 
@@ -112,7 +112,7 @@ function CountUpNumber({
   suffix: string
 }) {
   const ref = useRef<HTMLSpanElement | null>(null)
-  const isInView = useInView(ref, { once: true, amount: 0.6 })
+  const isInView = useInView(ref, { once: true, amount: 0.65 })
   const [displayValue, setDisplayValue] = useState(0)
 
   useEffect(() => {
@@ -122,7 +122,7 @@ function CountUpNumber({
 
     let frame = 0
     let animationFrame = 0
-    const totalFrames = 54
+    const totalFrames = 56
 
     const animate = () => {
       frame += 1
@@ -148,11 +148,34 @@ function CountUpNumber({
   )
 }
 
+function SectionReveal({
+  children,
+  className = '',
+  delay = 0,
+}: {
+  children: ReactNode
+  className?: string
+  delay?: number
+}) {
+  return (
+    <motion.div
+      className={className}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={fadeUp}
+      transition={{ duration: 0.8, delay, ease: smoothEase }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
 export default function App() {
-  const [form, setForm] = useState<ContactForm>({
+  const [form, setForm] = useState<InquiryForm>({
     company: '',
     name: '',
-    inquiry: '',
+    message: '',
   })
   const [submitted, setSubmitted] = useState(false)
 
@@ -170,389 +193,275 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900">
-      <div className="fixed inset-x-0 top-0 z-50 border-b border-zinc-200/80 bg-white/90 backdrop-blur-xl">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <a href="#top" className="text-lg font-extrabold tracking-[0.18em] text-zinc-900">
+    <div className="min-h-screen bg-white text-[#111111]">
+      <header className="sticky top-0 z-50 border-b border-[#EEEEEE] bg-white/95 backdrop-blur">
+        <div className="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-5">
+          <a href="#top" className="text-base font-black tracking-[-0.05em] text-[#111111]">
             SUTUDIO
           </a>
-          <div className="hidden items-center gap-8 md:flex">
+          <nav className="hidden items-center gap-8 md:flex">
             {data.nav.map((item) => (
               <a
                 key={item.id}
                 href={`#${item.id}`}
-                className="text-sm font-semibold text-zinc-600 transition hover:text-zinc-950"
+                className="text-sm font-semibold text-[#666666] transition hover:text-[#111111]"
               >
                 {item.label}
               </a>
             ))}
-          </div>
+          </nav>
           <a
             href="#contact"
-            className="rounded-full border border-zinc-200 px-5 py-2 text-sm font-semibold text-zinc-900 transition hover:border-emerald-600 hover:text-emerald-700"
+            className="text-sm font-semibold text-[#111111] transition hover:text-emerald-700"
           >
-            협업 문의
+            Contact
           </a>
-        </nav>
-      </div>
+        </div>
+      </header>
 
-      <main id="top" className="pt-24">
-        <section className="relative overflow-hidden px-6 pb-20 pt-14">
-          <div className="absolute inset-x-0 top-0 -z-10 mx-auto h-[32rem] max-w-6xl rounded-full bg-emerald-100/70 blur-3xl" />
-          <motion.div
-            className="mx-auto grid max-w-7xl gap-10 rounded-[2.5rem] border border-zinc-200 bg-white px-8 py-12 shadow-[0_30px_100px_rgba(24,24,27,0.06)] lg:grid-cols-[1.15fr_0.85fr] lg:px-14 lg:py-16"
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            transition={{ duration: 0.9, ease: smoothEase }}
-          >
-            <div>
-              <div className="inline-flex rounded-full bg-emerald-50 px-4 py-2 text-sm font-bold tracking-[0.18em] text-emerald-700">
-                {data.hero.badge}
+      <main id="top">
+        <section className="bg-white px-6 py-32 md:py-40">
+          <SectionReveal className="mx-auto max-w-[1200px]">
+            <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#666666]">
+              {data.hero.label}
+            </p>
+            <div className="mt-6 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+              <div>
+                <h1 className="max-w-5xl text-5xl font-black leading-[0.94] tracking-[-0.05em] text-[#111111] md:text-7xl">
+                  {data.hero.title}
+                </h1>
               </div>
-              <h1 className="mt-8 max-w-4xl text-5xl font-extrabold leading-[0.92] tracking-tight text-zinc-950 md:text-7xl">
-                {data.hero.title}
-              </h1>
-              <p className="mt-7 max-w-2xl text-lg leading-8 text-zinc-600 md:text-xl">
-                {data.hero.subtitle}
-              </p>
-              <div className="mt-10 flex flex-wrap gap-4">
-                <a
-                  href="#contact"
-                  className="rounded-full bg-zinc-950 px-7 py-4 text-sm font-bold text-white transition hover:bg-emerald-700"
-                >
-                  {data.hero.primaryCta}
-                </a>
-                <a
-                  href="#portfolio"
-                  className="rounded-full border border-zinc-200 px-7 py-4 text-sm font-bold text-zinc-900 transition hover:border-zinc-400"
-                >
-                  {data.hero.secondaryCta}
-                </a>
+              <div>
+                <p className="max-w-xl text-base leading-[1.6] text-[#666666] md:text-lg">
+                  {data.hero.subtitle}
+                </p>
+                <div className="mt-10 flex flex-wrap gap-4">
+                  <a
+                    href="#contact"
+                    className="border border-[#111111] px-6 py-3 text-sm font-semibold text-[#111111] transition hover:bg-[#111111] hover:text-white"
+                  >
+                    {data.hero.primaryCta}
+                  </a>
+                  <a
+                    href="#portfolio"
+                    className="border border-[#EEEEEE] px-6 py-3 text-sm font-semibold text-[#111111] transition hover:border-[#111111]"
+                  >
+                    {data.hero.secondaryCta}
+                  </a>
+                </div>
               </div>
             </div>
-
-            <div className="grid gap-4 self-end">
-              {data.stats.slice(0, 2).map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  className="rounded-[2rem] bg-zinc-50 p-7"
-                  initial="hidden"
-                  animate="visible"
-                  variants={fadeUp}
-                  transition={{ duration: 0.8, delay: 0.15 + index * 0.08, ease: smoothEase }}
-                >
-                  <div className="text-sm font-bold uppercase tracking-[0.2em] text-zinc-500">
-                    {stat.label}
-                  </div>
-                  <div className="mt-3 text-5xl font-extrabold tracking-tight text-zinc-950">
-                    <CountUpNumber value={stat.value} suffix={stat.suffix} />
-                  </div>
-                  <p className="mt-3 text-sm leading-6 text-zinc-600">{stat.description}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+          </SectionReveal>
         </section>
 
-        <section id="about" className="px-6 py-20">
-          <motion.div
-            className="mx-auto grid max-w-7xl gap-10 border-t border-zinc-200 pt-16 lg:grid-cols-[1fr_0.9fr]"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-            variants={fadeUp}
-            transition={{ duration: 0.8, ease: smoothEase }}
-          >
-            <div>
-              <p className="text-sm font-bold uppercase tracking-[0.28em] text-emerald-700">
-                About SUTUDIO
+        <section id="about" className="bg-[#F8F8F8] px-6 py-32 md:py-40">
+          <div className="mx-auto grid max-w-[1200px] gap-16 lg:grid-cols-[0.7fr_1.3fr] lg:items-center">
+            <SectionReveal>
+              <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#666666]">
+                {data.story.label}
               </p>
-              <h2 className="mt-6 max-w-4xl text-4xl font-extrabold leading-tight tracking-tight text-zinc-950 md:text-6xl">
-                {data.intro.headline}
+              <h2 className="mt-6 text-4xl font-black leading-[1.02] tracking-[-0.05em] text-[#111111] md:text-6xl">
+                {data.story.title}
               </h2>
-            </div>
-            <div className="max-w-2xl">
-              <p className="text-2xl font-bold leading-10 text-zinc-900">{data.intro.mission}</p>
-              <p className="mt-6 text-lg leading-8 text-zinc-600">{data.intro.description}</p>
-            </div>
-          </motion.div>
+              <p className="mt-8 max-w-md text-base leading-[1.6] text-[#666666]">
+                {data.story.description}
+              </p>
+            </SectionReveal>
+
+            <SectionReveal delay={0.08}>
+              <img
+                src={data.story.image}
+                alt={data.story.title}
+                className="aspect-[16/9] w-full object-cover"
+                loading="lazy"
+              />
+            </SectionReveal>
+          </div>
         </section>
 
-        <section className="px-6 py-8">
-          <div className="mx-auto max-w-7xl">
-            <motion.div
-              className="max-w-3xl"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={fadeUp}
-              transition={{ duration: 0.75, ease: smoothEase }}
-            >
-              <p className="text-sm font-bold uppercase tracking-[0.28em] text-emerald-700">
-                Core Value
+        <section className="bg-white px-6 py-32 md:py-40">
+          <div className="mx-auto max-w-[1200px]">
+            <SectionReveal>
+              <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#666666]">
+                Values
               </p>
-              <h2 className="mt-5 text-4xl font-extrabold tracking-tight text-zinc-950 md:text-5xl">
-                AI 수튜디오가 일하는 방식
+              <h2 className="mt-6 text-4xl font-black leading-[1.02] tracking-[-0.05em] text-[#111111] md:text-6xl">
+                수튜디오가 집중하는 핵심 가치
               </h2>
-            </motion.div>
+            </SectionReveal>
 
-            <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
+            <div className="mt-16 grid gap-10 md:grid-cols-3">
               {data.values.map((item, index) => (
-                <motion.div
-                  key={item.title}
-                  className="rounded-[2rem] bg-zinc-50 p-7"
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.2 }}
-                  variants={fadeUp}
-                  transition={{ duration: 0.65, delay: index * 0.08, ease: smoothEase }}
+                <SectionReveal
+                  key={item.number}
+                  delay={index * 0.08}
+                  className="border-t border-[#EEEEEE] pt-8"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-lg font-bold text-emerald-700 shadow-sm">
-                    {item.icon}
+                  <div className="text-4xl font-light tracking-[-0.05em] text-[#AAAAAA]">
+                    {item.number}
                   </div>
-                  <h3 className="mt-6 text-2xl font-extrabold tracking-tight text-zinc-950">
+                  <h3 className="mt-6 text-2xl font-black tracking-[-0.05em] text-[#111111]">
                     {item.title}
                   </h3>
-                  <p className="mt-4 text-base leading-7 text-zinc-600">{item.description}</p>
-                </motion.div>
+                  <p className="mt-4 text-base leading-[1.6] text-[#666666]">
+                    {item.description}
+                  </p>
+                </SectionReveal>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="automation" className="px-6 py-24">
-          <div className="mx-auto max-w-7xl rounded-[2.5rem] bg-zinc-950 px-8 py-12 text-white lg:px-14 lg:py-16">
-            <motion.div
-              className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={fadeUp}
-              transition={{ duration: 0.8, ease: smoothEase }}
-            >
-              <div>
-                <p className="text-sm font-bold uppercase tracking-[0.28em] text-emerald-300">
-                  Automation
-                </p>
-                <h2 className="mt-5 text-4xl font-extrabold tracking-tight md:text-5xl">
-                  유튜브부터 웹빌더까지
-                  <br />
-                  AI 자동화 솔루션을 설계합니다
-                </h2>
-              </div>
-              <div className="grid gap-4">
-                {data.automation.map((item, index) => (
-                  <motion.div
-                    key={item.title}
-                    className="rounded-[2rem] border border-white/10 bg-white/5 p-7"
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.2 }}
-                    variants={fadeUp}
-                    transition={{ duration: 0.65, delay: index * 0.08, ease: smoothEase }}
-                  >
-                    <div className="text-sm font-bold uppercase tracking-[0.18em] text-emerald-300">
-                      {item.detail}
-                    </div>
-                    <h3 className="mt-3 text-2xl font-extrabold tracking-tight text-white">
-                      {item.title}
-                    </h3>
-                    <p className="mt-3 text-base leading-7 text-zinc-300">{item.description}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        <section className="px-6 py-2">
-          <div className="mx-auto max-w-7xl">
-            <motion.div
-              className="max-w-3xl"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={fadeUp}
-              transition={{ duration: 0.75, ease: smoothEase }}
-            >
-              <p className="text-sm font-bold uppercase tracking-[0.28em] text-emerald-700">
+        <section className="bg-[#F8F8F8] px-6 py-32 md:py-40">
+          <div className="mx-auto max-w-[1200px]">
+            <SectionReveal>
+              <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#666666]">
                 Numbers
               </p>
-              <h2 className="mt-5 text-4xl font-extrabold tracking-tight text-zinc-950 md:text-5xl">
-                숫자로 증명하는 자동화 구축 성과
+              <h2 className="mt-6 text-4xl font-black leading-[1.02] tracking-[-0.05em] text-[#111111] md:text-6xl">
+                자동화 구축 성과를 숫자로 보여줍니다
               </h2>
-            </motion.div>
+            </SectionReveal>
 
-            <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-              {data.stats.map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  className="rounded-[2rem] border border-zinc-200 bg-white p-8 shadow-[0_20px_50px_rgba(24,24,27,0.04)]"
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.2 }}
-                  variants={fadeUp}
-                  transition={{ duration: 0.65, delay: index * 0.08, ease: smoothEase }}
-                >
-                  <div className="text-5xl font-extrabold tracking-tight text-zinc-950">
-                    <CountUpNumber value={stat.value} suffix={stat.suffix} />
+            <div className="mt-16 grid gap-10 md:grid-cols-2 xl:grid-cols-4">
+              {data.stats.map((item, index) => (
+                <SectionReveal key={item.label} delay={index * 0.08}>
+                  <div className="border-t border-[#EEEEEE] pt-8">
+                    <div className="text-5xl font-black tracking-[-0.05em] text-[#111111] md:text-6xl">
+                      <CountUpNumber value={item.value} suffix={item.suffix} />
+                    </div>
+                    <h3 className="mt-5 text-xl font-black tracking-[-0.05em] text-[#111111]">
+                      {item.label}
+                    </h3>
+                    <p className="mt-4 text-base leading-[1.6] text-[#666666]">
+                      {item.description}
+                    </p>
                   </div>
-                  <div className="mt-4 text-xl font-bold text-zinc-900">{stat.label}</div>
-                  <p className="mt-3 text-sm leading-6 text-zinc-600">{stat.description}</p>
-                </motion.div>
+                </SectionReveal>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="portfolio" className="px-6 py-24">
-          <div className="mx-auto max-w-7xl">
-            <motion.div
-              className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={fadeUp}
-              transition={{ duration: 0.75, ease: smoothEase }}
-            >
-              <div className="max-w-3xl">
-                <p className="text-sm font-bold uppercase tracking-[0.28em] text-emerald-700">
+        <section id="portfolio" className="bg-white px-6 py-32 md:py-40">
+          <div className="mx-auto max-w-[1200px]">
+            <SectionReveal className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr]">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#666666]">
                   Portfolio
                 </p>
-                <h2 className="mt-5 text-4xl font-extrabold tracking-tight text-zinc-950 md:text-5xl">
-                  구축 사례와 시안으로 보는
-                  <br />
-                  수튜디오의 결과물
+                <h2 className="mt-6 text-4xl font-black leading-[1.02] tracking-[-0.05em] text-[#111111] md:text-6xl">
+                  브랜드와 자동화의 결과물을 한 화면에서 보여줍니다
                 </h2>
               </div>
-              <p className="max-w-2xl text-lg leading-8 text-zinc-600">
-                브랜드의 결을 살리면서도 실제 문의와 매출 전환으로 이어지는 구조를 우선으로
-                설계합니다.
+              <p className="max-w-2xl text-base leading-[1.6] text-[#666666] md:text-lg">
+                시안은 보기 좋게 끝나지 않고 실제 문의와 운영 효율로 이어져야 합니다. 수튜디오는
+                브랜드 사이트와 자동화 시스템을 하나의 비즈니스 흐름으로 설계합니다.
               </p>
-            </motion.div>
+            </SectionReveal>
 
-            <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-16 grid gap-10 md:grid-cols-2 xl:grid-cols-3">
               {data.portfolio.map((item, index) => (
-                <motion.article
-                  key={item.title}
-                  className="overflow-hidden rounded-[2rem] bg-zinc-50"
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.2 }}
-                  variants={fadeUp}
-                  transition={{ duration: 0.65, delay: index * 0.08, ease: smoothEase }}
-                >
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="h-80 w-full object-cover"
-                    loading="lazy"
-                  />
-                  <div className="p-7">
-                    <div className="text-sm font-bold uppercase tracking-[0.18em] text-emerald-700">
-                      {item.category}
+                <SectionReveal key={item.title} delay={index * 0.08}>
+                  <article>
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="aspect-[4/5] w-full object-cover"
+                      loading="lazy"
+                    />
+                    <div className="mt-8">
+                      <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#666666]">
+                        {item.category}
+                      </p>
+                      <h3 className="mt-4 text-2xl font-black tracking-[-0.05em] text-[#111111]">
+                        {item.title}
+                      </h3>
+                      <p className="mt-4 text-base leading-[1.6] text-[#666666]">
+                        {item.description}
+                      </p>
                     </div>
-                    <h3 className="mt-3 text-3xl font-extrabold tracking-tight text-zinc-950">
-                      {item.title}
-                    </h3>
-                    <p className="mt-4 text-base leading-7 text-zinc-600">{item.description}</p>
-                  </div>
-                </motion.article>
+                  </article>
+                </SectionReveal>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="overflow-hidden border-y border-zinc-200 py-8">
+        <section className="overflow-hidden border-y border-[#EEEEEE] bg-[#F8F8F8] py-10">
           <div className="logo-marquee">
             <div className="logo-track">
-              {[...data.partners, ...data.partners].map((partner, index) => (
+              {[...data.partners, ...data.partners].map((item, index) => (
                 <div
-                  key={`${partner}-${index}`}
-                  className="mx-3 flex min-w-[13rem] items-center justify-center rounded-full border border-zinc-200 bg-zinc-50 px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-zinc-500"
+                  key={`${item.name}-${index}`}
+                  className="mx-3 flex min-w-[14rem] items-center justify-center border border-[#EEEEEE] bg-white px-6 py-4 text-sm font-semibold tracking-[0.18em] text-[#666666]"
                 >
-                  {partner}
+                  {item.name}
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="contact" className="px-6 py-24">
-          <div className="mx-auto grid max-w-7xl gap-8 rounded-[2.5rem] bg-zinc-50 p-8 lg:grid-cols-[0.8fr_1.2fr] lg:p-14">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={fadeUp}
-              transition={{ duration: 0.75, ease: smoothEase }}
-            >
-              <p className="text-sm font-bold uppercase tracking-[0.28em] text-emerald-700">
-                Contact
+        <section id="contact" className="bg-white px-6 py-32 md:py-40">
+          <div className="mx-auto grid max-w-[1200px] gap-16 lg:grid-cols-[0.75fr_1.25fr]">
+            <SectionReveal>
+              <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#666666]">
+                {data.contact.label}
               </p>
-              <h2 className="mt-5 text-4xl font-extrabold tracking-tight text-zinc-950 md:text-5xl">
+              <h2 className="mt-6 text-4xl font-black leading-[1.02] tracking-[-0.05em] text-[#111111] md:text-6xl">
                 {data.contact.title}
               </h2>
-              <p className="mt-6 text-lg leading-8 text-zinc-600">{data.contact.description}</p>
-              <div className="mt-8 rounded-[1.75rem] bg-white p-6 shadow-sm">
-                <div className="text-sm font-bold uppercase tracking-[0.18em] text-zinc-500">
-                  Email
-                </div>
-                <a
-                  href={`mailto:${data.contact.email}`}
-                  className="mt-3 block text-xl font-bold text-zinc-950"
-                >
-                  {data.contact.email}
-                </a>
-              </div>
-            </motion.div>
-
-            <motion.form
-              className="grid gap-4"
-              onSubmit={handleSubmit}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={fadeUp}
-              transition={{ duration: 0.8, delay: 0.08, ease: smoothEase }}
-            >
-              <input
-                className="rounded-2xl border border-zinc-200 bg-white px-5 py-4 text-base text-zinc-900 outline-none transition focus:border-emerald-600"
-                placeholder="회사명 또는 브랜드명"
-                value={form.company}
-                onChange={(event) =>
-                  setForm((current) => ({ ...current, company: event.target.value }))
-                }
-              />
-              <input
-                className="rounded-2xl border border-zinc-200 bg-white px-5 py-4 text-base text-zinc-900 outline-none transition focus:border-emerald-600"
-                placeholder="담당자명"
-                value={form.name}
-                onChange={(event) =>
-                  setForm((current) => ({ ...current, name: event.target.value }))
-                }
-              />
-              <textarea
-                className="min-h-48 rounded-2xl border border-zinc-200 bg-white px-5 py-4 text-base text-zinc-900 outline-none transition focus:border-emerald-600"
-                placeholder="자동화하고 싶은 업무, 필요한 페이지, 기대하는 결과를 적어주세요."
-                value={form.inquiry}
-                onChange={(event) =>
-                  setForm((current) => ({ ...current, inquiry: event.target.value }))
-                }
-              />
-              <button
-                type="submit"
-                className="rounded-full bg-zinc-950 px-7 py-4 text-sm font-bold text-white transition hover:bg-emerald-700"
+              <p className="mt-8 max-w-md text-base leading-[1.6] text-[#666666]">
+                {data.contact.description}
+              </p>
+              <a
+                href={`mailto:${data.contact.email}`}
+                className="mt-8 inline-block text-lg font-black tracking-[-0.05em] text-[#111111]"
               >
-                {data.contact.cta}
-              </button>
-              {submitted ? (
-                <p className="text-sm text-emerald-700">
-                  문의 내용이 정리되었습니다. 실제 연동 전 단계이므로 현재는 화면에서만 확인됩니다.
-                </p>
-              ) : null}
-            </motion.form>
+                {data.contact.email}
+              </a>
+            </SectionReveal>
+
+            <SectionReveal delay={0.08}>
+              <form className="grid gap-4" onSubmit={handleSubmit}>
+                <input
+                  className="border border-[#EEEEEE] bg-[#F8F8F8] px-5 py-4 text-base text-[#111111] outline-none transition focus:border-[#111111]"
+                  placeholder="회사명 또는 브랜드명"
+                  value={form.company}
+                  onChange={(event) =>
+                    setForm((current) => ({ ...current, company: event.target.value }))
+                  }
+                />
+                <input
+                  className="border border-[#EEEEEE] bg-[#F8F8F8] px-5 py-4 text-base text-[#111111] outline-none transition focus:border-[#111111]"
+                  placeholder="담당자명"
+                  value={form.name}
+                  onChange={(event) =>
+                    setForm((current) => ({ ...current, name: event.target.value }))
+                  }
+                />
+                <textarea
+                  className="min-h-56 border border-[#EEEEEE] bg-[#F8F8F8] px-5 py-4 text-base leading-[1.6] text-[#111111] outline-none transition focus:border-[#111111]"
+                  placeholder="자동화하고 싶은 업무와 필요한 결과를 적어주세요."
+                  value={form.message}
+                  onChange={(event) =>
+                    setForm((current) => ({ ...current, message: event.target.value }))
+                  }
+                />
+                <button
+                  type="submit"
+                  className="mt-2 w-fit border border-[#111111] px-6 py-3 text-sm font-semibold text-[#111111] transition hover:bg-[#111111] hover:text-white"
+                >
+                  {data.contact.cta}
+                </button>
+                {submitted ? (
+                  <p className="text-sm text-[#666666]">
+                    문의 내용이 정리되었습니다. 현재는 화면 상에서만 제출 상태를 확인합니다.
+                  </p>
+                ) : null}
+              </form>
+            </SectionReveal>
           </div>
         </section>
       </main>
