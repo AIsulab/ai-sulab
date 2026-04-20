@@ -1,1 +1,17 @@
-﻿{"title":"SULAB 공식 홈페이지 | AI 마케팅 & 홈페이지 제작 연구소","description":"AI 기술로 홈페이지 제작과 마케팅 자동화를 구현하는 대한민국 AI 전문기업 수랩(SULAB). 워드프레스-웹플로우-노코드 플랫폼 기반 맞춤형 웹사이트 구축부터 콘텐츠 자동화까지, AI가 효율을 디자인합니다.","lang":"ko","googleAnalyticsId":"G-WRFSF1X8F6","favicon":"/favicon.png","socialImage": "https://sulab.store/social-1200x630.png"}
+{
+  "siteMetadata": {
+    "title": "SULAB | AI 자동화 연구소",
+    "description": "AI 에이전트 기반 업무 자동화 솔루션",
+    "themeColor": "#000000",
+    "category": "Technology" 
+  },
+  "content": {
+    "heroTitle": "자면서도 수익이 발생하는 AI 시스템",
+    "heroSubtitle": "이진수 님의 1인 AI 자동화 사업을 위한 맞춤형 솔루션",
+    "features": [
+      { "title": "유튜브 자동화", "desc": "AI가 기획부터 업로드까지" },
+      { "title": "웹 구축 자동화", "desc": "클릭 한 번으로 배포되는 사이트" },
+      { "title": "마케팅 자동화", "desc": "24시간 작동하는 수익 파이프라인" }
+    ]
+  }
+}
