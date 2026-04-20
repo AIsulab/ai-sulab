@@ -3,9 +3,9 @@ import { AnimatePresence, motion } from 'framer-motion'
 import {
   ArrowRight,
   CheckCircle2,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
-  ChevronDown,
   MessageCircle,
   Sparkles,
   Star,
@@ -388,7 +388,7 @@ export default function App() {
           <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-600">
-                대표님의 비즈니스를 위한 선택
+                AI 수튜디오 비즈니스를 위한 선택
               </p>
               <h1 className="mt-8 max-w-4xl text-6xl font-black leading-[0.92] tracking-tight md:text-8xl">
                 대표님들의
@@ -463,10 +463,10 @@ export default function App() {
           </motion.div>
         </section>
 
-        <section className="px-6 py-24 lg:px-8">
+        <section id="service" className="px-6 py-24 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <SectionTitle
-              eyebrow="왜 선택할까요"
+              eyebrow="선택 이유"
               title="신뢰감 있는 구조와 설득력 있는 흐름으로"
               description="훑어보기만 해도 믿음이 생기는 레이아웃을 유지하면서, AI 수튜디오의 자동화 역량과 상담 전환 기능을 함께 넣었습니다."
             />
@@ -475,18 +475,18 @@ export default function App() {
               {[
                 {
                   icon: CheckCircle2,
-                  title: '전문가형 신뢰 구조',
-                  text: '대표님들이 가장 먼저 보는 첫인상을 안정적으로 구성합니다.',
+                  title: '전문가형 구조',
+                  text: '대표님이 원하는 순간에 핵심 정보를 먼저 보여줍니다.',
                 },
                 {
                   icon: Star,
-                  title: '실적 기반 사회적 증거',
-                  text: '숫자, 사례, 후기, 로고를 함께 배치해 신뢰를 빠르게 만듭니다.',
+                  title: '실적 기반 신뢰',
+                  text: '숫자, 후기, 로고, 사례를 균형 있게 배치합니다.',
                 },
                 {
                   icon: Zap,
-                  title: '전환 동선 최적화',
-                  text: '문의하기, 오픈톡, 견적 시스템을 한 흐름으로 연결합니다.',
+                  title: '전환 최적화',
+                  text: '문의하기와 오픈톡 동선을 자연스럽게 연결합니다.',
                 },
               ].map((item) => {
                 const Icon = item.icon
@@ -500,6 +500,48 @@ export default function App() {
                   </div>
                 )
               })}
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-white px-6 py-24 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+              <SectionTitle
+                eyebrow="신뢰받는 선택"
+                title="SULAB과 함께하는 기업들"
+                description="업종을 불문하고 다양한 기업들과 협력하며, 맞춤형 AI 자동화 솔루션을 통해 실질적인 성과를 이끌어냅니다."
+              />
+              <div className="rounded-[2rem] border border-slate-200 bg-slate-50 px-6 py-5 text-sm leading-7 text-slate-600">
+                실적, 후기, 로고, 사례를 한 화면에 정리해 고객이 첫 방문만으로도 전문성과 신뢰를
+                느낄 수 있도록 구성했습니다.
+              </div>
+            </div>
+
+            <div className="mt-12 overflow-hidden rounded-[2.5rem] border border-slate-200 bg-slate-50/80 py-6 shadow-[0_20px_60px_rgba(15,23,42,0.05)]">
+              <div className="flex items-center">
+                <div className="flex min-w-max animate-infinite-scroll items-center gap-4 px-6">
+                  {[...caseTiles, ...caseTiles].map((tile, index) => (
+                    <div
+                      key={`${tile}-${index}`}
+                      className="flex h-16 min-w-[12rem] items-center justify-center rounded-full border border-slate-200 bg-white px-6 text-sm font-semibold tracking-[0.14em] text-slate-500 transition hover:-translate-y-0.5 hover:text-emerald-600"
+                    >
+                      {tile}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 grid gap-3 md:grid-cols-3">
+              {['업종별 맞춤 구성', '상담 전환 최적화', '반복 노출되는 신뢰 요소'].map((item) => (
+                <div
+                  key={item}
+                  className="rounded-[1.5rem] border border-slate-200 bg-white px-5 py-4 text-center text-sm font-semibold tracking-[0.12em] text-slate-600"
+                >
+                  {item}
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -559,21 +601,31 @@ export default function App() {
         <section className="border-y border-slate-200 bg-slate-50 px-6 py-16 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <SectionTitle
-              eyebrow="신뢰받는 선택"
-              title="AI 수튜디오와 함께하는 기업들"
-              description="업종을 불문하고 다양한 브랜드와 협력하는 느낌을 그대로 살렸습니다."
+              eyebrow="신뢰 요소"
+              title="SULAB과 함께하는 기업들"
+              description="업종을 불문하고 다양한 기업들과 협력하며, 맞춤형 AI 자동화 솔루션을 통해 실질적인 성과를 이끌어냅니다."
             />
-            <div className="logo-marquee mt-12">
-              <div className="logo-track gap-4">
+            <div className="mt-12 overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white/80 py-6 shadow-[0_20px_60px_rgba(15,23,42,0.05)]">
+              <div className="flex min-w-max animate-infinite-scroll items-center gap-4 px-6">
                 {[...caseTiles, ...caseTiles].map((tile, index) => (
                   <div
                     key={`${tile}-${index}`}
-                    className="flex min-w-[12rem] items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-4 text-sm font-semibold text-slate-500"
+                    className="flex h-16 min-w-[12rem] items-center justify-center rounded-full border border-slate-200 bg-white px-6 text-sm font-semibold tracking-[0.14em] text-slate-500 transition hover:-translate-y-0.5 hover:text-emerald-600"
                   >
                     {tile}
                   </div>
                 ))}
               </div>
+            </div>
+            <div className="mt-6 grid gap-3 md:grid-cols-3">
+              {['업종별 맞춤 구성', '상담 전환 최적화', '반복 노출되는 신뢰 요소'].map((item) => (
+                <div
+                  key={item}
+                  className="rounded-[1.5rem] border border-slate-200 bg-white px-5 py-4 text-center text-sm font-semibold tracking-[0.12em] text-slate-600"
+                >
+                  {item}
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -597,7 +649,7 @@ export default function App() {
           <div className="mx-auto max-w-7xl">
             <SectionTitle
               eyebrow="Class"
-              title="AI 웹 클래스 느낌의 교육/상품 영역"
+              title="AI 웹클래스 느낌의 교육/상품 영역"
               description="교육과 상품 카테고리를 하단에 두어 실제 사이트처럼 확장 가능한 구조로 만들었습니다."
             />
             <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
@@ -653,20 +705,38 @@ export default function App() {
                 }}
               >
                 <div className="grid gap-4 md:grid-cols-2">
-                  <input className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white placeholder:text-white/60 outline-none" placeholder="업체명" />
-                  <input className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white placeholder:text-white/60 outline-none" placeholder="성함 / 직책" />
+                  <input
+                    className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white placeholder:text-white/60 outline-none"
+                    placeholder="업체명"
+                  />
+                  <input
+                    className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white placeholder:text-white/60 outline-none"
+                    placeholder="성함 / 직책"
+                  />
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
-                  <input className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white placeholder:text-white/60 outline-none" placeholder="연락처" />
-                  <input className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white placeholder:text-white/60 outline-none" placeholder="이메일 주소" />
+                  <input
+                    className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white placeholder:text-white/60 outline-none"
+                    placeholder="연락처"
+                  />
+                  <input
+                    className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white placeholder:text-white/60 outline-none"
+                    placeholder="이메일 주소"
+                  />
                 </div>
                 <textarea
                   className="min-h-32 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white placeholder:text-white/60 outline-none"
                   placeholder="프로젝트에 대해 간단히 설명해주세요"
                 />
                 <div className="grid gap-4 md:grid-cols-2">
-                  <input className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white placeholder:text-white/60 outline-none" placeholder="벤치마킹 사이트" />
-                  <input className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white placeholder:text-white/60 outline-none" placeholder="희망 예산" />
+                  <input
+                    className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white placeholder:text-white/60 outline-none"
+                    placeholder="벤치마킹 사이트"
+                  />
+                  <input
+                    className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white placeholder:text-white/60 outline-none"
+                    placeholder="희망 예산"
+                  />
                 </div>
                 <label className="flex items-start gap-3 text-sm text-emerald-50/90">
                   <input type="checkbox" className="mt-1 h-4 w-4 accent-white" />
