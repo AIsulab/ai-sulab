@@ -5,12 +5,8 @@ import {
   ArrowDown,
   ArrowRight,
   Boxes,
-  Building2,
   ChartNoAxesCombined,
-  CircleCheckBig,
   Menu,
-  PenTool,
-  Rocket,
   ShoppingCart,
   SquareTerminal,
   X,
@@ -334,17 +330,17 @@ export default function App() {
             </div>
 
             <div className="col-span-12 mt-10 grid grid-cols-12 items-center gap-6 lg:mt-14">
-              <ScrollReveal>
-                <div className="col-span-12 lg:col-span-7">
+              <ScrollReveal className="col-span-12 lg:col-span-7">
+                <div className="w-full max-w-none">
                   <p className="text-sm font-light uppercase tracking-[0.35em] text-white/60">
                     Premium AI automation for business growth
                   </p>
-                  <h1 className="mt-6 max-w-[12ch] text-[clamp(2.8rem,6vw,5.2rem)] font-black leading-[0.92] tracking-[-0.07em]">
+                  <h1 className="mt-6 w-full max-w-none whitespace-normal text-[clamp(2.8rem,6vw,5.2rem)] font-black leading-[0.92] tracking-[-0.07em]">
                     비즈니스의 모든 과정을
                     <br />
                     AI로 자동화합니다.
                   </h1>
-                  <p className="mt-6 max-w-xl text-lg font-light leading-[1.6] text-white/68">
+                  <p className="mt-6 max-w-2xl text-lg font-light leading-[1.6] text-white/68">
                     상담, 견적, 콘텐츠, 예약, 응답까지 하나의 시스템으로 묶어 운영을 가볍게 만듭니다.
                   </p>
                   <div className="mt-10 flex flex-wrap gap-4">
@@ -367,8 +363,8 @@ export default function App() {
                 </div>
               </ScrollReveal>
 
-              <ScrollReveal delay={0.08}>
-                <div className="col-span-12 flex justify-center lg:col-span-5 lg:justify-end">
+              <ScrollReveal delay={0.08} className="col-span-12 lg:col-span-5">
+                <div className="flex justify-center lg:justify-end">
                   <div className="rounded-full border border-white/15 bg-[#0b1220] p-10 shadow-[0_28px_80px_rgba(0,0,0,0.35)]">
                     <div className="flex h-48 w-48 items-center justify-center rounded-full border-[12px] border-emerald-500/75 text-center">
                       <div className="text-3xl font-black leading-none tracking-[-0.06em] text-white">
@@ -401,12 +397,12 @@ export default function App() {
 
         <section id="services" className="bg-[#0f172a] px-6 py-32 lg:px-8">
           <div className="mx-auto grid max-w-7xl grid-cols-12 gap-6">
-            <ScrollReveal>
-              <div className="col-span-12 lg:col-span-4">
+            <ScrollReveal className="col-span-12 lg:col-span-4">
+              <div>
                 <p className="text-sm font-light uppercase tracking-[0.35em] text-white/60">
                   Services
                 </p>
-                <h2 className="mt-4 max-w-[12ch] text-4xl font-black tracking-[-0.05em] text-white md:text-5xl">
+                <h2 className="mt-4 w-full max-w-2xl whitespace-normal text-4xl font-black tracking-[-0.05em] text-white md:text-5xl">
                   초보 고객도 바로 이해하는 자동화 구조
                 </h2>
               </div>
@@ -414,28 +410,7 @@ export default function App() {
 
             <div className="col-span-12 lg:col-span-8">
               <div className="grid grid-cols-12 gap-6">
-                {[
-                  {
-                    icon: PenTool,
-                    title: '기획 정리',
-                    desc: '복잡한 요구사항을 상담 질문지로 정리합니다.',
-                  },
-                  {
-                    icon: Rocket,
-                    title: '빠른 구축',
-                    desc: '필요한 기능만 묶어 빠르게 런칭합니다.',
-                  },
-                  {
-                    icon: CircleCheckBig,
-                    title: '견적 안내',
-                    desc: '단가와 옵션을 쉽게 확인할 수 있게 구성합니다.',
-                  },
-                  {
-                    icon: Building2,
-                    title: '신뢰 설계',
-                    desc: '후기, 실적, 로고를 배치해 신뢰를 만듭니다.',
-                  },
-                ].map((item, index) => (
+                {serviceCards.map((item, index) => (
                   <ScrollReveal
                     key={item.title}
                     delay={index * 0.05}
@@ -457,7 +432,7 @@ export default function App() {
                   <p className="text-sm font-light uppercase tracking-[0.35em] text-white/60">
                     Portfolio
                   </p>
-                  <h2 className="mt-4 max-w-[12ch] text-4xl font-black tracking-[-0.05em] text-white md:text-5xl">
+                  <h2 className="mt-4 w-full max-w-2xl whitespace-normal text-4xl font-black tracking-[-0.05em] text-white md:text-5xl">
                     실제 사례로 보여주는 설득력
                   </h2>
                 </div>
