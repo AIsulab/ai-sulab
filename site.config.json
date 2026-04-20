@@ -1,34 +1,152 @@
 {
   "site_info": {
-    "site_name": "강남역 24시 무인 스터디카페",
-    "main_color": "#0F766E"
+    "site_name": "AI 수튜디오 SUTUDIO",
+    "main_color": "#047857"
   },
-  "meta_description": "강남역 24시 무인 스터디카페에서 조용하고 쾌적한 학습 공간과 AI 학습 플래너를 통해 하루 공부 루틴을 완성하세요.",
+  "meta_description": "수튜디오는 비즈니스의 모든 과정을 AI로 자동화하는 브랜드입니다. 웹빌더 구축, 유튜브 자동화, 쿠팡파트너스 자동화, 마케팅 카피 설계까지 전환 중심으로 설계합니다.",
   "seo_keywords": [
-    "강남역 스터디카페",
-    "24시 스터디카페",
-    "무인 스터디카페",
-    "강남 공부 공간",
-    "AI 학습 플래너"
+    "AI 수튜디오",
+    "SUTUDIO",
+    "AI 자동화",
+    "웹빌더 자동화",
+    "유튜브 자동화",
+    "쿠팡파트너스 자동화",
+    "AI 웹사이트 구축"
   ],
-  "image_keyword": "study,cafe",
-  "hero": {
-    "title": "언제든 집중할 수 있는 24시간 프리미엄 학습 공간",
-    "subtitle": "강남역 도보권에서 조용함, 쾌적함, 몰입감을 모두 갖춘 무인 스터디카페. 시험 준비부터 야간 업무까지 끊기지 않는 집중 루틴을 제공합니다.",
-    "cta_button": "지금 좌석 확인하기"
-  },
-  "services": [
+  "nav": [
     {
-      "title": "24시간 자유 이용",
-      "desc": "새벽 공부, 야간 업무, 시험 직전 막판 스퍼트까지 시간 제약 없이 원하는 루틴으로 이용할 수 있습니다."
+      "id": "about",
+      "label": "About"
     },
     {
-      "title": "무인 운영 시스템",
-      "desc": "비대면 출입과 간편 결제로 빠르게 입장하고, 불필요한 대기 없이 바로 집중할 수 있는 스마트 학습 환경을 제공합니다."
+      "id": "automation",
+      "label": "Automation"
     },
     {
-      "title": "강남역 프리미엄 집중존",
-      "desc": "편안한 좌석, 안정적인 분위기, 몰입 중심 공간 설계로 오래 머물수록 차이가 느껴지는 학습 경험을 만듭니다."
+      "id": "portfolio",
+      "label": "Portfolio"
+    },
+    {
+      "id": "contact",
+      "label": "Contact"
     }
-  ]
+  ],
+  "hero": {
+    "badge": "AI AUTOMATION STUDIO",
+    "title": "비즈니스의 모든 과정을 AI로 자동화합니다. SUTUDIO",
+    "subtitle": "수튜디오는 기획, 카피, 웹 구축, 운영 자동화를 하나의 흐름으로 설계해 더 적은 리소스로 더 큰 결과를 만드는 AI 스튜디오입니다.",
+    "primaryCta": "협업 문의하기",
+    "secondaryCta": "구축 사례 보기"
+  },
+  "intro": {
+    "headline": "수튜디오는 AI 자동화로 비즈니스의 새로운 표준을 만듭니다.",
+    "mission": "About (수튜디오): 브랜드 미션과 이진수 사장님의 AI 철학 소개.",
+    "description": "이진수 대표는 반복적인 실무를 AI와 자동화 시스템으로 재설계해, 사업자가 더 중요한 의사결정과 성장 전략에 집중할 수 있도록 돕습니다. 수튜디오는 빠른 구축보다 더 중요한 전환 구조와 운영 효율을 함께 만듭니다."
+  },
+  "values": [
+    {
+      "icon": "A1",
+      "title": "Automation First",
+      "description": "사람이 반복하는 업무를 먼저 정의하고 AI가 대신할 수 있는 흐름으로 바꿉니다."
+    },
+    {
+      "icon": "UX",
+      "title": "전환 중심 설계",
+      "description": "보여주기용 디자인보다 실제 문의, 예약, 신청으로 이어지는 구조를 우선합니다."
+    },
+    {
+      "icon": "CP",
+      "title": "AI 카피라이팅",
+      "description": "브랜드 무드와 업종 특성에 맞는 설득형 문장을 빠르게 설계하고 검증합니다."
+    },
+    {
+      "icon": "WS",
+      "title": "웹 시스템 구축",
+      "description": "랜딩페이지부터 웹빌더, 자동화 연결까지 하나의 시스템처럼 구축합니다."
+    },
+    {
+      "icon": "GR",
+      "title": "지속 성장 운영",
+      "description": "한 번 배포하고 끝나는 것이 아니라, 데이터와 운영 효율을 기준으로 고도화합니다."
+    }
+  ],
+  "stats": [
+    {
+      "value": 100,
+      "suffix": "+",
+      "label": "자동화 시스템 구축",
+      "description": "웹 구축과 운영 자동화를 결합한 누적 프로젝트 기준"
+    },
+    {
+      "value": 95,
+      "suffix": "%",
+      "label": "업무 효율 증대",
+      "description": "반복 실무를 자동화했을 때 확보되는 평균 효율 체감"
+    },
+    {
+      "value": 10,
+      "suffix": "분",
+      "label": "초안 완성 속도",
+      "description": "기획과 카피 초안을 빠르게 도출하는 내부 제작 프로세스"
+    },
+    {
+      "value": 30,
+      "suffix": "+",
+      "label": "브랜드 카테고리 경험",
+      "description": "교육, 커머스, 전문가 서비스, 로컬 비즈니스를 포함한 구축 경험"
+    }
+  ],
+  "automation": [
+    {
+      "title": "유튜브 자동화 운영",
+      "description": "영상 기획, 썸네일 문구, 배포 흐름을 AI로 연결해 채널 운영 속도를 끌어올립니다.",
+      "detail": "콘텐츠 제작 워크플로우"
+    },
+    {
+      "title": "쿠팡파트너스 수익 구조 자동화",
+      "description": "상품 리서치, 리뷰 구조, 콘텐츠 배포 단계를 자동화해 수익형 시스템으로 전환합니다.",
+      "detail": "수익형 콘텐츠 자동화"
+    },
+    {
+      "title": "웹빌더 구축 자동화",
+      "description": "서비스 소개, 포트폴리오, 문의 전환 구조를 빠르게 조립하고 즉시 배포 가능한 상태로 만듭니다.",
+      "detail": "브랜드 사이트 제작"
+    }
+  ],
+  "portfolio": [
+    {
+      "title": "강남 스터디카페 리브랜딩",
+      "category": "브랜드 사이트 구축",
+      "description": "프리미엄 공간 이미지를 전면에 배치하고 문의 CTA를 강화한 전환형 랜딩 시안입니다.",
+      "image": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1400"
+    },
+    {
+      "title": "AI 음악 학원 런칭 페이지",
+      "category": "교육 비즈니스 자동화",
+      "description": "커리큘럼, 후기, 상담 동선을 자연스럽게 연결해 모집 효율을 높인 페이지 구성입니다.",
+      "image": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&q=80&w=1400"
+    },
+    {
+      "title": "전문가 포트폴리오 웹빌더",
+      "category": "1인 브랜드 구축",
+      "description": "대표 전문성을 강하게 드러내고 사례와 문의 전환을 동시에 설계한 전문가형 웹사이트입니다.",
+      "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1400"
+    }
+  ],
+  "partners": [
+    "IMWEB BUILDER",
+    "NOTION OPS",
+    "YOUTUBE STUDIO",
+    "COUPANG PARTNERS",
+    "META ADS",
+    "GOOGLE WORKSPACE",
+    "SLACK FLOW",
+    "OPENAI SYSTEM"
+  ],
+  "contact": {
+    "title": "Contact (협업 문의): 잠재 고객이 상담 신청을 남길 수 있는 곳.",
+    "description": "브랜드 소개 페이지가 필요하거나, 반복되는 업무를 자동화하고 싶거나, AI를 실무에 연결하고 싶다면 수튜디오와 함께 설계해보세요.",
+    "email": "hello@sutudio.ai",
+    "cta": "상담 요청 남기기"
+  }
 }
