@@ -59,6 +59,54 @@ const fadeUp = {
 
 const smoothEase = [0.22, 1, 0.36, 1] as const
 
+const pricingPlans = [
+  {
+    id: 'standard',
+    name: 'Standard',
+    basePrice: 500000,
+    summary: '반응형 1페이지, 기본 SEO',
+  },
+  {
+    id: 'deluxe',
+    name: 'Deluxe',
+    basePrice: 1200000,
+    summary: '페이지 5개, 디자인 고도화',
+  },
+  {
+    id: 'premium',
+    name: 'Premium (AI 자동화)',
+    basePrice: 2500000,
+    summary: 'AI 기능 연동, 고급 자동화 로직',
+  },
+] as const
+
+const pricingOptions = [
+  {
+    id: 'pg',
+    name: 'PG 결제',
+    price: 300000,
+  },
+  {
+    id: 'booking',
+    name: '예약 시스템',
+    price: 400000,
+  },
+  {
+    id: 'assistant',
+    name: 'AI 비서',
+    price: 600000,
+  },
+  {
+    id: 'crm',
+    name: 'CRM 연동',
+    price: 350000,
+  },
+] as const
+
+function formatPrice(value: number) {
+  return `${value.toLocaleString()}원`
+}
+
 function ensureMetaTag(
   name: string,
   content: string,
@@ -159,6 +207,27 @@ function InstagramIcon() {
 
 export default function App() {
   const tickerItems = useMemo(() => [...data.tickerLogos, ...data.tickerLogos], [])
+  const [industry, setIndustry] = useState('')
+  const [requestedFeatures, setRequestedFeatures] = useState('')
+  const [selectedPlan, setSelectedPlan] =
+    useState<(typeof pricingPlans)[number]['id']>('standard')
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([])
+
+  const activePlan = useMemo(
+    () => pricingPlans.find((plan) => plan.id === selectedPlan) ?? pricingPlans[0],
+    [selectedPlan],
+  )
+
+  const optionTotal = useMemo(
+    () =>
+      pricingOptions
+        .filter((option) => selectedOptions.includes(option.id))
+        .reduce((sum, option) => sum + option.price, 0),
+    [selectedOptions],
+  )
+
+  const totalEstimate = activePlan.basePrice + optionTotal
+  const marketValue = Math.round((totalEstimate * 1.2) / 100000) * 100000
 
   useEffect(() => {
     document.title = data.site_info.site_name
@@ -167,6 +236,14 @@ export default function App() {
     ensureMetaTag('og:title', data.site_info.site_name, 'property')
     ensureMetaTag('og:description', data.meta_description, 'property')
   }, [])
+
+  function toggleOption(optionId: string) {
+    setSelectedOptions((current) =>
+      current.includes(optionId)
+        ? current.filter((item) => item !== optionId)
+        : [...current, optionId],
+    )
+  }
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -361,6 +438,158 @@ export default function App() {
                 </SectionReveal>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section className="bg-slate-50 px-6 py-28 lg:px-8">
+          <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.85fr_1.15fr]">
+            <SectionReveal>
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-600">
+                AI Estimate System
+              </p>
+              <h2 className="font-heading mt-6 text-4xl font-bold leading-tight tracking-tight text-slate-900 md:text-6xl">
+                초보 고객도 바로 이해하는
+                <br />
+                AI 자동 견적 시스템
+              </h2>
+              <p className="mt-8 max-w-xl text-lg leading-8 text-slate-600">
+                크몽과 아임웹 전문가 시장 단가를 반영해 현재 구성의 대략적인 제작 범위를
+                실시간으로 보여줍니다. 업종과 필요한 기능만 입력해도 상담 전 단계에서 방향을
+                빠르게 잡을 수 있습니다.
+              </p>
+              <div className="mt-10 rounded-[2rem] border border-slate-200 bg-white p-6">
+                <div className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-600">
+                  Quick Guide
+                </div>
+                <ul className="mt-4 space-y-3 text-sm leading-7 text-slate-600">
+                  <li>Standard: 간단한 소개형 랜딩이나 테스트 런칭에 적합합니다.</li>
+                  <li>Deluxe: 서비스 소개와 세부 페이지가 필요한 브랜드형 구축에 맞습니다.</li>
+                  <li>Premium: AI 자동화, 운영 효율, 외부 연동이 필요한 경우 선택합니다.</li>
+                </ul>
+              </div>
+            </SectionReveal>
+
+            <SectionReveal delay={0.08}>
+              <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-[0_24px_60px_rgba(15,23,42,0.06)]">
+                <div className="grid gap-6">
+                  <label className="block">
+                    <span className="text-sm font-semibold text-slate-900">업종</span>
+                    <input
+                      className="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-base text-slate-900 outline-none transition focus:border-emerald-500"
+                      placeholder="예: 무인 카페"
+                      value={industry}
+                      onChange={(event) => setIndustry(event.target.value)}
+                    />
+                    <span className="mt-2 block text-sm text-slate-400">
+                      예시: 무인 카페, AI 교육 플랫폼, 수익형 블로그 등
+                    </span>
+                  </label>
+
+                  <label className="block">
+                    <span className="text-sm font-semibold text-slate-900">필요 기능</span>
+                    <textarea
+                      className="mt-3 min-h-32 w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-base text-slate-900 outline-none transition focus:border-emerald-500"
+                      placeholder="예: 카카오톡 알림톡 연동"
+                      value={requestedFeatures}
+                      onChange={(event) => setRequestedFeatures(event.target.value)}
+                    />
+                    <span className="mt-2 block text-sm text-slate-400">
+                      예시: 카카오톡 알림톡 연동, 자동 포스팅 시스템, 실시간 예약
+                    </span>
+                  </label>
+
+                  <div>
+                    <div className="text-sm font-semibold text-slate-900">패키지 선택</div>
+                    <div className="mt-3 grid gap-3">
+                      {pricingPlans.map((plan) => (
+                        <label
+                          key={plan.id}
+                          className={`cursor-pointer rounded-2xl border p-5 transition ${
+                            selectedPlan === plan.id
+                              ? 'border-emerald-500 bg-emerald-50'
+                              : 'border-slate-200 bg-slate-50'
+                          }`}
+                        >
+                          <div className="flex items-start justify-between gap-4">
+                            <div>
+                              <div className="text-lg font-semibold text-slate-900">{plan.name}</div>
+                              <div className="mt-1 text-sm text-slate-500">{plan.summary}</div>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-lg font-bold text-slate-900">
+                                {formatPrice(plan.basePrice)}
+                              </div>
+                              <input
+                                type="radio"
+                                name="pricing-plan"
+                                className="mt-2 h-4 w-4 accent-emerald-500"
+                                checked={selectedPlan === plan.id}
+                                onChange={() => setSelectedPlan(plan.id)}
+                              />
+                            </div>
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="text-sm font-semibold text-slate-900">옵션 추가</div>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                      {pricingOptions.map((option) => (
+                        <label
+                          key={option.id}
+                          className={`cursor-pointer rounded-2xl border p-4 transition ${
+                            selectedOptions.includes(option.id)
+                              ? 'border-emerald-500 bg-emerald-50'
+                              : 'border-slate-200 bg-slate-50'
+                          }`}
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <div className="font-semibold text-slate-900">{option.name}</div>
+                              <div className="mt-1 text-sm text-slate-500">
+                                + {formatPrice(option.price)}
+                              </div>
+                            </div>
+                            <input
+                              type="checkbox"
+                              className="mt-1 h-4 w-4 accent-emerald-500"
+                              checked={selectedOptions.includes(option.id)}
+                              onChange={() => toggleOption(option.id)}
+                            />
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 rounded-[1.75rem] bg-slate-900 p-7 text-white">
+                  <div className="text-sm uppercase tracking-[0.18em] text-emerald-300">
+                    Estimated Quote
+                  </div>
+                  <div className="mt-4 text-4xl font-bold tracking-tight">
+                    {formatPrice(totalEstimate)}
+                  </div>
+                  <div className="mt-3 text-sm leading-7 text-slate-300">
+                    선택 패키지: {activePlan.name}
+                    {industry.trim() ? ` | 업종: ${industry.trim()}` : ''}
+                    {requestedFeatures.trim() ? ` | 기능: ${requestedFeatures.trim()}` : ''}
+                  </div>
+                  <p className="mt-5 rounded-2xl bg-white/5 px-4 py-4 text-sm leading-7 text-slate-100">
+                    이 구성은 현재 아임웹 전문가 시장에서 약 {formatPrice(marketValue)} 상당의
+                    가치를 가집니다.
+                  </p>
+                  <a
+                    href="#contact"
+                    className="mt-6 inline-flex rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition hover:bg-emerald-100"
+                  >
+                    이 견적으로 10분 만에 기획안 초안 받기
+                  </a>
+                </div>
+              </div>
+            </SectionReveal>
           </div>
         </section>
 
