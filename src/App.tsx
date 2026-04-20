@@ -16,44 +16,44 @@ const menuItems = [
 
 const projects = [
   {
-    id: 'eclair',
+    id: 'studio',
     eyebrow: 'Powerful Energy.',
-    title: 'éclair',
+    title: 'Studio Commerce',
     category: 'Website / Film',
     image:
       'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1800',
     description:
-      '하이엔드 제품군을 위한 차콜 베이스의 풀스크린 비주얼 쇼케이스.',
+      '브랜드의 첫인상을 단단하게 만드는 프리미엄 랜딩 구조와 움직임 중심의 화면 설계.',
   },
   {
-    id: 'hugel',
+    id: 'health',
     eyebrow: 'Korea Botox.',
     title: 'Hugel',
     category: 'Biotech / Brand',
     image:
       'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&q=80&w=1800',
     description:
-      '의료와 바이오 영역에 맞춘 엄격한 정보 구조와 강한 대비의 레이아웃.',
+      '클린한 정보 구조와 강한 시각 리듬으로 의료·전문 서비스의 신뢰를 끌어올리는 디자인.',
   },
   {
-    id: 'zaram',
+    id: 'tech',
     eyebrow: 'Semiconductor.',
     title: 'Zaram Technology',
     category: 'Corporate / Tech',
     image:
       'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&q=80&w=1800',
     description:
-      '기술 기업의 무게감과 선명함을 담아낸 산업형 메인 비주얼.',
+      '기술 기업의 복잡한 메시지를 최소한의 레이아웃으로 선명하게 전달하는 구성.',
   },
   {
-    id: 'workup',
+    id: 'platform',
     eyebrow: 'HR Platform.',
     title: 'Workup',
     category: 'Platform / UX',
     image:
       'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1800',
     description:
-      '서비스 설명보다 이미지와 타이포의 리듬으로 먼저 설득하는 플랫폼형 섹션.',
+      '데이터와 CTA를 균형 있게 배치해 전환을 유도하는 서비스형 플랫폼 스타일.',
   },
 ]
 
@@ -70,31 +70,31 @@ function useBodyLock(locked: boolean) {
   }, [locked])
 }
 
-function OutlineHeadline() {
+function OutlineHeadline({ label }: { label: string }) {
   return (
-    <svg viewBox="0 0 1200 240" className="h-auto w-full" aria-hidden="true">
+    <svg viewBox="0 0 1600 260" className="h-auto w-full" aria-hidden="true">
       <defs>
         <linearGradient id="hero-stroke" x1="0%" x2="100%" y1="0%" y2="0%">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.25" />
+          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.2" />
           <stop offset="50%" stopColor="#ffffff" stopOpacity="1" />
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="#ffffff" stopOpacity="0.2" />
         </linearGradient>
       </defs>
       <motion.text
-        x="50%"
+        x="0"
         y="52%"
-        textAnchor="middle"
+        textAnchor="start"
         dominantBaseline="middle"
-        className="font-brand text-[92px] font-light tracking-[0.38em] md:text-[132px]"
+        className="font-brand text-[88px] font-light tracking-[0.22em] md:text-[130px]"
         fill="none"
         stroke="url(#hero-stroke)"
         strokeWidth="1.1"
         strokeDasharray="12 12"
-        initial={{ strokeDashoffset: 0, opacity: 0.75 }}
+        initial={{ strokeDashoffset: 0, opacity: 0.85 }}
         animate={{ strokeDashoffset: -260 }}
         transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
       >
-        SULAB AI
+        {label}
       </motion.text>
     </svg>
   )
@@ -102,14 +102,15 @@ function OutlineHeadline() {
 
 function RotatingSignature() {
   const text = 'SULAB AI AUTOMATION SYSTEM'
+
   return (
-    <div className="fixed left-1/2 top-1/2 z-40 hidden -translate-x-1/2 -translate-y-1/2 md:block">
-      <div className="relative h-40 w-40">
+    <div className="fixed right-[-72px] top-1/2 z-40 hidden -translate-y-1/2 md:block">
+      <div className="relative h-52 w-52">
         <div
           className="ring-spin absolute inset-0 rounded-full border border-white/15 bg-white/5 backdrop-blur-md"
           style={
             {
-              ['--ring-speed' as string]: '16s',
+              ['--ring-speed' as string]: '18s',
             } as CSSProperties
           }
         >
@@ -131,10 +132,28 @@ function RotatingSignature() {
           </svg>
         </div>
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/15 bg-black text-white shadow-[0_18px_40px_rgba(0,0,0,0.35)]">
-            <ArrowDown className="h-5 w-5" />
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/15 bg-black text-white shadow-[0_18px_40px_rgba(0,0,0,0.35)]">
+            <ArrowDown className="h-6 w-6 animate-bounce" />
           </div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function RightRail() {
+  return (
+    <div className="fixed right-6 top-1/2 z-30 hidden -translate-y-1/2 flex-col items-center gap-5 xl:flex">
+      <a
+        href="#request"
+        className="rounded-none border border-white/45 px-3 py-4 text-[0.68rem] font-medium uppercase tracking-[0.45em] text-white/90 [writing-mode:vertical-rl]"
+      >
+        Project Request
+      </a>
+      <div className="flex flex-col items-center gap-4 text-white/70">
+        <span className="h-3 w-3 rounded-full border border-white/70" />
+        <span className="h-3 w-3 rounded-full border border-white/70" />
+        <span className="h-3 w-3 rounded-full border border-white/70" />
       </div>
     </div>
   )
@@ -192,7 +211,7 @@ export default function App() {
   )
 
   useEffect(() => {
-    document.title = 'AI SULAB | Design Pixel Inspired'
+    document.title = 'AI SULAB | High-End Motion Layout'
   }, [])
 
   return (
@@ -277,32 +296,74 @@ export default function App() {
           </video>
           <div className="absolute inset-0 bg-black/60" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.09),_transparent_35%)]" />
+          <div className="absolute inset-x-0 top-1/2 z-10 h-px -translate-y-1/2 bg-white/20" />
 
           <div className="relative z-10 flex min-h-screen items-end px-6 pb-16 pt-28 lg:px-8 lg:pb-20">
-            <div className="mx-auto w-full max-w-7xl">
-              <OutlineHeadline />
-              <div className="mt-8 flex max-w-2xl flex-wrap items-center gap-4 text-sm uppercase tracking-[0.35em] text-white/55">
-                <span>High-End Minimal</span>
-                <span className="h-px w-12 bg-white/25" />
-                <span>Full Screen VOD</span>
+            <div className="mx-auto flex w-full max-w-7xl flex-col justify-between gap-16">
+              <div className="max-w-5xl">
+                <div className="mb-6 text-sm uppercase tracking-[0.45em] text-white/55">
+                  Design-driven AI automation
+                </div>
+                <div className="max-w-6xl">
+                  <OutlineHeadline label="BEYOND AUTOMATION" />
+                </div>
+                <motion.h1
+                  initial={{ opacity: 0, y: 28 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, ease: 'easeOut', delay: 0.1 }}
+                  className="mt-6 max-w-4xl font-brand text-[clamp(4rem,9vw,8rem)] font-black leading-[0.92] tracking-[-0.05em] text-white"
+                >
+                  SULAB AI
+                </motion.h1>
+                <motion.div
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.75, delay: 0.35 }}
+                  className="mt-8 flex items-center gap-4 text-sm uppercase tracking-[0.35em] text-white/55"
+                >
+                  <span>High-End Motion</span>
+                  <span className="h-px w-12 bg-white/30" />
+                  <span>Dark Luxury UI</span>
+                </motion.div>
+                <a
+                  href="#portfolio"
+                  className="mt-10 inline-flex items-center gap-3 border-b border-white/70 pb-2 text-sm font-medium uppercase tracking-[0.28em] text-white transition hover:border-emerald-400 hover:text-emerald-400"
+                >
+                  Go to site
+                  <span className="text-lg">→</span>
+                </a>
+              </div>
+
+              <div className="flex flex-col gap-6 text-white/75 md:flex-row md:items-end md:justify-between">
+                <div className="max-w-sm text-sm leading-7">
+                  Seoul, Korea / AI automation systems / premium web experiences
+                </div>
+                <div className="max-w-xs text-right text-xs uppercase tracking-[0.3em] text-white/45">
+                  © 2026 SULAB AI
+                  <br />
+                  Dark high-end motion layout
+                </div>
               </div>
             </div>
           </div>
         </section>
+
+        <RightRail />
+        <RotatingSignature />
 
         <section id="about" className="border-t border-white/10 bg-[#050505] px-6 py-24 lg:px-8">
           <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
             <div>
               <p className="text-sm uppercase tracking-[0.35em] text-white/45">About</p>
               <h2 className="mt-6 text-4xl font-light leading-tight text-white md:text-6xl">
-                짙은 톤과 여백으로
+                AI automation with
                 <br />
-                메시지를 압축합니다.
+                editorial-grade precision.
               </h2>
             </div>
             <p className="max-w-2xl text-lg leading-9 text-white/65">
-              디자인픽셀처럼 비주얼이 중심이 되는 구조를 유지하면서, AI 수튜디오의 비즈니스 정체성을
-              선명하게 드러내는 다크 무드 레이아웃으로 재구성했습니다.
+              브랜드의 시각적 무게감과 실제 전환을 동시에 설계합니다. 디자인, 자동화, 상담 흐름까지
+              하나의 럭셔리한 사용자 경험으로 연결합니다.
             </p>
           </div>
         </section>
@@ -316,14 +377,14 @@ export default function App() {
               <div>
                 <p className="text-sm uppercase tracking-[0.35em] text-white/45">Portfolio</p>
                 <h2 className="mt-6 text-4xl font-light leading-tight text-white md:text-6xl">
-                  이미지가 먼저 말하고,
+                  Selected work,
                   <br />
-                  정보는 천천히 따라옵니다.
+                  presented with restraint.
                 </h2>
               </div>
               <p className="max-w-2xl text-lg leading-9 text-white/65">
-                클릭할 때마다 부드럽게 화면이 전환되는 큰 쇼케이스 구조로, 프로젝트 자체가 충분히
-                압도적으로 보이도록 설계했습니다.
+                화면은 단순하게, 디테일은 선명하게. 각 프로젝트는 브랜드의 신뢰와 기술력을
+                한 장면으로 전달하도록 설계했습니다.
               </p>
             </div>
 
@@ -386,12 +447,12 @@ export default function App() {
                   <div className="text-sm uppercase tracking-[0.3em] text-white/35">{item}</div>
                   <div className="mt-4 text-2xl font-light leading-tight text-white">
                     {item === 'Project Request'
-                      ? '프로젝트 의뢰'
+                      ? 'Brief, scope, and quote'
                       : item === 'Company Profile'
-                        ? '회사 소개서와 핵심 영역'
+                        ? 'Studio profile and capabilities'
                         : item === 'Location'
-                          ? '오시는 길과 연락'
-                          : '기록과 업데이트'}
+                          ? 'Seoul, Korea'
+                          : 'Editorial notes and updates'}
                   </div>
                 </div>
               ))}
@@ -408,9 +469,9 @@ export default function App() {
               <div>
                 <p className="text-sm uppercase tracking-[0.35em] text-white/45">Request</p>
                 <h2 className="mt-6 text-4xl font-light leading-tight text-white md:text-6xl">
-                  지금 바로
+                  Start a new
                   <br />
-                  문의를 시작할 수 있습니다.
+                  project with SULAB AI.
                 </h2>
               </div>
               <a
@@ -419,14 +480,12 @@ export default function App() {
                 rel="noreferrer"
                 className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white px-8 py-4 text-sm font-semibold text-black transition hover:scale-105"
               >
-                Request
+                Open Chat
               </a>
             </div>
           </div>
         </section>
       </main>
-
-      <RotatingSignature />
 
       <footer className="border-t border-white/10 bg-[#050505] px-6 py-8 lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 text-sm text-white/35 md:flex-row md:items-center md:justify-between">
