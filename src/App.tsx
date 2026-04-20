@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { AnimatePresence, motion, useInView } from 'framer-motion'
+import { Bot, MessageCircleMore, X } from 'lucide-react'
 import siteData from '../site.config.json'
 
 type NavItem = {
@@ -49,6 +50,8 @@ type SiteData = {
   tickerLogos: string[]
   footer: Footer
 }
+
+type ChatIntent = 'pricing' | 'portfolio' | 'consult'
 
 const data = siteData as SiteData
 
@@ -104,6 +107,34 @@ const pricingOptions = [
     price: 350000,
   },
 ] as const
+
+const chatbotReplies: Record<
+  ChatIntent,
+  {
+    title: string
+    description: string
+    highlight: string
+  }
+> = {
+  pricing: {
+    title: '서비스 단가 확인',
+    description:
+      '기본형은 50만 원부터, Deluxe는 120만 원부터, Premium AI 자동화형은 250만 원부터 시작합니다. 옵션에 따라 PG 결제, 예약 시스템, AI 비서 기능이 실시간으로 추가됩니다.',
+    highlight: '정확한 구성은 오픈톡에서 1:1로 바로 맞춤 안내해드립니다.',
+  },
+  portfolio: {
+    title: '구축 사례 보기',
+    description:
+      '강남역 24시 무인 스터디카페, AI 음악 학원, 오토메이션 컨설팅 프로젝트처럼 브랜드 톤과 전환 구조를 함께 설계한 사례를 보실 수 있습니다.',
+    highlight: '원하시면 비슷한 업종 사례를 골라서 오픈톡에서 바로 추천해드립니다.',
+  },
+  consult: {
+    title: '대표님과 1:1 상담',
+    description:
+      '반복 질문은 AI 비서가 빠르게 정리하고, 실제 상담은 대표님과 오픈톡에서 바로 이어집니다. 목표, 예산, 필요한 자동화를 알려주시면 가장 빠른 방향으로 잡아드립니다.',
+    highlight: '아래 버튼으로 바로 카카오 오픈톡 상담을 시작하실 수 있습니다.',
+  },
+}
 
 function formatPrice(value: number) {
   return `${value.toLocaleString()}원`
@@ -207,14 +238,6 @@ function InstagramIcon() {
   )
 }
 
-function ChatBubbleIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 fill-current">
-      <path d="M12 3C6.477 3 2 6.582 2 11c0 2.646 1.617 4.99 4.103 6.45L5 22l4.272-2.33c.88.154 1.79.23 2.728.23 5.523 0 10-3.582 10-8S17.523 3 12 3Z" />
-    </svg>
-  )
-}
-
 function KakaoLinkButton({
   href,
   className,
@@ -236,6 +259,122 @@ function KakaoLinkButton({
   )
 }
 
+function Chatbot({
+  currentIntent,
+  onSelectIntent,
+}: {
+  currentIntent: ChatIntent
+  onSelectIntent: (intent: ChatIntent) => void
+}) {
+  const reply = chatbotReplies[currentIntent]
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
+      <AnimatePresence>
+        {isOpen ? (
+          <motion.div
+            initial={{ opacity: 0, y: 16, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 16, scale: 0.96 }}
+            transition={{ duration: 0.22, ease: smoothEase }}
+            className="w-[22rem] overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-[0_24px_60px_rgba(15,23,42,0.16)] sm:w-[24rem]"
+          >
+            <div className="bg-slate-900 px-5 py-4 text-white">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="rounded-full bg-emerald-500/20 p-2 text-emerald-300">
+                    <Bot className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <div className="font-semibold">SULAB AI 비서</div>
+                    <div className="text-xs text-slate-300">
+                      안녕하세요! SULAB의 AI 비서입니다. 무엇을 도와드릴까요?
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  className="rounded-full p-2 text-slate-300 transition hover:bg-white/10 hover:text-white"
+                  onClick={() => setIsOpen(false)}
+                  aria-label="챗봇 닫기"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-4 px-5 py-5">
+              <div className="rounded-2xl bg-slate-50 px-4 py-4">
+                <div className="text-sm font-semibold text-emerald-600">{reply.title}</div>
+                <p className="mt-2 text-sm leading-6 text-slate-700">{reply.description}</p>
+                <p className="mt-3 text-sm leading-6 text-slate-500">{reply.highlight}</p>
+              </div>
+
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                  추천 질문
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                      currentIntent === 'pricing'
+                        ? 'bg-emerald-500 text-white'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    }`}
+                    onClick={() => onSelectIntent('pricing')}
+                  >
+                    서비스 단가 확인
+                  </button>
+                  <button
+                    type="button"
+                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                      currentIntent === 'portfolio'
+                        ? 'bg-emerald-500 text-white'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    }`}
+                    onClick={() => onSelectIntent('portfolio')}
+                  >
+                    구축 사례 보기
+                  </button>
+                  <button
+                    type="button"
+                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                      currentIntent === 'consult'
+                        ? 'bg-emerald-500 text-white'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    }`}
+                    onClick={() => onSelectIntent('consult')}
+                  >
+                    대표님과 1:1 상담
+                  </button>
+                </div>
+              </div>
+
+              <KakaoLinkButton
+                href={KAKAO_OPENCHAT_URL}
+                className="inline-flex w-full items-center justify-center rounded-full bg-[#FEE500] px-5 py-3 text-sm font-semibold text-slate-900 hover:bg-[#f8dc33]"
+              >
+                카카오 오픈톡으로 바로 상담하기
+              </KakaoLinkButton>
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+
+      <button
+        type="button"
+        className="inline-flex items-center gap-2 rounded-full bg-[#FEE500] px-5 py-4 text-sm font-semibold text-slate-900 shadow-[0_18px_40px_rgba(15,23,42,0.18)] transition-all hover:-translate-y-1 hover:scale-105 hover:shadow-[0_22px_50px_rgba(15,23,42,0.22)]"
+        onClick={() => setIsOpen((current) => !current)}
+      >
+        <MessageCircleMore className="h-5 w-5" />
+        AI 챗봇
+      </button>
+    </div>
+  )
+}
+
 export default function App() {
   const tickerItems = useMemo(() => [...data.tickerLogos, ...data.tickerLogos], [])
   const [industry, setIndustry] = useState('')
@@ -243,6 +382,7 @@ export default function App() {
   const [selectedPlan, setSelectedPlan] =
     useState<(typeof pricingPlans)[number]['id']>('standard')
   const [selectedOptions, setSelectedOptions] = useState<string[]>([])
+  const [chatIntent, setChatIntent] = useState<ChatIntent>('pricing')
 
   const activePlan = useMemo(
     () => pricingPlans.find((plan) => plan.id === selectedPlan) ?? pricingPlans[0],
@@ -689,13 +829,7 @@ export default function App() {
         </div>
       </footer>
 
-      <KakaoLinkButton
-        href={KAKAO_OPENCHAT_URL}
-        className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 rounded-full bg-[#FEE500] px-5 py-4 text-sm font-semibold text-slate-900 shadow-[0_18px_40px_rgba(15,23,42,0.18)] hover:shadow-[0_22px_50px_rgba(15,23,42,0.22)]"
-      >
-        <ChatBubbleIcon />
-        문의하기
-      </KakaoLinkButton>
+      <Chatbot currentIntent={chatIntent} onSelectIntent={setChatIntent} />
     </div>
   )
 }
