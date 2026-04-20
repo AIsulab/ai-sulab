@@ -117,12 +117,15 @@ function CountUpStat({ value, label }: { value: string; label: string }) {
 function ScrollReveal({
   children,
   delay = 0,
+  className,
 }: {
   children: ReactNode
   delay?: number
+  className?: string
 }) {
   return (
     <motion.div
+      className={className}
       initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
@@ -143,7 +146,7 @@ function ServiceCard({
   desc: string
 }) {
   return (
-    <div className="rounded-[1.75rem] border border-slate-800/10 bg-[#fbfbf8] p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+    <div className="flex h-full flex-col items-center rounded-[1.75rem] border border-slate-800/10 bg-[#fbfbf8] p-6 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
       <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
         <Icon className="h-6 w-6" />
       </div>
@@ -396,7 +399,7 @@ export default function App() {
           </div>
         </section>
 
-        <section id="services" className="bg-[#0f172a] px-6 py-24 lg:px-8">
+        <section id="services" className="bg-[#0f172a] px-6 py-32 lg:px-8">
           <div className="mx-auto grid max-w-7xl grid-cols-12 gap-6">
             <ScrollReveal>
               <div className="col-span-12 lg:col-span-4">
@@ -410,7 +413,7 @@ export default function App() {
             </ScrollReveal>
 
             <div className="col-span-12 lg:col-span-8">
-              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+              <div className="grid grid-cols-12 gap-6">
                 {[
                   {
                     icon: PenTool,
@@ -433,7 +436,11 @@ export default function App() {
                     desc: '후기, 실적, 로고를 배치해 신뢰를 만듭니다.',
                   },
                 ].map((item, index) => (
-                  <ScrollReveal key={item.title} delay={index * 0.05}>
+                  <ScrollReveal
+                    key={item.title}
+                    delay={index * 0.05}
+                    className="col-span-12 sm:col-span-6 lg:col-span-3"
+                  >
                     <ServiceCard icon={item.icon} title={item.title} desc={item.desc} />
                   </ScrollReveal>
                 ))}
@@ -442,7 +449,7 @@ export default function App() {
           </div>
         </section>
 
-        <section id="portfolio" className="bg-[#0f172a] px-6 py-24 lg:px-8">
+        <section id="portfolio" className="bg-[#0f172a] px-6 py-32 lg:px-8">
           <div className="mx-auto grid max-w-7xl grid-cols-12 gap-6">
             <ScrollReveal>
               <div className="col-span-12 grid gap-6 lg:grid-cols-12 lg:items-end">
@@ -461,21 +468,22 @@ export default function App() {
               </div>
             </ScrollReveal>
 
-            <div className="col-span-12 grid gap-6 lg:grid-cols-12">
-              <div className="grid gap-6 lg:col-span-5">
-                {portfolioItems.map((item, index) => (
+            <div className="col-span-12 grid grid-cols-12 gap-6">
+              {portfolioItems.map((item, index) => (
+                <div key={item.title} className="col-span-12 lg:col-span-6">
                   <PortfolioCard
-                    key={item.title}
                     item={item}
                     index={index}
                     active={activePortfolio.title === item.title}
                     onClick={() => setActivePortfolio(item)}
                   />
-                ))}
-              </div>
+                </div>
+              ))}
+            </div>
 
+            <div className="col-span-12">
               <ScrollReveal delay={0.08}>
-                <div className="lg:col-span-7 overflow-hidden rounded-[2rem] border border-white/10 bg-[#111827] shadow-sm">
+                <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-[#111827] shadow-sm">
                   <img
                     src={activePortfolio.image}
                     alt={activePortfolio.title}
@@ -499,7 +507,7 @@ export default function App() {
           </div>
         </section>
 
-        <section id="proof" className="bg-[#111827] px-6 py-24 text-white lg:px-8">
+        <section id="proof" className="bg-[#111827] px-6 py-32 text-white lg:px-8">
           <div className="mx-auto grid max-w-7xl grid-cols-12 gap-6 rounded-[2rem] border border-white/10 bg-[#0b1220] px-8 py-14 shadow-[0_24px_60px_rgba(0,0,0,0.2)] lg:px-12">
             <ScrollReveal>
               <div className="col-span-12 mx-auto max-w-3xl text-center">
@@ -527,7 +535,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="bg-[#0f172a] px-6 py-24 lg:px-8">
+        <section className="bg-[#0f172a] px-6 py-32 lg:px-8">
           <div className="mx-auto grid max-w-7xl grid-cols-12 gap-6">
             <ScrollReveal>
               <div className="col-span-12 text-center">
@@ -558,7 +566,7 @@ export default function App() {
           </div>
         </section>
 
-        <section id="contact" className="bg-[#0f172a] px-6 py-24 lg:px-8">
+        <section id="contact" className="bg-[#0f172a] px-6 py-32 lg:px-8">
           <div className="mx-auto grid max-w-7xl grid-cols-12 gap-6 rounded-[2rem] border border-white/10 bg-[#111827] px-8 py-14 text-white lg:px-12">
             <div className="col-span-12 grid gap-8 lg:grid-cols-12 lg:items-center">
               <div className="lg:col-span-8">
