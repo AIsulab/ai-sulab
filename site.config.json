@@ -1,114 +1,112 @@
 {
   "site_info": {
-    "site_name": "SUTUDIO | AI Automation Studio",
-    "main_color": "#047857"
+    "site_name": "SULAB | Premium AI Automation Agency",
+    "main_color": "#10B981"
   },
-  "meta_description": "수튜디오는 비즈니스의 모든 과정을 AI로 자동화하는 스튜디오입니다. 웹 구축, 운영 자동화, 전환형 카피 설계까지 하나의 흐름으로 만듭니다.",
+  "meta_description": "SULAB은 비즈니스의 모든 과정을 AI로 자동화하는 프리미엄 에이전시입니다. 홈페이지 구축, 운영 자동화, 마케팅 카피 설계까지 한 번에 연결합니다.",
   "seo_keywords": [
-    "SUTUDIO",
-    "AI Automation Studio",
+    "SULAB",
     "AI 자동화",
-    "웹빌더 자동화",
-    "업무 자동화",
-    "전환형 랜딩페이지",
-    "AI 스튜디오"
+    "프리미엄 에이전시",
+    "홈페이지 제작",
+    "운영 자동화",
+    "AI 마케팅 카피",
+    "웹빌더 자동화"
   ],
   "nav": [
-    { "id": "about", "label": "About" },
+    { "id": "top", "label": "Home" },
     { "id": "portfolio", "label": "Portfolio" },
     { "id": "contact", "label": "Contact" }
   ],
   "hero": {
-    "label": "AI AUTOMATION STUDIO",
-    "title": "비즈니스의 모든 과정을 AI로 자동화합니다. SUTUDIO",
-    "subtitle": "수튜디오는 복잡한 비즈니스 흐름을 더 선명하고 더 빠른 자동화 시스템으로 다시 설계합니다. 브랜드 사이트부터 운영 워크플로우까지 하나의 구조로 연결합니다.",
-    "primaryCta": "협업 문의하기",
-    "secondaryCta": "구축 사례 보기"
+    "title": "대표님들의 시간을 아껴드립니다. 비즈니스의 모든 과정을 AI로 자동화합니다.",
+    "subtitle": "SULAB은 누끼토끼처럼 설득력 있는 비주얼과 노베이스 클래스처럼 정교한 구조를 결합해, 전환되는 홈페이지와 운영 가능한 자동화 시스템을 함께 만듭니다.",
+    "primaryCta": "자세히 보기",
+    "secondaryCta": "문의하기"
   },
-  "story": {
-    "label": "Story",
-    "title": "수튜디오는 AI 자동화로 비즈니스의 새로운 표준을 만듭니다.",
-    "description": "이진수 대표는 사람이 반복적으로 처리하던 실무를 AI와 시스템으로 전환해 더 큰 성과를 만드는 데 집중합니다. 빠르게 보이는 결과보다, 실제 운영 효율과 전환 구조가 동시에 개선되는 설계를 우선합니다.",
-    "image": "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&q=80&w=1600"
-  },
-  "values": [
-    {
-      "number": "01",
-      "title": "필요한 자동화부터 설계",
-      "description": "트렌디한 기술을 나열하지 않고, 지금 사업에 가장 필요한 반복 업무부터 정의하고 자동화합니다."
-    },
-    {
-      "number": "02",
-      "title": "카피와 구조를 함께 설계",
-      "description": "예쁜 화면만 만드는 것이 아니라 고객이 이해하고 행동하게 만드는 흐름을 먼저 만듭니다."
-    },
-    {
-      "number": "03",
-      "title": "운영 가능한 시스템으로 마무리",
-      "description": "배포 이후에도 바로 운영할 수 있도록 문서화와 워크플로우까지 정리된 결과물을 제공합니다."
-    }
-  ],
   "stats": [
     {
-      "value": 100,
+      "value": 150,
       "suffix": "+",
-      "label": "자동화 시스템 구축",
-      "description": "브랜드 사이트와 운영 자동화를 결합한 누적 프로젝트 기준"
+      "label": "누적 프로젝트"
     },
     {
-      "value": 95,
+      "value": 80,
+      "suffix": "+",
+      "label": "함께한 파트너"
+    },
+    {
+      "value": 99,
       "suffix": "%",
-      "label": "업무 효율 증대",
-      "description": "반복 업무 자동화 이후 체감되는 평균 효율 개선 수치"
-    },
-    {
-      "value": 10,
-      "suffix": "분",
-      "label": "초안 설계 속도",
-      "description": "AI 기반으로 브랜드 구조와 카피 초안을 정리하는 평균 시작 시간"
-    },
-    {
-      "value": 30,
-      "suffix": "+",
-      "label": "브랜드 카테고리 경험",
-      "description": "교육, 로컬 비즈니스, 전문가 서비스, 디지털 제품 구축 경험"
+      "label": "고객 만족도"
     }
   ],
   "portfolio": [
     {
-      "title": "Premium Study Cafe",
-      "category": "Brand Site",
-      "description": "공간의 무드를 강조하면서도 문의와 예약 전환을 선명하게 만드는 프리미엄 스터디카페 구축 사례입니다.",
+      "title": "강남역 24시 무인 스터디카페",
+      "category": "Premium Landing",
+      "description": "프리미엄 공간 이미지를 전면에 배치하고, 문의와 좌석 확인 전환을 선명하게 설계한 랜딩 프로젝트입니다.",
       "image": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1400"
     },
     {
-      "title": "AI Music Academy",
-      "category": "Education Landing",
-      "description": "커리큘럼, 후기, 상담 CTA가 자연스럽게 이어지도록 설계한 교육 브랜드 랜딩 사례입니다.",
+      "title": "AI 음악 학원",
+      "category": "Education Brand",
+      "description": "교육 서비스의 신뢰와 상담 전환을 동시에 잡기 위해 커리큘럼과 브랜드 무드를 정교하게 배치한 사례입니다.",
       "image": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&q=80&w=1400"
     },
     {
       "title": "Automation Consulting",
       "category": "Service Portfolio",
-      "description": "대표 전문성과 자동화 프로세스를 동시에 보여주며 B2B 문의로 이어지게 만든 전문가 포트폴리오입니다.",
+      "description": "전문가 포지셔닝과 자동화 프로세스를 한 화면에서 이해시키는 B2B 서비스형 포트폴리오입니다.",
       "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1400"
+    },
+    {
+      "title": "Luxury Wellness Brand",
+      "category": "Brand Website",
+      "description": "미니멀한 이미지와 절제된 카피를 통해 프리미엄 브랜드 톤을 강조한 구축 사례입니다.",
+      "image": "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80&w=1400"
+    },
+    {
+      "title": "Executive Business Site",
+      "category": "Corporate Website",
+      "description": "대표 소개, 핵심 서비스, 문의 흐름을 명확히 설계해 빠른 신뢰 형성이 가능하도록 만든 프로젝트입니다.",
+      "image": "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1400"
+    },
+    {
+      "title": "Creative Commerce Page",
+      "category": "Commerce Landing",
+      "description": "브랜드 감성과 판매 구조를 동시에 살리기 위해 강한 비주얼과 명확한 CTA를 결합한 페이지입니다.",
+      "image": "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&q=80&w=1400"
     }
   ],
-  "partners": [
-    { "name": "IMWEB" },
-    { "name": "NOTION" },
-    { "name": "SLACK" },
-    { "name": "OPENAI" },
-    { "name": "GOOGLE" },
-    { "name": "META ADS" },
-    { "name": "YOUTUBE" },
-    { "name": "COUPANG" }
+  "tickerLogos": [
+    "OPENAI",
+    "NOTION",
+    "SLACK",
+    "META ADS",
+    "GOOGLE",
+    "YOUTUBE",
+    "COUPANG",
+    "IMWEB",
+    "FIGMA",
+    "STRIPE",
+    "SHOPIFY",
+    "AIRTABLE",
+    "MAKE",
+    "ZAPIER",
+    "WEBFLOW",
+    "HUBSPOT",
+    "GA4",
+    "TALLY",
+    "TYPEFORM",
+    "MAILCHIMP",
+    "FRAMER",
+    "CLOUDFLARE"
   ],
-  "contact": {
-    "label": "Contact",
-    "title": "자동화가 필요한 브랜드와 함께 일합니다.",
-    "description": "브랜드 소개 페이지, 자동화 시스템, 반복 업무 효율화가 필요하다면 수튜디오와 구조부터 다시 설계해보세요.",
-    "email": "hello@sutudio.ai",
-    "cta": "문의 남기기"
+  "footer": {
+    "company": "SULAB",
+    "owner": "이진수",
+    "youtubeUrl": "https://www.youtube.com/",
+    "instagramUrl": "https://www.instagram.com/"
   }
 }
