@@ -23,7 +23,7 @@ const portfolioItems = [
 
 export default function PortfolioSection() {
   return (
-    <section className="py-24 px-4 md:px-8">
+    <section id="portfolio" className="py-24 px-4 md:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           {portfolioItems.map((item) => (
