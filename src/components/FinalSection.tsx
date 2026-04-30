@@ -43,7 +43,7 @@ export default function FinalSection() {
           </div>
 
           <div className="absolute bottom-[12%] left-[8%] lg:bottom-[20%]">
-            <div className="liquid-glass divide-y divide-white/10 rounded-[0.5rem] sm:rounded-[1rem] md:rounded-[1.25rem] overflow-hidden">
+            <div className="liquid-glass divide-y divide-white/10 overflow-hidden rounded-[0.5rem] sm:rounded-[1rem] md:rounded-[1.25rem]">
               {socialLinks.map((item) => {
                 const Icon = item.icon
 
@@ -51,7 +51,7 @@ export default function FinalSection() {
                   <a
                     key={item.label}
                     aria-label={item.label}
-                    className={`flex items-center justify-center text-[#EFF4FF] transition-transform hover:scale-105 w-[14vw] h-[3.25rem] px-4 sm:w-[14.375rem] sm:h-[3.5rem] sm:px-5 md:w-[10.78125rem] md:h-[3.75rem] lg:w-[16.77rem] lg:h-[4.25rem]`}
+                    className="flex h-[3.25rem] w-[14vw] items-center justify-center px-4 text-[#EFF4FF] transition-transform hover:scale-105 sm:h-[3.5rem] sm:w-[14.375rem] sm:px-5 md:h-[3.75rem] md:w-[10.78125rem] lg:h-[4.25rem] lg:w-[16.77rem]"
                     href="#"
                   >
                     <Icon className="h-5 w-5" />

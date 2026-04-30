@@ -7,6 +7,7 @@ const navItems = [
   { label: 'FAQ', href: '#contact' },
   { label: 'Contact', href: '#contact' },
 ]
+
 const socialLinks = [
   { label: 'Mail', icon: Mail },
   { label: 'Twitter', icon: Twitter },
@@ -15,10 +16,13 @@ const socialLinks = [
 
 export default function HeroSection() {
   return (
-    <section id="home" className="relative overflow-hidden rounded-b-[32px] bg-[#010828]">
+    <section
+      id="home"
+      className="relative overflow-hidden rounded-b-[32px] bg-[#010828]"
+    >
       <div className="absolute inset-0">
         <video
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover object-bottom"
           autoPlay
           muted
           loop

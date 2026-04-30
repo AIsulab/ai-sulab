@@ -28,7 +28,7 @@ export default function CollectionSection() {
               Collection of
               <br />
               <span className="ml-12 sm:ml-24 lg:ml-32">
-                <span className="font-condiment text-neon italic">Space</span> objects
+                <span className="font-condiment italic text-neon">Space</span> objects
               </span>
             </h2>
           </div>

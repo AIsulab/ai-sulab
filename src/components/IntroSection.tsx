@@ -3,7 +3,10 @@ export default function IntroSection() {
     'A digital object fixed beyond time and place. An exploration of distance, form, and silence in space'
 
   return (
-    <section id="about" className="relative overflow-hidden bg-[#010828]">
+    <section
+      id="about"
+      className="relative overflow-hidden bg-[#010828]"
+    >
       <div className="absolute inset-0">
         <video
           className="h-full w-full object-cover"
