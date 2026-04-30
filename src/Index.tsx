@@ -1,17 +1,20 @@
 import HeroSection from './components/HeroSection'
-import AboutSection from './components/AboutSection'
-import FeaturedVideoSection from './components/FeaturedVideoSection'
-import PhilosophySection from './components/PhilosophySection'
-import ServicesSection from './components/ServicesSection'
+import IntroSection from './components/IntroSection'
+import CollectionSection from './components/CollectionSection'
+import FinalSection from './components/FinalSection'
 
 export default function Index() {
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="relative bg-[#010828] text-[#EFF4FF]">
       <HeroSection />
-      <AboutSection />
-      <FeaturedVideoSection />
-      <PhilosophySection />
-      <ServicesSection />
+      <IntroSection />
+      <CollectionSection />
+      <FinalSection />
+      <div
+        aria-hidden="true"
+        className="texture-overlay"
+        style={{ backgroundImage: `url(${import.meta.env.BASE_URL}texture.png)` }}
+      />
     </main>
   )
 }

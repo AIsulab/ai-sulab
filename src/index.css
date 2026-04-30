@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Condiment&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,9 +6,9 @@
 
 @layer base {
   :root {
-    color: #ffffff;
-    background: #000000;
-    font-family: 'Instrument Serif', serif;
+    color: #eff4ff;
+    background: #010828;
+    font-family: 'Anton', sans-serif;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -20,16 +20,16 @@
 
   html {
     scroll-behavior: smooth;
-    background: #000000;
+    background: #010828;
   }
 
   body {
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
-    background: #000000;
-    color: #ffffff;
-    font-family: 'Instrument Serif', serif;
+    background: #010828;
+    color: #eff4ff;
+    font-family: 'Anton', sans-serif;
   }
 
   button,
@@ -46,7 +46,7 @@
 
   #root {
     min-height: 100vh;
-    background: #000000;
+    background: #010828;
   }
 }
 
@@ -81,5 +81,16 @@
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
+  }
+
+  .texture-overlay {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    opacity: 0.6;
+    background-size: cover;
+    background-position: center;
+    mix-blend-mode: lighten;
   }
 }

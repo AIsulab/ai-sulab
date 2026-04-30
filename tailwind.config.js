@@ -4,10 +4,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        brand: '#EE3F2C',
+        cream: '#EFF4FF',
+        neon: '#6FFF00',
+        space: '#010828',
       },
-      boxShadow: {
-        glass: 'inset 0 1px 0 rgba(255,255,255,0.08), 0 18px 50px rgba(0,0,0,0.45)',
+      fontFamily: {
+        grotesk: ['Anton', 'sans-serif'],
+        condiment: ['Condiment', 'cursive'],
       },
     },
   },
