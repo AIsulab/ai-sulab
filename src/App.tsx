@@ -1,113 +1,90 @@
-import { useEffect, useRef, useState, type WheelEvent } from 'react'
+import { Phone } from 'lucide-react'
 
-const slides = [
-  {
-    category: 'Revenue Engine.',
-    title: 'AI 자동화로 대표님의 시간을 10배로 늘려드립니다.',
-    videoSrc: 'https://www.w3schools.com/html/mov_bbb.mp4',
-  },
-  {
-    category: '150+ Projects.',
-    title: '무인 카페 / 교육 / SaaS 맞춤 자동화',
-    videoSrc: 'https://www.w3schools.com/html/movie.mp4',
-  },
-  {
-    category: 'AI Estimate Engine.',
-    title: '업종과 기능을 고르면 실시간으로 예상 견적이 산출됩니다.',
-    videoSrc: 'https://www.w3schools.com/html/mov_bbb.mp4',
-  },
-  {
-    category: '3-Step Solution.',
-    title: '유튜브 자동화, AI 콘텐츠 생성, SaaS형 자동화 시스템 구축',
-    videoSrc: 'https://www.w3schools.com/html/movie.mp4',
-  },
-]
+const navItems = ['Home', 'About', 'Contact Us']
 
 export default function App() {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const wheelLockRef = useRef(false)
-  const wheelUnlockTimeoutRef = useRef<number | null>(null)
-
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setCurrentIndex((current) => (current + 1) % slides.length)
-    }, 5000)
-
-    return () => window.clearInterval(timer)
-  }, [])
-
-  useEffect(() => {
-    return () => {
-      if (wheelUnlockTimeoutRef.current !== null) {
-        window.clearTimeout(wheelUnlockTimeoutRef.current)
-      }
-    }
-  }, [])
-
-  const goNext = () => {
-    setCurrentIndex((current) => (current + 1) % slides.length)
-  }
-
-  const goPrev = () => {
-    setCurrentIndex((current) => (current - 1 + slides.length) % slides.length)
-  }
-
-  const handleWheel = (event: WheelEvent<HTMLDivElement>) => {
-    event.preventDefault()
-
-    if (wheelLockRef.current) {
-      return
-    }
-
-    wheelLockRef.current = true
-
-    if (event.deltaY > 0) {
-      goNext()
-    } else if (event.deltaY < 0) {
-      goPrev()
-    }
-
-    wheelUnlockTimeoutRef.current = window.setTimeout(() => {
-      wheelLockRef.current = false
-    }, 1000)
-  }
-
   return (
-    <div
-      className="h-screen w-full overflow-hidden bg-black"
-      onWheel={handleWheel}
-    >
-      <div
-        className="flex h-full transition-transform duration-1000 ease-in-out"
-        style={{ transform: `translateX(-${currentIndex * 100}vw)` }}
+    <main className="hero-shell relative bg-black">
+      <video
+        className="hero-video absolute inset-0 h-full w-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
       >
-        {slides.map((slide) => (
-          <section key={slide.category} className="relative h-full w-screen flex-shrink-0">
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="absolute inset-0 h-full w-full object-cover opacity-50"
-            >
-              <source src={slide.videoSrc} type="video/mp4" />
-            </video>
+        <source
+          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260227_042027_c4b2f2ea-1c7c-4d6e-9e3d-81a78063703f.mp4"
+          type="video/mp4"
+        />
+      </video>
 
-            <div className="absolute inset-0 bg-black/40" />
+      <header className="hero-header relative z-10">
+        <a className="brand" href="#top" aria-label="targo home">
+          <svg
+            className="brand-mark"
+            viewBox="0 0 64 64"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M10 30.5C10 20.2837 18.2837 12 28.5 12H39.5C49.7163 12 58 20.2837 58 30.5V31.5C58 41.7163 49.7163 50 39.5 50H28.5C18.2837 50 10 41.7163 10 31.5V30.5Z"
+              stroke="white"
+              strokeWidth="2.4"
+            />
+            <path
+              d="M19 33.5C22.3333 26.8333 27 23.5 33 23.5C39 23.5 43.6667 26.8333 47 33.5"
+              stroke="white"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+            />
+            <circle cx="24" cy="29" r="2.4" fill="white" />
+            <circle cx="40" cy="29" r="2.4" fill="white" />
+          </svg>
+          <span className="brand-wordmark">targo</span>
+        </a>
 
-            <div className="relative z-10 flex h-full items-end px-4 pb-16 md:px-8 md:pb-20">
-              <div className="max-w-5xl">
-                <p className="mb-2 text-xl text-gray-400 md:text-2xl">
-                  {slide.category}
-                </p>
-                <h1 className="text-4xl font-bold tracking-tight text-white md:text-6xl">
-                  {slide.title}
-                </h1>
-              </div>
-            </div>
-          </section>
-        ))}
-      </div>
-    </div>
+        <nav className="hero-nav" aria-label="Primary">
+          {navItems.map((item) => (
+            <a key={item} href={`#${item.toLowerCase().replace(/\s+/g, '-')}`}>
+              {item}
+            </a>
+          ))}
+        </nav>
+
+        <a className="btn btn-sm btn-red clip-shape" href="#contact">
+          Contact Us
+        </a>
+      </header>
+
+      <section className="hero-content relative z-10" id="top">
+        <div className="hero-copy">
+          <p className="eyebrow">Global logistics</p>
+          <h1>Swift and Simple Transport</h1>
+          <a className="btn btn-lg btn-red clip-shape" href="#contact">
+            Get Started
+          </a>
+        </div>
+      </section>
+
+      <section className="consult-card-wrap relative z-10" id="contact">
+        <article className="consult-card">
+          <div className="shine" aria-hidden="true" />
+          <div className="consult-copy">
+            <p className="consult-label">Need a route plan?</p>
+            <h2>Book a Free Consultation</h2>
+            <p>
+              Talk through shipment timing, transport scope, and the fastest way to move
+              your operation forward.
+            </p>
+          </div>
+
+          <a className="btn btn-call clip-shape btn-white" href="tel:+10000000000">
+            <Phone size={18} strokeWidth={2.25} />
+            Book a Call
+          </a>
+        </article>
+      </section>
+    </main>
   )
 }
