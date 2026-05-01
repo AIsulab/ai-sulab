@@ -1,23 +1,228 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#010828" />
+    <meta name="color-scheme" content="dark" />
     <meta
       name="description"
-      content="Orbis.Nft landing page built with React, Vite, and Tailwind CSS."
+      content="AI 자동화 프롬프트 라이브러리와 리드 마그넷을 결합한 고객 DB 수집형 랜딩 페이지"
     />
+    <title>AI 자동화 프롬프트 라이브러리</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Anton&family=Condiment&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
       rel="stylesheet"
     />
-    <title>Orbis.Nft</title>
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <div class="page-shell">
+      <header class="topbar" id="top">
+        <a class="brand" href="#top" aria-label="AI 자동화 프롬프트 라이브러리 홈">
+          <span class="brand-badge" aria-hidden="true"></span>
+          <span>AI 자동화 프롬프트 라이브러리</span>
+        </a>
+        <p class="topbar-meta">
+          1인 AI 자동화 사업자 · 고객 DB 수집 · 즉시 배포 가능한 정적 랜딩
+        </p>
+        <a class="ghost-link" href="#lead-form">리드 마그넷 받기</a>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="hero-copy">
+            <span class="eyebrow">Prompt library · Lead magnet · Customer DB</span>
+            <h1>
+              AI 자동화 프롬프트 라이브러리
+            </h1>
+            <p class="hero-description">
+              유튜브 파이프라인, 쿠팡/제휴마케팅, SaaS 구축, AI 콘텐츠까지 연결되는
+              리드 제너레이션형 프롬프트 허브입니다. 방문자는 프롬프트를 탐색하고,
+              당신은 이메일을 수집해 재방문과 전환을 만듭니다.
+            </p>
+
+            <div class="hero-actions">
+              <a class="gift-cta" href="#lead-form">
+                <span>
+                  <strong>🎁 월 100만 원 버는 AI 파이프라인 구축 노션 템플릿 받기</strong>
+                  <small>이메일을 남기면 자동으로 다운로드 안내를 받습니다.</small>
+                </span>
+                <span class="gift-cta__arrow" aria-hidden="true">↗</span>
+              </a>
+              <button class="btn-secondary" type="button" data-scroll-library>
+                프롬프트 탐색
+              </button>
+            </div>
+
+            <ul class="hero-points" aria-label="핵심 포인트">
+              <li>블루 / 퍼플 그라데이션 테마</li>
+              <li>검색 · 카테고리 필터 · 클립보드 복사</li>
+              <li>이메일 수집용 리드 폼 포함</li>
+            </ul>
+          </div>
+
+          <aside class="profile-card" aria-label="프로필 영역">
+            <div class="profile-header">
+              <div class="avatar" aria-hidden="true">AI</div>
+              <div>
+                <p class="profile-kicker">AI 자동화 사업자</p>
+                <h2>한 사람의 운영으로도 확장되는 시스템</h2>
+              </div>
+            </div>
+
+            <p class="profile-copy">
+              콘텐츠 생성, 리드 분류, 전환 시퀀스, 후속 세일즈까지 자동화하는 1인
+              비즈니스용 운영 구조를 설계합니다.
+            </p>
+
+            <div class="profile-badges">
+              <span class="pill">Notion 시스템</span>
+              <span class="pill">CRM 파이프라인</span>
+              <span class="pill">리드 스코어링</span>
+              <span class="pill">콘텐츠 재활용</span>
+            </div>
+
+            <div class="profile-list">
+              <div class="profile-item">
+                <span>전환 목표</span>
+                <strong>고객 DB 확보</strong>
+              </div>
+              <div class="profile-item">
+                <span>운영 방식</span>
+                <strong>검색 기반 프롬프트 라이브러리</strong>
+              </div>
+              <div class="profile-item">
+                <span>배포 환경</span>
+                <strong>Vercel / GitHub Pages</strong>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="lead-strip" aria-labelledby="lead-strip-title">
+          <div class="lead-strip__copy">
+            <p class="section-label">Lead Magnet</p>
+            <h2 id="lead-strip-title">상단 CTA에서 바로 이메일을 수집하세요</h2>
+            <p>
+              방문자를 프롬프트 소비자로만 끝내지 말고, 템플릿 다운로드와 후속 메일
+              흐름으로 연결합니다.
+            </p>
+          </div>
+          <div class="lead-strip__stats" id="stats">
+            <article class="stat-card">
+              <span>프롬프트</span>
+              <strong data-stat="prompts">0</strong>
+            </article>
+            <article class="stat-card">
+              <span>카테고리</span>
+              <strong data-stat="categories">0</strong>
+            </article>
+            <article class="stat-card">
+              <span>저장 리드</span>
+              <strong data-stat="leads">0</strong>
+            </article>
+          </div>
+        </section>
+
+        <section class="lead-form-section" id="lead-form" aria-labelledby="lead-form-title">
+          <div class="lead-card">
+            <p class="section-label">Email Capture</p>
+            <h2 id="lead-form-title">무료 노션 템플릿 받기</h2>
+            <p class="lead-copy">
+              이름과 이메일만 남기면 AI 자동화 파이프라인 구축 템플릿을 받을 수 있습니다.
+              실서비스에서는 이 폼을 Formspree, Tally, Make, Notion API 같은 리드 DB와
+              연결하면 됩니다.
+            </p>
+
+            <form class="lead-form" id="leadCaptureForm">
+              <label>
+                <span>이름</span>
+                <input name="name" type="text" placeholder="홍길동" autocomplete="name" />
+              </label>
+              <label>
+                <span>이메일 *</span>
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  autocomplete="email"
+                  required
+                />
+              </label>
+              <label>
+                <span>관심 분야</span>
+                <select name="interest">
+                  <option value="automation">AI 자동화</option>
+                  <option value="youtube">유튜브 파이프라인</option>
+                  <option value="affiliate">쿠팡/제휴마케팅</option>
+                  <option value="saas">SaaS 구축</option>
+                  <option value="content">AI 콘텐츠</option>
+                </select>
+              </label>
+              <button class="submit-btn" type="submit">
+                템플릿 받기
+              </button>
+            </form>
+          </div>
+
+          <div class="lead-proof">
+            <p class="section-label">왜 이 구조인가</p>
+            <ul>
+              <li>카드 탐색과 이메일 수집을 같은 페이지에서 끝냄</li>
+              <li>검색어와 카테고리로 방문자의 관심도를 바로 확인</li>
+              <li>복사 버튼으로 실제 사용 가치를 먼저 체감하게 만듦</li>
+            </ul>
+            <div class="lead-note">
+              고객 DB는 별도 백엔드나 폼 서비스로 연결하면 즉시 실전 운영이 가능합니다.
+            </div>
+          </div>
+        </section>
+
+        <section class="library-section" id="library" aria-labelledby="library-title">
+          <div class="library-header">
+            <div>
+              <p class="section-label">Prompt Library</p>
+              <h2 id="library-title">바로 복사해서 쓰는 프롬프트</h2>
+            </div>
+            <div class="library-meta">
+              <span id="resultCount">0개 결과</span>
+              <span>카드 클릭이 아닌 버튼 복사 방식으로 오작동을 줄였습니다.</span>
+            </div>
+          </div>
+
+          <div class="library-toolbar">
+            <label class="search-wrap" for="searchInput">
+              <span class="search-label">검색</span>
+              <input
+                id="searchInput"
+                class="search-input"
+                type="search"
+                placeholder="프롬프트, 태그, 카테고리 검색"
+                autocomplete="off"
+              />
+            </label>
+            <div class="filters" id="categoryFilters" aria-label="카테고리 필터"></div>
+          </div>
+
+          <div class="prompt-grid" id="promptGrid" aria-live="polite"></div>
+        </section>
+
+        <footer class="footer">
+          <p>© 2026 AI 자동화 프롬프트 라이브러리. Lead generation landing page.</p>
+        </footer>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <noscript>
+      <div class="noscript">
+        이 사이트는 검색, 필터링, 복사 기능을 위해 자바스크립트를 사용합니다.
+      </div>
+    </noscript>
+
+    <script type="module" src="./app.js"></script>
   </body>
 </html>
