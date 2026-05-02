@@ -118,12 +118,14 @@ img {
   text-transform: uppercase;
 }
 
-.brand-badge {
+.brand-logo {
   width: 42px;
   height: 42px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
+  object-fit: contain;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.95);
   box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  padding: 2px;
 }
 
 .topbar-meta {
@@ -381,18 +383,15 @@ img {
   gap: 14px;
 }
 
-.avatar {
+.profile-avatar {
   display: grid;
   place-items: center;
   flex: none;
   width: 56px;
   height: 56px;
   border-radius: 18px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  background: linear-gradient(135deg, rgba(124, 140, 255, 0.9), rgba(34, 211, 238, 0.9));
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.94);
   box-shadow: var(--shadow-card);
 }
 
