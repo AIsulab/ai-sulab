@@ -167,7 +167,7 @@ function renderLeadStats() {
 
   if (els.statPrompts) els.statPrompts.textContent = String(promptCount)
   if (els.statCategories) els.statCategories.textContent = String(categoryCount)
-  if (els.statLeads) els.statLeads.textContent = String(state.leads)
+  if (els.statLeads) els.statLeads.textContent = state.leads > 0 ? String(state.leads) : '—'
   if (els.resultCount) {
     els.resultCount.textContent = `${state.filtered.length}개 결과`
   }
@@ -194,7 +194,7 @@ function renderPromptCard(prompt, index) {
   const preview = escapeHtml(prompt.prompt.slice(0, 260))
 
   return `
-    <article class="prompt-card">
+    <article class="prompt-card" data-cat="${prompt.category}">
       <div class="prompt-card__head">
         <span class="chip">${categoryLabel(prompt.category)}</span>
         <span class="prompt-card__index">#${indexLabel}</span>
