@@ -785,10 +785,10 @@ h2 {
   max-width: min(92vw, 420px);
   padding: 12px 18px;
   border-radius: 10px;
-  background: var(--ink-1);
+  background: #7c3aed;
   color: #fff;
   font-size: 13px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  box-shadow: 0 12px 36px rgba(124, 58, 237, 0.3);
   opacity: 0;
   transition: opacity 200ms ease, transform 200ms ease;
   pointer-events: none;
