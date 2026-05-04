@@ -6,17 +6,13 @@ const CATS = [
   { id: 'all', label: '전체' },
   { id: 'automation', label: 'AI 자동화' },
   { id: 'youtube', label: '유튜브 파이프라인' },
-  { id: 'affiliate', label: '쿠팡/어필리에이트' },
+  { id: 'affiliate', label: '쿠팡/제휴마케팅' },
   { id: 'saas', label: 'SaaS 구축' },
   { id: 'content', label: 'AI 콘텐츠' },
 ];
 
 const storageKey = 'sulab-leads';
 const endpointKey = 'SULAB_LEAD_ENDPOINT';
-const templateFormUrl = 'https://forms.gle/K6YEXsJzvpvwpwPQ6';
-const templateToastMessage =
-  '구글 폼에서 정보를 입력하시면 이메일로 템플릿이 즉시 발송됩니다!';
-const templateToastDelayMs = 2000;
 const activeToast = { timer: null };
 
 const state = {
@@ -25,8 +21,8 @@ const state = {
   query: '',
   category: 'all',
   leads: loadStoredLeads().length,
-  pageSize: 9,
-  visible: 9,
+  pageSize: 12,
+  visible: 12,
 };
 
 const els = {};
@@ -54,7 +50,6 @@ function cacheElements() {
   els.loadMoreWrap = document.getElementById('loadMoreWrap');
   els.loadMoreBtn = document.getElementById('loadMoreBtn');
   els.loadMoreMeta = document.getElementById('loadMoreMeta');
-  els.templateLink = document.querySelector('[data-template-link]');
 }
 
 function bindStaticEvents() {
@@ -78,8 +73,6 @@ function bindStaticEvents() {
     state.visible += state.pageSize;
     renderPromptCards();
   });
-
-  els.templateLink?.addEventListener('click', handleTemplateLinkClick);
 
   els.promptGrid?.addEventListener('click', async (event) => {
     const target = event.target instanceof Element ? event.target : null;
@@ -138,38 +131,6 @@ function updateActiveCategory() {
   els.categoryFilters?.querySelectorAll('[data-category]').forEach((button) => {
     button.classList.toggle('is-active', button.dataset.category === state.category);
   });
-}
-
-function handleTemplateLinkClick(event) {
-  event.preventDefault();
-
-  showToast(templateToastMessage, templateToastDelayMs);
-
-  const popup = window.open('about:blank', '_blank');
-  if (!popup) return;
-
-  try {
-    popup.opener = null;
-  } catch {
-    // Ignore browsers that disallow changing opener on the returned window.
-  }
-
-  try {
-    popup.document.write(
-      '<!doctype html><title>템플릿 이동 중</title><p style="font-family:sans-serif;padding:24px;">구글 폼으로 이동하는 중입니다...</p>',
-    );
-    popup.document.close();
-  } catch {
-    // Some browsers may block document access on the new tab; navigation still works.
-  }
-
-  window.setTimeout(() => {
-    try {
-      popup.location.href = templateFormUrl;
-    } catch {
-      window.open(templateFormUrl, '_blank');
-    }
-  }, templateToastDelayMs);
 }
 
 async function loadPrompts() {
@@ -231,7 +192,7 @@ function renderPromptCards() {
     if (remaining > 0) {
       els.loadMoreWrap.hidden = false;
       if (els.loadMoreBtn) {
-        els.loadMoreBtn.textContent = `더 보기 (+${remaining})`;
+        els.loadMoreBtn.textContent = `더 보기 (+${Math.min(state.pageSize, remaining)})`;
       }
       if (els.loadMoreMeta) {
         els.loadMoreMeta.textContent = `${visibleItems.length} / ${state.filtered.length}`;
@@ -338,12 +299,12 @@ async function saveLead(lead) {
   }
 }
 
-function showToast(message, durationMs = 2200) {
+function showToast(message) {
   if (!els.toast) return;
   els.toast.textContent = message;
   els.toast.classList.add('is-visible');
   if (activeToast.timer) window.clearTimeout(activeToast.timer);
   activeToast.timer = window.setTimeout(() => {
     els.toast.classList.remove('is-visible');
-  }, durationMs);
+  }, 2200);
 }

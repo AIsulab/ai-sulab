@@ -3,15 +3,15 @@
     "id": 1,
     "category": "automation",
     "title": "AI 리드 응답 자동화 시스템",
-    "summary": "문의가 들어오면 자동으로 긴급도를 분류하고, 맞춤 메시지와 요약 링크까지 자동으로 제안하는 프롬프트.",
+    "summary": "문의가 들어오면 의도와 긴급도를 분류하고, 후속 메시지와 예약 링크까지 자동으로 제안하는 프롬프트.",
     "prompt": "You are an AI sales operations manager. For each lead provided, return a table with: 1) Intent classification 2) Urgency level (P0/P1/P2) 3) Personalized follow-up message under 80 words 4) Best CTA (book a call / send pricing / nurture) 5) CRM note. Keep replies short — shorter responses convert better.",
-    "tags": ["CRM", "리드 분류", "팔로업 메시지"]
+    "tags": ["CRM", "리드 분류", "후속 메시지"]
   },
   {
     "id": 2,
     "category": "automation",
     "title": "고객 지원 티켓 자동 분류",
-    "summary": "지원 티켓을 자동 분류하고, 공개 열린 첫 응답 이슈를 생성하며, 에스컬레이션이 필요한 건을 탐지.",
+    "summary": "지원 티켓을 자동 분류하고, 공감 어린 첫 응답 초안을 작성하며, 에스컬레이션이 필요한 건을 표시.",
     "prompt": "You are a customer support triage agent. For each ticket: identify category (billing, bug, feature request, account, other), sentiment (frustrated/neutral/positive), priority, and write a draft first reply that acknowledges the issue, sets expectations, and asks one clarifying question if needed. Flag tickets that require human escalation.",
     "tags": ["고객 지원", "티켓", "분류"]
   },
@@ -27,7 +27,7 @@
     "id": 4,
     "category": "automation",
     "title": "받은편지함 데일리 브리핑",
-    "summary": "하루 이메일을 유형별로 묶어 5분 안에 읽는 아침 브리핑 + 우선 답장 이슈 작성.",
+    "summary": "하루 이메일을 의도별로 묶어 5분 안에 읽는 아침 브리핑 + 우선 답장 초안 생성.",
     "prompt": "You are my chief of staff. Read the emails below and produce a morning brief: (1) Top 3 items needing my decision today, (2) Drafts for replies I should send (under 60 words each), (3) Items safe to archive, (4) Items to delegate with suggested delegate. Output in markdown sections.",
     "tags": ["이메일", "받은편지함", "데일리"]
   },
@@ -58,16 +58,16 @@
   {
     "id": 8,
     "category": "automation",
-    "title": "콜드 이메일 5단계 시퀀스",
-    "summary": "타깃 퍼르소나에 맞춘 5번 점점 세지는 시퀀스 + A/B 제목 자동 작성.",
+    "title": "콜드 아웃리치 5단계 시퀀스",
+    "summary": "타깃 페르소나에 맞춘 5번 접점 아웃바운드 시퀀스 + A/B 제목 자동 생성.",
     "prompt": "You are an outbound sales strategist. For the target persona below, write a 5-touch sequence (email-email-LinkedIn-email-breakup). Each email: subject line A, subject line B, 70-word body, one CTA, personalization slot. Tone: human, specific, no buzzwords. Output as a table.",
     "tags": ["아웃바운드", "콜드메일", "시퀀스"]
   },
   {
     "id": 9,
     "category": "automation",
-    "title": "인보이스 미납금 리마인더",
-    "summary": "연체 일수와 고객 등급에 따라 톤이 달라지는 미납금 리마인더 메일을 자동 작성.",
+    "title": "인보이스 미수금 리마인더",
+    "summary": "연체 일수와 고객 등급에 따라 톤이 달라지는 미수금 리마인더 메일을 자동 작성.",
     "prompt": "You are a friendly AR specialist. Given an invoice age and customer tier, draft the appropriate reminder email: 3 days overdue (gentle), 14 days (firm), 30 days (formal with consequences), 60 days (final notice). Include payment link placeholder and option to discuss. Match tone to tier (SMB vs Enterprise).",
     "tags": ["재무", "인보이스", "AR"]
   },
@@ -75,7 +75,7 @@
     "id": 10,
     "category": "automation",
     "title": "슬랙 데일리 스탠드업 요약",
-    "summary": "비동기 스탠드업 스레드를 한 줄 전체 상태 다이제스트 한 장으로 압축.",
+    "summary": "비동기 스탠드업 스레드를 팀 전체 상태 다이제스트 한 장으로 압축.",
     "prompt": "You are a team operations bot. From the standup thread below, produce a team digest: (1) shipped yesterday, (2) shipping today, (3) blockers (with @mentions for who can unblock), (4) team morale signal. Keep total under 200 words. Use bullet points only.",
     "tags": ["슬랙", "스탠드업", "팀"]
   },
@@ -83,7 +83,7 @@
     "id": 11,
     "category": "youtube",
     "title": "유튜브 쇼츠 파이프라인 설계",
-    "summary": "롱폼 스크립트에서 쇼츠 후보 5개를 추출하고 훅, 썸네일, 제목까지 자동 작성.",
+    "summary": "롱폼 스크립트에서 쇼츠 후보 5개를 추출하고 훅, 썸네일, 제목까지 자동 생성.",
     "prompt": "You are a YouTube growth strategist. From the long-form script below, extract 5 Shorts candidates. For each: hook line (first 3 seconds), thumbnail text (max 4 words), 3 title options, captions emphasis points. Optimize for saves and rewatches over raw views.",
     "tags": ["쇼츠", "썸네일", "훅"]
   },
@@ -91,7 +91,7 @@
     "id": 12,
     "category": "youtube",
     "title": "바이럴 제목 & 썸네일 생성기",
-    "summary": "검증된 호기심 갭 패턴을 사용해 10개의 제목·썸네일 조합을 작성.",
+    "summary": "검증된 호기심 갭 패턴을 사용해 10개의 제목·썸네일 조합을 생성.",
     "prompt": "You are a YouTube packaging expert. For the video topic below, generate 10 title + thumbnail copy pairs. Use curiosity gap, contrast, specificity, and outcome framing. Avoid clickbait that doesn't deliver. Rank them by predicted CTR and explain the pattern used in each.",
     "tags": ["제목", "CTR", "패키징"]
   },
@@ -114,8 +114,8 @@
   {
     "id": 15,
     "category": "youtube",
-    "title": "B-roll 샷 리스트 작성",
-    "summary": "완성된 스크립트에서 타임스탬프별 B-roll·사가 타 리스트를 자동 작성.",
+    "title": "B-roll 샷 리스트 생성",
+    "summary": "완성된 스크립트에서 타임스탬프별 B-roll·시각 큐 리스트를 자동 생성.",
     "prompt": "You are a video editor's assistant. From the script below, generate a shot list: timestamp, scene, B-roll suggestion, on-screen text, transition style, music mood. Include 3 alternative shots per scene. Output as a CSV-ready table.",
     "tags": ["B-roll", "편집", "샷리스트"]
   },
@@ -123,7 +123,7 @@
     "id": 16,
     "category": "youtube",
     "title": "댓글 마이닝으로 영상 아이디어",
-    "summary": "유튜브 댓글을 테마별로 군집화해 시청자 핵심포인트와 다음 영상 아이디어 도출.",
+    "summary": "유튜브 댓글을 테마별로 군집화해 시청자 페인포인트와 다음 영상 아이디어 도출.",
     "prompt": "You are an audience research analyst. From the comments below, cluster them into 5-7 themes. For each theme: count, representative quote, sentiment, video idea it suggests, urgency. Output a prioritized content backlog.",
     "tags": ["댓글", "리서치", "아이디어"]
   },
@@ -147,25 +147,25 @@
     "id": 19,
     "category": "youtube",
     "title": "재사용 가능한 훅 라이브러리",
-    "summary": "성과 패턴별 20개 훅 템플릿 라이브러리 — 호기심·반발·문제 인식·선택 등.",
+    "summary": "성과 패턴별 20개 훅 템플릿 라이브러리 — 호기심·반전·문제인식·전환 등.",
     "prompt": "You are a hook strategist. Generate 20 reusable hook templates organized by pattern (curiosity, controversy, contrarian, problem-aware, transformation, social proof). For each: template, fill-in slots, example for the niche below, when to use, when to avoid.",
     "tags": ["훅", "템플릿", "라이브러리"]
   },
   {
     "id": 20,
     "category": "youtube",
-    "title": "챕터 마커 & SEO 설명란",
-    "summary": "트랜스크립트에서 정확한 챕터 마커, SEO 최적화 설명, 추천 태그 자동 작성.",
+    "title": "챕터 마커 & SEO 설명",
+    "summary": "트랜스크립트에서 정확한 챕터 마커, SEO 최적화 설명, 추천 태그 자동 생성.",
     "prompt": "You are a YouTube SEO specialist. From the transcript below, output: (1) chapter markers with timestamps and concise titles, (2) 200-word description with keywords naturally included, (3) 15 tags ranked by relevance, (4) suggested pinned comment that drives engagement.",
     "tags": ["SEO", "챕터", "설명"]
   },
   {
     "id": 21,
     "category": "affiliate",
-    "title": "쿠팡/어필리에이트 상품 최적화",
-    "summary": "구매 의도에 맞는 비교형 클릭 전 카피로 어필리 전환율을 높이는 프롬프트.",
+    "title": "쿠팡/제휴마케팅 전환 최적화",
+    "summary": "구매 의도에 맞는 비교표와 클릭 전 카피로 제휴 전환률을 높이는 프롬프트.",
     "prompt": "You are an affiliate marketing consultant. For the product category below, produce: (1) comparison criteria, (2) top 5 product recommendations with pros/cons, (3) pre-click copy that handles objections, (4) review-style hooks, (5) FAQ section. Avoid hype — write from a real-user lens.",
-    "tags": ["쿠팡", "비교형", "전환"]
+    "tags": ["쿠팡", "비교표", "전환"]
   },
   {
     "id": 22,
@@ -179,7 +179,7 @@
     "id": 23,
     "category": "affiliate",
     "title": "신뢰감 있는 상품 리뷰 글",
-    "summary": "직접 써본 뷰어 키울로 신뢰를 쌓고 클릭을 유도하는 1500자 롱폼 리뷰.",
+    "summary": "직접 써본 듯한 톤으로 신뢰를 쌓고 클릭을 유도하는 1500자 롱폼 리뷰.",
     "prompt": "You are a hands-on product reviewer. Write a 1500-word review of the product below: who it's for, unboxing impressions, daily use observations, head-to-head with one competitor, where it falls short, verdict score, who should NOT buy it. Insert affiliate CTAs naturally at 3 points.",
     "tags": ["리뷰", "롱폼", "신뢰"]
   },
@@ -195,7 +195,7 @@
     "id": 25,
     "category": "affiliate",
     "title": "FAQ 스키마 빌더",
-    "summary": "검색 스니펫과 상품 페이지 전환을 최적화하는 FAQ 콘텐츠 자동 작성.",
+    "summary": "검색 스니펫과 상품 페이지 전환에 최적화된 FAQ 콘텐츠 자동 생성.",
     "prompt": "You are an SEO content strategist. For the product/topic below, generate 10 FAQ Q&As optimized for featured snippets. Keep answers 40-60 words. Cover objections, comparisons, use cases, alternatives. Output as JSON-LD ready schema plus rendered HTML.",
     "tags": ["FAQ", "스키마", "스니펫"]
   },
@@ -203,39 +203,39 @@
     "id": 26,
     "category": "affiliate",
     "title": "언박싱 영상 스크립트",
-    "summary": "어필리 링크 노출 타이밍과 시청자 유지 비트가 명시된 7분 언박싱 스크립트.",
+    "summary": "제휴 링크 노출 타이밍과 시청 유지 비트가 명시된 7분 언박싱 스크립트.",
     "prompt": "You are an unboxing creator. Write a 7-minute unboxing script for the product below: hook, expectation reveal, unboxing beats (each with B-roll cue), feature spotlight (3 features), real-use test, verdict, CTA. Mark exact timestamps for affiliate link mentions and pinned comment cue.",
     "tags": ["언박싱", "스크립트", "영상"]
   },
   {
     "id": 27,
     "category": "affiliate",
-    "title": "어필리 오퍼 3단 메일 캠페인",
-    "summary": "예고·론칭·라스트콜 3개의 메일로 구성된 어필리 오퍼 미니 캠페인.",
+    "title": "제휴 오퍼 3단 메일 캠페인",
+    "summary": "워밍업·런칭·라스트콜 3개의 메일로 구성된 제휴 오퍼 미니 캠페인.",
     "prompt": "You are an email copywriter. For the affiliate offer below, write 3 emails: (1) curiosity teaser day before, (2) launch day with full pitch, (3) last-call urgency. Each: subject line + preheader, 200-word body, P.S. with social proof, single CTA. Match the tone of an honest creator, not a hard seller.",
     "tags": ["이메일", "캠페인", "프로모션"]
   },
   {
     "id": 28,
     "category": "affiliate",
-    "title": "공정 규정 준수 카피 리라이트",
-    "summary": "설득력을 유지하면서 FTC·국내 광고 표현 규정에 맞게 카피를 다시 쓰기.",
+    "title": "공시 규정 준수 카피 리라이트",
+    "summary": "설득력은 유지하면서 FTC·국내 광고 표시 규정에 맞게 카피를 다시 쓰기.",
     "prompt": "You are a compliance-aware copywriter. Review the copy below and: (1) flag any claims that need substantiation, (2) add proper affiliate disclosure language, (3) rewrite borderline claims to be honest and still compelling, (4) suggest where disclosure should appear visually. Provide before/after side-by-side.",
-    "tags": ["컴플라이언스", "광고표현", "공정"]
+    "tags": ["컴플라이언스", "광고표시", "공시"]
   },
   {
     "id": 29,
     "category": "affiliate",
     "title": "핀터레스트 핀 카피 & 전략",
-    "summary": "어필리 글 하나에 대해 SEO 설명까지 포함된 핀 10개 변형을 자동 작성.",
+    "summary": "제휴 글 하나에 대해 SEO 설명까지 포함된 핀 10개 변형을 자동 생성.",
     "prompt": "You are a Pinterest marketing expert. For the article URL below, generate 10 pin variations: image concept, overlay text (max 8 words), pin title, 200-char description with keywords, board fit. Output as a table with predicted save rate and rationale.",
     "tags": ["핀터레스트", "핀", "트래픽"]
   },
   {
     "id": 30,
     "category": "affiliate",
-    "title": "전환율 감사 체크리스트",
-    "summary": "어필리 페이지의 클릭률·구매 마찰 항목별로 진단하고 개선 우선순위 도출.",
+    "title": "전환률 감사 체크리스트",
+    "summary": "제휴 페이지의 클릭률·구매 마찰을 항목별로 진단하고 개선 우선순위 도출.",
     "prompt": "You are a CRO consultant. For the page content below, audit: (1) above-the-fold clarity, (2) CTA visibility and copy, (3) trust signals, (4) friction points, (5) mobile reading flow, (6) link placement strategy. Output a prioritized fix list with expected lift estimates.",
     "tags": ["CRO", "감사", "전환"]
   },
@@ -243,7 +243,7 @@
     "id": 31,
     "category": "saas",
     "title": "SaaS 온보딩 이메일 7일 시퀀스",
-    "summary": "활성화 시점에 맞춘 7일 온보딩 + 성공 경로 포함 이메일 시퀀스.",
+    "summary": "활성화 순간에 맞춘 7일 온보딩 + 업셀 경로 포함 이메일 시퀀스.",
     "prompt": "You are a SaaS product marketer. Write a 7-day onboarding email sequence. Each email: subject, key message, single CTA, churn-prevention purpose. Lead with success outcomes before features. Include 1 personal-from-founder email and 1 case study email.",
     "tags": ["온보딩", "이메일", "활성화"]
   },
@@ -251,7 +251,7 @@
     "id": 32,
     "category": "saas",
     "title": "SaaS 가격 페이지 리라이트",
-    "summary": "가치 명확화와 의사결정 마찰 감소에 이점을 맞춘 가격 페이지 재구성.",
+    "summary": "가치 명확화와 의사결정 마비 감소에 초점을 맞춘 가격 페이지 재구성.",
     "prompt": "You are a SaaS pricing strategist. Rewrite the pricing page below: clear plan names, who-it's-for line per tier, top 5 features per tier (no exhaustive lists), 3 anchor differentiators, FAQ addressing top 5 objections, single recommended plan with reasoning. Avoid feature-list arms race.",
     "tags": ["가격", "전환", "카피"]
   },
@@ -266,10 +266,10 @@
   {
     "id": 34,
     "category": "saas",
-    "title": "이탈 사전 인터뷰 분석",
-    "summary": "자본 해지 피드백을 군집화해 실행 가능한 이탈 버킷으로 정리.",
+    "title": "이탈 사유 자동 태깅",
+    "summary": "원본 해지 피드백을 군집화해 실행 가능한 이탈 버킷으로 정리.",
     "prompt": "You are a customer success analyst. From the cancellation feedback below, cluster reasons into 6-8 buckets. For each: count, representative verbatim, root cause hypothesis, prevention idea, win-back angle. Rank by frequency and revenue impact.",
-    "tags": ["이탈", "피드백", "리서치"]
+    "tags": ["이탈", "피드백", "리텐션"]
   },
   {
     "id": 35,
@@ -291,7 +291,7 @@
     "id": 37,
     "category": "saas",
     "title": "연간 결제 업셀 메일",
-    "summary": "월간 구독자에게 가치 중심·절약 긴급성으로 연간 전환을 유도하는 메일.",
+    "summary": "월간 구독자에게 가치 중심·약한 긴급성으로 연간 전환을 유도하는 메일.",
     "prompt": "You are a SaaS lifecycle marketer. Write an upsell email targeting monthly subscribers active 3+ months. Lead with their usage milestones, frame annual savings as 2 free months, address commitment objection, soft urgency (offer ends in 14 days). Keep under 180 words. One CTA only.",
     "tags": ["업셀", "라이프사이클", "연간"]
   },
@@ -299,7 +299,7 @@
     "id": 38,
     "category": "saas",
     "title": "공개 로드맵 커뮤니케이션",
-    "summary": "내부 로드맵을 신뢰도 있고 과도한 약속을 피하는 공개 버전으로 변환.",
+    "summary": "내부 로드맵을 신뢰는 쌓되 과도한 약속은 피하는 공개 버전으로 변환.",
     "prompt": "You are a product communications lead. From the internal roadmap below, produce a public version with: Now / Next / Later columns, plain-English titles (no internal jargon), expected user benefit per item, what it explicitly does NOT include, comments-welcome CTA. Avoid dates; use directional language.",
     "tags": ["로드맵", "커뮤니케이션", "공개"]
   },
@@ -316,22 +316,22 @@
     "category": "saas",
     "title": "Git 커밋 → 체인지로그",
     "summary": "원본 git log를 사용자 친화적인 카테고리별 릴리즈 노트로 변환.",
-    "prompt": "You are a release notes writer. From the git log below, produce a changelog grouped into ✨ New, 📈 Improvements, 🐛 Fixes, 🔧 Under-the-hood. Translate technical commits to user-impact language. Skip internal-only changes. Add a one-line summary at the top.",
+    "prompt": "You are a release notes writer. From the git log below, produce a changelog grouped into ✨ New, 🚀 Improvements, 🐛 Fixes, 🔧 Under-the-hood. Translate technical commits to user-impact language. Skip internal-only changes. Add a one-line summary at the top.",
     "tags": ["체인지로그", "릴리즈 노트", "엔지니어링"]
   },
   {
     "id": 41,
     "category": "content",
     "title": "30일 콘텐츠 캘린더",
-    "summary": "플랫폼별 훅·CTA·재가공 타이밍까지 포함된 30일치 콘텐츠 캘린더 자동 작성.",
+    "summary": "플랫폼별 훅·CTA·재가공 페어까지 포함된 30일치 콘텐츠 캘린더 자동 작성.",
     "prompt": "You are a performance content strategist. Build a 30-day calendar from the brand info below. For each day: platform, format, hook, summary body, CTA, repurpose-from / repurpose-to links between posts. Aim for lead generation and consultation conversions over vanity metrics.",
-    "tags": ["캘린더", "재가공", "리드 생성"]
+    "tags": ["캘린더", "재가공", "리드 수집"]
   },
   {
     "id": 42,
     "category": "content",
     "title": "트위터/X 스레드 빌더",
-    "summary": "강력한 훅과 북마크할 만한 마무리가 있는 9개 트윗 스레드 자동 작성.",
+    "summary": "강력한 훅과 북마크할 만한 마무리가 있는 9개 트윗 스레드 자동 생성.",
     "prompt": "You are a Twitter ghostwriter. For the topic below, write a 9-tweet thread: hook tweet (must work standalone), 7 value tweets (one insight each, bookmark-worthy), close tweet with soft CTA. Use line breaks for readability. Avoid emojis except where they replace words.",
     "tags": ["트위터", "스레드", "참여"]
   },
@@ -339,7 +339,7 @@
     "id": 43,
     "category": "content",
     "title": "링크드인 퍼스널 브랜딩 글",
-    "summary": "개인 스토리·인사이트·약한 거리 CTA를 담은 링크드인 1300자 포스트.",
+    "summary": "개인 스토리·인사이트·생각 거리 CTA를 섞은 링크드인 1300자 포스트.",
     "prompt": "You are a LinkedIn ghostwriter. Write a 1300-character post on the topic below. Structure: pattern-interrupt opening line, personal story (3-4 short paragraphs), 3 takeaways formatted as a list, reflection question as CTA. Conversational tone. No #hashtag spam.",
     "tags": ["링크드인", "퍼스널 브랜드", "B2B"]
   },
@@ -347,7 +347,7 @@
     "id": 44,
     "category": "content",
     "title": "인스타그램 캐러셀 10장",
-    "summary": "팔질 훅 + 가치 흐름 + 저장할 만한 요약으로 구성된 10장 캐러셀.",
+    "summary": "표지 훅 + 가치 흐름 + 저장할 만한 요약으로 구성된 10장 캐러셀.",
     "prompt": "You are an Instagram content designer. For the topic below, write a 10-slide carousel: slide 1 cover hook (max 6 words), slides 2-9 progressive insights (one idea each, max 25 words), slide 10 summary + CTA. Add caption (150 words) with one question to drive comments.",
     "tags": ["인스타그램", "캐러셀", "저장"]
   },
@@ -355,7 +355,7 @@
     "id": 45,
     "category": "content",
     "title": "뉴스레터 한 호 구성",
-    "summary": "훅·메인 에세이·프레이즈 링크·구독자 전용 인사이트로 구성된 주간 뉴스레터.",
+    "summary": "훅·메인 에세이·큐레이션 링크·구독자 전용 인사이트로 구성된 주간 뉴스레터.",
     "prompt": "You are a newsletter editor. For the theme below, outline this week's edition: subject line A/B, preheader, hook (50 words), main essay (500 words, one strong opinion), 3 curated links with 1-line takes, subscriber-only insider nugget, soft CTA. Voice: smart friend, not corporate.",
     "tags": ["뉴스레터", "이메일", "에디토리얼"]
   },
@@ -371,15 +371,15 @@
     "id": 47,
     "category": "content",
     "title": "팟캐스트 게스트 출연 피치",
-    "summary": "주제 최근성·영상 스토리·청중 적합성을 담은 팟캐스트 게스트 피치 메일.",
+    "summary": "주제 앵글·예시 스토리·청중 적합성을 담은 팟캐스트 게스트 피치 메일.",
     "prompt": "You are a podcast booker. Draft a guest pitch to the show below: subject line, 80-word opener showing you've listened, 3 episode angles with sample story per angle, audience-fit reasoning, social proof, easy yes CTA. Sub-200 words total.",
     "tags": ["팟캐스트", "피치", "게스트"]
   },
   {
     "id": 48,
     "category": "content",
-    "title": "스토리텔링 프레임 적용",
-    "summary": "밋밋한 콘텐츠를 StoryBrand·영웅의 여정 구조로 다시 쓰기.",
+    "title": "스토리텔링 프레임워크 적용",
+    "summary": "밋밋한 콘텐츠를 StoryBrand·영웅의 여정 같은 구조로 다시 쓰기.",
     "prompt": "You are a story-driven copywriter. Rewrite the content below using the StoryBrand framework: Customer as hero, problem (external/internal/philosophical), guide positioning, plan, call to action, success vision, failure stakes. Output the rewrite plus a one-paragraph rationale per choice.",
     "tags": ["스토리텔링", "StoryBrand", "카피"]
   },
@@ -387,15 +387,15 @@
     "id": 49,
     "category": "content",
     "title": "브랜드 보이스 가이드라인",
-    "summary": "do/don't 예시까지 포함된 한 장 분량 브랜드 보이스 가이드 자동 작성.",
+    "summary": "do/don't 예시까지 포함된 한 장 분량 브랜드 보이스 가이드 자동 생성.",
     "prompt": "You are a brand strategist. From the brand description below, produce a voice guideline: 3 voice attributes (we are X, not Y), tone modulation by channel, 5 do/don't sentence pairs, vocabulary preferences (use these words / avoid these words), example post-edit (before/after).",
-    "tags": ["브랜드 보이스", "가이드라인", "아이덴티티"]
+    "tags": ["브랜드 보이스", "가이드라인", "에디팅"]
   },
   {
     "id": 50,
     "category": "content",
     "title": "콘텐츠 재가공 매트릭스",
-    "summary": "하나의 콘텐츠 1개를 12개 파생 콘텐츠로 자동 매핑하는 시스템.",
+    "summary": "필러 콘텐츠 1개를 12개 파생 콘텐츠로 자동 매핑하는 시스템.",
     "prompt": "You are a content systems designer. For the pillar content below, generate a repurposing matrix: 12 derivative pieces (Shorts, tweets, thread, LinkedIn, carousel, newsletter section, blog excerpt, podcast clip, quote graphic, FAQ post, case study, course module). For each: format, hook, target channel, expected effort 1-5.",
     "tags": ["재가공", "매트릭스", "시스템"]
   }
