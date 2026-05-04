@@ -192,7 +192,7 @@ function renderPromptCards() {
     if (remaining > 0) {
       els.loadMoreWrap.hidden = false;
       if (els.loadMoreBtn) {
-        els.loadMoreBtn.textContent = `더 보기 (+${Math.min(state.pageSize, remaining)})`;
+        els.loadMoreBtn.textContent = `더 보기 (+${remaining})`;
       }
       if (els.loadMoreMeta) {
         els.loadMoreMeta.textContent = `${visibleItems.length} / ${state.filtered.length}`;
