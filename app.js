@@ -21,8 +21,8 @@ const state = {
   query: '',
   category: 'all',
   leads: loadStoredLeads().length,
-  pageSize: 12,
-  visible: 12,
+  pageSize: 9,
+  visible: 9,
 };
 
 const els = {};
