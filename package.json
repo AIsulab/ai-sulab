@@ -6,5 +6,8 @@
   "scripts": {
     "build": "node build.js",
     "clean": "node -e \"import('node:fs/promises').then(fs=>fs.rm('dist',{recursive:true,force:true}))\""
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5"
   }
 }

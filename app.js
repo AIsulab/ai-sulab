@@ -9,6 +9,11 @@ const CATS = [
   { id: 'affiliate', label: '쿠팡/제휴마케팅' },
   { id: 'saas', label: 'SaaS 구축' },
   { id: 'content', label: 'AI 콘텐츠' },
+  { id: 'marketing', label: '마케팅/퍼포먼스' },
+  { id: 'startup', label: '기획/스타트업' },
+  { id: 'dev', label: '코딩/개발' },
+  { id: 'design', label: '디자인/이미지' },
+  { id: 'writing', label: '카피라이팅/글쓰기' },
 ];
 
 const storageKey = 'sulab-leads';
