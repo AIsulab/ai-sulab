@@ -116,3 +116,10 @@ body {
   box-shadow: 0 0 0 4px rgba(124,58,237,0.18);
   border-color: #7C3AED;
 }
+
+.gradient-text {
+  background: linear-gradient(90deg, #7C3AED, #C026D3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
