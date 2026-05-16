@@ -59,29 +59,34 @@ async function generateContent({ keyword, newsTitle }) {
     이 키워드/이슈에 대해 사람들이 검색엔진에서 가장 궁금해할 정보(예: 지원금 신청 방법, 대상, 혜택, 핵심 요약, 사건의 전말 등)를 아주 읽기 쉽고 친절하게 정리하는 블로그 포스트 HTML을 작성해 주세요. 네이버 블로그의 인기 정보성 글처럼 가독성이 뛰어나고 체류 시간을 늘릴 수 있는 구조여야 합니다.
     
     조건:
-    1. <h1> 태그로 클릭을 유도하는 매력적인 제목 (예: "2026년 OO지원금 신청 방법 및 대상 총정리!", "OOO 열애설 총정리: 핵심 요약")
-    2. 아래와 같은 구조(<h2>)를 포함해 주세요:
-       - <h2>핵심 요약 (혹은 사건 개요)</h2>
-       - <h2>상세 정보 (지원 자격, 혜택, 또는 사건의 전개)</h2>
-       - <h2>신청 방법 및 주의사항 (해당할 경우) / 향후 전망</h2>
-       - <h2>마무리 (개인적 의견이나 독자 질문 유도)</h2>
-    3. 본문 내 중요 단어, 꿀팁, 강조할 숫자는 <strong> 태그나 <mark> 태그로 강조
-    4. 문단은 너무 길지 않게 2~3문장 단위로 끊어서 작성하고 <ul>이나 <ol> 리스트를 적극 활용
-    5. <html>, <head>, <body> 태그는 절대 포함하지 마세요. <body> 태그 내부의 순수 본문(<h1>, <p> 등)만 출력해야 합니다.
-    6. 마크다운 백틱은 절대 포함하지 말고 순수 HTML 텍스트만 출력하세요.
+    1. <h1> 태그로 클릭을 유도하는 매력적인 제목
+    2. <h2> 태그로 소제목 구분 (핵심 요약, 상세 정보, 마무리 등)
+    3. 본문 내 중요 단어는 <strong>, <mark> 태그로 강조
+    4. <html>, <head>, <body> 태그는 절대 포함하지 마세요. 순수 본문(<h1>, <p> 등)만 작성하세요.
+    5. 초상권 침해나 저작권 이슈가 없도록, 본문의 내용을 상징적으로 나타낼 수 있는 안전하고 비유적인 '영문 이미지 생성 프롬프트(imagePrompt)'를 하나 작성해주세요. (예: 특정 인물 이름 대신 "A cinematic professional news studio background", "An abstract representation of internet trends", "A beautiful generic cityscape")
+
+    출력 형식 (반드시 아래 JSON 형식으로만 출력하세요):
+    {
+      "imagePrompt": "영문 이미지 프롬프트",
+      "htmlContent": "<h1>...생성된 HTML 본문...</h1>"
+    }
   `;
 
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+      }
     });
     
-    let cleanedHtml = response.text.replace(/```html/g, '').replace(/```/g, '');
-    cleanedHtml = cleanedHtml.replace(/<\/?body>/gi, '').trim(); // body 태그 제거
+    const data = JSON.parse(response.text);
+    let cleanedHtml = data.htmlContent.replace(/<\/?body>/gi, '').trim(); // body 태그 혹시라도 있으면 제거
     
-    // 블로그 포스트 상단에 시각적 요소를 위해 랜덤 이미지 추가 (가독성 향상)
-    const thumbnailHtml = `<div style="text-align: center; margin-bottom: 20px;"><img src="https://picsum.photos/seed/${encodeURIComponent(keyword)}/800/400" alt="${keyword} 관련 이미지" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></div>`;
+    // Pollinations.ai 무료 이미지 생성 API 사용 (초상권 침해 없는 안전한 프롬프트 기반)
+    const encodedPrompt = encodeURIComponent(data.imagePrompt);
+    const thumbnailHtml = `<div style="text-align: center; margin-bottom: 20px;"><img src="https://image.pollinations.ai/prompt/${encodedPrompt}?width=800&height=400&nologo=true" alt="${keyword} 관련 이미지" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></div>`;
     
     return {
       title: `${keyword} 이슈 총정리`, // 내부 저장용
