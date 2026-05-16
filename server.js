@@ -40,6 +40,7 @@ app.get('/auth/google', (req, res) => {
     prompt: 'consent',      // 강제로 동의 화면을 띄워 Refresh Token 갱신
     scope: [
       'https://www.googleapis.com/auth/blogger',
+      'https://www.googleapis.com/auth/youtube.upload',
       'https://www.googleapis.com/auth/userinfo.email',
       'https://www.googleapis.com/auth/userinfo.profile'
     ]
