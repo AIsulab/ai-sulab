@@ -1,0 +1,32 @@
+name: Auto Blogger Posting
+
+on:
+  schedule:
+    # 매일 한국 시간 기준 아침 8시(UTC 23:00)와 오후 6시(UTC 09:00)에 실행
+    - cron: '0 23,9 * * *'
+  workflow_dispatch: # 수동으로도 실행할 수 있도록 버튼 생성
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 저장소 체크아웃
+      uses: actions/checkout@v3
+
+    - name: Node.js 세팅
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: 패키지 설치
+      run: npm install
+
+    - name: 자동 포스팅 스크립트 실행
+      env:
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+        GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+        GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+        BLOGGER_BLOG_ID: ${{ secrets.BLOGGER_BLOG_ID }}
+      run: node auto_post.js
