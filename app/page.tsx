@@ -191,7 +191,7 @@ function Hero() {
         </h1>
         <p className="text-slate-600 text-[15px] md:text-[18px] mt-5 md:mt-6 max-w-[640px] mx-auto leading-relaxed fade-up" style={{ animationDelay: "120ms" }}>
           마케팅 · CS · 운영 워크플로우를 자동화해 매일 4시간을 돌려드립니다.<br className="hidden sm:block" />
-          연동만 하면, Sulab AI가 24시간 대신 일합니다.
+          연동만 하면, AI가 24시간 대신 일합니다.
         </p>
         <div className="mt-8 flex items-center justify-center gap-2 flex-wrap fade-up" style={{ animationDelay: "180ms" }}>
           <Link href="/login" className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-violet-600 hover:bg-violet-700 active:bg-violet-800 text-white font-semibold text-[15px] transition shadow-lg shadow-violet-600/25">
@@ -298,7 +298,7 @@ function MockComments() {
                 <Sparkles className="w-3.5 h-3.5" />
               </div>
               <div>
-                <div className="text-[11px] text-violet-700 font-semibold mb-0.5">Sulab AI · 응답 제안</div>
+                <div className="text-[11px] text-violet-700 font-semibold mb-0.5">AI · 응답 제안</div>
                 <div className="text-[13px] text-slate-700 leading-relaxed">{m.ai}</div>
                 <div className="mt-2 flex gap-1.5">
                   <button className="h-6 px-2 rounded-md bg-violet-600 text-white text-[11px] font-medium">전송</button>
