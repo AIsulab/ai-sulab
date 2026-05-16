@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(\\(Get-Content C:\\\\website\\\\data.json | ConvertFrom-Json\\).Count)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(node build.js)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" https://sulab.store)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -L https://sulab.store)",
+      "Bash(git fetch *)",
+      "Bash(git pull *)",
+      "Bash(git rm *)",
+      "Bash(node -e \"require\\('sharp'\\)\")",
+      "Bash(magick --version)",
+      "Bash(npm install *)",
+      "Bash(node -e \"const sharp=require\\('sharp'\\); sharp\\('./assets/sulab-logo.png'\\).resize\\(32,32\\).toFile\\('./assets/favicon-32.png', \\(e,i\\)=>console.log\\(e||i\\)\\)\")",
+      "Bash(node -e \"require\\('sharp'\\); console.log\\('OK'\\)\")",
+      "PowerShell(git -C C:\\\\website fetch origin)",
+      "PowerShell(git -C C:\\\\website log --oneline -5 origin/main)",
+      "PowerShell(git -C C:\\\\website pull origin main)",
+      "PowerShell(git -C C:\\\\website log --oneline -8)",
+      "WebSearch",
+      "WebFetch(domain:platum.kr)",
+      "WebFetch(domain:www.sixshop.com)",
+      "WebFetch(domain:help.pro.sixshop.com)",
+      "WebFetch(domain:developers.sixshop.com)",
+      "Bash(claude mcp *)",
+      "Bash(curl *)",
+      "WebFetch(domain:mcp.sixshop.io)",
+      "PowerShell(claude mcp *)",
+      "WebFetch(domain:sulab.store)",
+      "mcp__claude_ai_MCP__common_get_store"
+    ]
+  }
+}
