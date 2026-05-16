@@ -27,7 +27,7 @@ function Nav() {
       <div className="max-w-[1180px] mx-auto bg-white/85 backdrop-blur-xl ring-1 ring-slate-200/70 rounded-2xl shadow-sm shadow-slate-900/[0.03]">
         <div className="h-14 px-4 lg:px-5 flex items-center justify-between">
           <div className="flex items-center gap-8">
-            <Logo size={26} />
+            <Link href="/"><Logo size={26} /></Link>
             <nav className="hidden lg:flex items-center gap-1 text-[13.5px]">
               {NAV_LINKS.map(([t, h]) => (
                 <a key={t} href={h} className="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 transition font-medium">{t}</a>
@@ -806,7 +806,7 @@ function Footer() {
     <footer className="bg-white border-t border-slate-200">
       <div className="max-w-[1180px] mx-auto px-6 py-10 md:py-14 grid lg:grid-cols-[1.4fr_2fr] gap-8 md:gap-12">
         <div>
-          <Logo />
+          <Link href="/"><Logo /></Link>
           <p className="text-[14px] text-slate-500 mt-4 max-w-[300px] leading-relaxed">
             AI로 더 쉽게 성장하는 비즈니스. 마케팅 · CS · 운영을 자동화합니다.
           </p>

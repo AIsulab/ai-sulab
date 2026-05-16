@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -125,7 +126,7 @@ export default function LoginPage() {
         <div className="absolute -bottom-40 -right-20 w-[520px] h-[520px] rounded-full bg-violet-300/30 blur-3xl" />
 
         <div className="relative z-10 flex items-center justify-between">
-          <Logo light />
+          <Link href="/"><Logo light /></Link>
           <span className="hidden lg:inline-flex items-center gap-1.5 text-sm text-white/80">
             <Globe className="w-4 h-4" /> 한국어
           </span>
@@ -174,7 +175,7 @@ export default function LoginPage() {
         <div className="flex-1 flex items-center justify-center px-6 lg:px-12 py-12">
           <div className="w-full max-w-[420px]">
             <div className="text-center">
-              <div className="inline-flex"><Logo size={32} /></div>
+              <Link href="/"><Logo size={32} /></Link>
               <h2 className="font-display font-bold text-[28px] mt-6 tracking-tight text-slate-900">
                 다시 오신 것을 환영합니다
               </h2>
