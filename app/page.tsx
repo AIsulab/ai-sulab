@@ -36,8 +36,10 @@ function Nav() {
           </div>
           <div className="flex items-center gap-2">
             <Link href="/login" className="hidden sm:inline-flex items-center h-9 px-3.5 rounded-lg text-[13.5px] font-medium text-slate-700 hover:bg-slate-100 transition">로그인</Link>
-            <Link href="/login" className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg bg-violet-600 hover:bg-violet-700 text-white text-[13.5px] font-semibold transition shadow-sm shadow-violet-600/25">
-              무료로 시작하기 <ArrowRight className="w-3.5 h-3.5" />
+            <Link href="/login" className="inline-flex items-center gap-1.5 h-9 px-3 sm:px-3.5 rounded-lg bg-violet-600 hover:bg-violet-700 text-white text-[13.5px] font-semibold transition shadow-sm shadow-violet-600/25">
+              <span className="sm:hidden">시작하기</span>
+              <span className="hidden sm:inline">무료로 시작하기</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
             <button onClick={() => setOpen(o => !o)} className="lg:hidden w-9 h-9 inline-flex items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100">
               {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -73,9 +75,9 @@ function ProductPreview() {
             </div>
           </div>
           {/* fake app */}
-          <div className="grid grid-cols-[200px_1fr] min-h-[440px]">
-            {/* sidebar */}
-            <aside className="border-r border-slate-200 p-3 bg-slate-50/40">
+          <div className="grid md:grid-cols-[200px_1fr] min-h-[320px] md:min-h-[440px]">
+            {/* sidebar — hidden on mobile */}
+            <aside className="hidden md:block border-r border-slate-200 p-3 bg-slate-50/40">
               <div className="text-[10.5px] uppercase tracking-wider text-slate-400 font-semibold px-2 mb-2">Workspace</div>
               {[
                 { n: "홈", Icon: Home },
@@ -97,11 +99,11 @@ function ProductPreview() {
               </div>
             </aside>
             {/* canvas */}
-            <div className="p-5 grid-bg relative">
+            <div className="p-4 md:p-5 grid-bg relative">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-[10.5px] text-slate-500 mb-1">워크플로우 · 편집 중</div>
-                  <div className="font-semibold text-[15px]">신규 고객 응대 v3</div>
+                  <div className="font-semibold text-[13px] md:text-[15px]">신규 고객 응대 v3</div>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[11px] font-medium ring-1 ring-emerald-100">
@@ -110,7 +112,7 @@ function ProductPreview() {
                   <button className="h-7 px-2.5 rounded-md bg-violet-600 text-white text-[11.5px] font-semibold">실행</button>
                 </div>
               </div>
-              <div className="mt-6 grid grid-cols-4 gap-3 relative">
+              <div className="mt-4 md:mt-6 grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 relative">
                 <svg className="absolute left-0 right-0 top-1/2 -translate-y-[18px] w-full h-6 pointer-events-none" viewBox="0 0 400 24" preserveAspectRatio="none" aria-hidden="true">
                   <line x1="0" y1="12" x2="400" y2="12" stroke="rgba(124,58,237,0.4)" strokeWidth="1.5" className="flow-dash" />
                 </svg>
@@ -130,7 +132,7 @@ function ProductPreview() {
                 ))}
               </div>
               {/* mini insight cards */}
-              <div className="mt-5 grid grid-cols-3 gap-2.5">
+              <div className="mt-4 md:mt-5 grid grid-cols-3 gap-2 md:gap-2.5">
                 {[
                   { l: "오늘 처리", v: "1,284" },
                   { l: "성공률", v: "99.4%" },
@@ -183,12 +185,12 @@ function Hero() {
           <span className="w-1.5 h-1.5 rounded-full bg-violet-600 dot-pulse" />
           v3.2 출시 · 워크플로우 빌더 베타 오픈
         </div>
-        <h1 className="font-display font-extrabold text-[44px] md:text-[72px] leading-[1.02] tracking-tight mt-6 max-w-[900px] mx-auto fade-up" style={{ animationDelay: "60ms" }}>
+        <h1 className="font-display font-extrabold text-[34px] sm:text-[44px] md:text-[72px] leading-[1.05] md:leading-[1.02] tracking-tight mt-6 max-w-[900px] mx-auto fade-up" style={{ animationDelay: "60ms" }}>
           반복 업무는 그만,<br />
           <span className="gradient-text">AI가 다 도와드립니다.</span>
         </h1>
-        <p className="text-slate-600 text-[16px] md:text-[18px] mt-6 max-w-[640px] mx-auto leading-relaxed fade-up" style={{ animationDelay: "120ms" }}>
-          마케팅 · CS · 운영 워크플로우를 자동화해 매일 4시간을 돌려드립니다.<br />
+        <p className="text-slate-600 text-[15px] md:text-[18px] mt-5 md:mt-6 max-w-[640px] mx-auto leading-relaxed fade-up" style={{ animationDelay: "120ms" }}>
+          마케팅 · CS · 운영 워크플로우를 자동화해 매일 4시간을 돌려드립니다.<br className="hidden sm:block" />
           연동만 하면, Sulab AI가 24시간 대신 일합니다.
         </p>
         <div className="mt-8 flex items-center justify-center gap-2 flex-wrap fade-up" style={{ animationDelay: "180ms" }}>
@@ -215,12 +217,15 @@ function LogoStrip() {
   const items = ["Toss", "NAVER", "Kakao", "Coupang", "당근", "LINE", "배민", "Riot"];
   return (
     <section className="border-y border-slate-100 bg-slate-50/60">
-      <div className="max-w-[1180px] mx-auto px-6 py-8 flex items-center justify-between flex-wrap gap-y-4">
-        <span className="text-[12px] text-slate-500 font-medium">15,000+ 팀이 Sulab을 신뢰합니다</span>
-        <div className="flex items-center gap-8 lg:gap-10 flex-wrap">
-          {items.map(n => (
-            <span key={n} className="font-display font-bold text-slate-400 text-[16px] tracking-tight opacity-80 hover:opacity-100 transition cursor-default">{n}</span>
-          ))}
+      <div className="max-w-[1180px] mx-auto px-6 py-7 md:py-8">
+        <p className="text-center text-[12px] text-slate-400 font-medium mb-5 md:mb-0 md:hidden">15,000+ 팀이 Sulab을 신뢰합니다</p>
+        <div className="flex items-center md:justify-between flex-wrap justify-center gap-x-7 gap-y-3 md:gap-x-0 md:gap-y-0">
+          <span className="hidden md:inline text-[12px] text-slate-500 font-medium shrink-0">15,000+ 팀이 Sulab을 신뢰합니다</span>
+          <div className="flex items-center justify-center gap-6 md:gap-8 lg:gap-10 flex-wrap">
+            {items.map(n => (
+              <span key={n} className="font-display font-bold text-slate-400 text-[15px] md:text-[16px] tracking-tight opacity-80 hover:opacity-100 transition cursor-default">{n}</span>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -404,7 +409,7 @@ function MockPhone() {
   return (
     <div className="relative flex justify-center">
       <div className="absolute -inset-6 bg-violet-200/30 blur-2xl -z-10 rounded-3xl" />
-      <div className="relative w-[260px] h-[520px] rounded-[44px] bg-slate-900 p-2.5 shadow-2xl shadow-slate-900/30">
+      <div className="relative w-[220px] h-[440px] sm:w-[260px] sm:h-[520px] rounded-[36px] sm:rounded-[44px] bg-slate-900 p-2 sm:p-2.5 shadow-2xl shadow-slate-900/30">
         <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-24 h-5 bg-slate-900 rounded-b-2xl z-10" />
         <div className="w-full h-full rounded-[36px] bg-white overflow-hidden">
           <div className="h-12" />
@@ -455,7 +460,7 @@ function FeatureRow({ tag, title, desc, bullets, visual, reverse = false }: {
   bullets: string[]; visual: React.ReactNode; reverse?: boolean;
 }) {
   return (
-    <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center mt-20 first:mt-16">
+    <div className="grid lg:grid-cols-2 gap-8 lg:gap-14 items-center mt-16 md:mt-20">
       <div className={reverse ? "lg:order-2" : ""}>
         <span className="inline-flex px-3 py-1 rounded-full bg-white ring-1 ring-violet-100 text-violet-700 text-[12px] font-semibold tracking-wider uppercase">{tag}</span>
         <h3 className="font-display font-extrabold text-[28px] md:text-[36px] leading-[1.1] mt-4 tracking-tight">{title}</h3>
@@ -560,11 +565,11 @@ function Integrations() {
               <a href="#" className="inline-flex items-center gap-1.5 h-10 px-4 rounded-lg ring-1 ring-slate-200 hover:ring-slate-300 text-slate-700 text-[13.5px] font-medium transition">API 문서</a>
             </div>
           </div>
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 md:gap-3">
             {apps.map(a => (
-              <div key={a.n} className="rounded-2xl bg-white ring-1 ring-slate-200 hover:ring-violet-200 hover:shadow-md hover:shadow-violet-500/10 transition p-4 flex flex-col items-center gap-2">
-                <div className={`w-10 h-10 rounded-xl ${a.c} flex items-center justify-center font-display font-bold text-[12px]`}>{a.i}</div>
-                <div className="text-[12px] text-slate-700 font-medium">{a.n}</div>
+              <div key={a.n} className="rounded-2xl bg-white ring-1 ring-slate-200 hover:ring-violet-200 hover:shadow-md hover:shadow-violet-500/10 transition p-3 md:p-4 flex flex-col items-center gap-1.5 md:gap-2">
+                <div className={`w-9 h-9 md:w-10 md:h-10 rounded-xl ${a.c} flex items-center justify-center font-display font-bold text-[11px] md:text-[12px]`}>{a.i}</div>
+                <div className="text-[11px] md:text-[12px] text-slate-700 font-medium text-center leading-tight">{a.n}</div>
               </div>
             ))}
           </div>
@@ -605,24 +610,27 @@ function DarkStats() {
       <div className="relative max-w-[1180px] mx-auto px-6">
         <div className="text-center max-w-[680px] mx-auto">
           <span className="inline-flex px-3 py-1 rounded-full bg-white/10 ring-1 ring-white/15 text-white/80 text-[12.5px] font-medium">고객 사례</span>
-          <h2 className="font-display font-extrabold text-[34px] md:text-[44px] leading-[1.08] mt-4 tracking-tight">
+          <h2 className="font-display font-extrabold text-[28px] sm:text-[34px] md:text-[44px] leading-[1.08] mt-4 tracking-tight">
             Sulab을 만난 팀들의<br /><span className="gradient-text">생산성 실화 1년.</span>
           </h2>
         </div>
-        <div className="mt-10 grid grid-cols-2 gap-5 max-w-[760px] mx-auto">
+        <div className="mt-10 grid grid-cols-2 gap-3 md:gap-5 max-w-[760px] mx-auto">
           {[
-            { v: "1,161,009,690", l: "AI가 처리한 작업 수", g: true },
+            { v: "11억+", vFull: "1,161,009,690", l: "AI가 처리한 작업 수", g: true },
             { v: "539K+", l: "활성 사용자", g: false },
           ].map(s => (
-            <div key={s.l} className="rounded-2xl bg-white/5 ring-1 ring-white/10 backdrop-blur-sm px-6 py-5 text-center">
-              <div className={`font-display font-extrabold text-[28px] md:text-[40px] font-mono-num tracking-tight ${s.g ? "gradient-text" : ""}`}>{s.v}</div>
-              <div className="text-[12.5px] text-slate-400 mt-1">{s.l}</div>
+            <div key={s.l} className="rounded-2xl bg-white/5 ring-1 ring-white/10 backdrop-blur-sm px-4 md:px-6 py-4 md:py-5 text-center">
+              <div className={`font-display font-extrabold text-[24px] sm:text-[28px] md:text-[40px] font-mono-num tracking-tight ${s.g ? "gradient-text" : ""}`}>
+                <span className="sm:hidden">{s.v}</span>
+                <span className="hidden sm:inline">{s.vFull ?? s.v}</span>
+              </div>
+              <div className="text-[11.5px] md:text-[12.5px] text-slate-400 mt-1">{s.l}</div>
             </div>
           ))}
         </div>
-        <div className="mt-14 grid md:grid-cols-2 gap-4">
+        <div className="mt-10 md:mt-14 grid md:grid-cols-2 gap-3 md:gap-4">
           {cases.map(c => (
-            <div key={c.n} className="rounded-2xl bg-white/[0.04] ring-1 ring-white/10 backdrop-blur-sm p-6 hover:bg-white/[0.06] transition">
+            <div key={c.n} className="rounded-2xl bg-white/[0.04] ring-1 ring-white/10 backdrop-blur-sm p-5 md:p-6 hover:bg-white/[0.06] transition">
               <Quote className="w-6 h-6 text-violet-400" />
               <p className="text-[15px] mt-3 leading-relaxed text-slate-200">&ldquo;{c.q}&rdquo;</p>
               <div className="mt-5 flex items-center gap-3 pt-4 border-t border-white/10">
@@ -673,7 +681,8 @@ function Pricing() {
           </h2>
           <p className="text-slate-500 text-[15px] mt-3">팀 크기에 맞춰 자유롭게 시작하세요. 언제든 변경할 수 있습니다.</p>
         </div>
-        <div className="mt-12 rounded-2xl ring-1 ring-slate-200 overflow-hidden bg-white shadow-sm">
+        <p className="mt-4 text-center text-[12px] text-slate-400 sm:hidden">← 표를 좌우로 스크롤하세요</p>
+        <div className="mt-4 md:mt-12 rounded-2xl ring-1 ring-slate-200 overflow-hidden bg-white shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-[13.5px] min-w-[820px]">
               <thead>
@@ -760,12 +769,12 @@ function FinalCTA() {
   return (
     <section className="relative bg-white py-20">
       <div className="max-w-[1180px] mx-auto px-6">
-        <div className="relative overflow-hidden rounded-3xl hero-violet grain text-white p-10 md:p-16 text-center">
+        <div className="relative overflow-hidden rounded-2xl md:rounded-3xl hero-violet grain text-white p-8 sm:p-10 md:p-16 text-center">
           <div className="absolute -top-24 -left-20 w-[400px] h-[400px] rounded-full bg-white/20 blur-3xl" />
           <div className="absolute -bottom-24 -right-20 w-[400px] h-[400px] rounded-full bg-fuchsia-300/30 blur-3xl" />
           <div className="relative z-10 max-w-[680px] mx-auto">
             <span className="inline-flex px-3 py-1 rounded-full bg-white/15 ring-1 ring-white/20 text-white text-[12.5px] font-medium">7일 무료 체험</span>
-            <h2 className="font-display font-extrabold text-[36px] md:text-[52px] leading-[1.05] mt-5 tracking-tight">
+            <h2 className="font-display font-extrabold text-[28px] sm:text-[36px] md:text-[52px] leading-[1.05] mt-5 tracking-tight">
               마케팅, 더 이상 직접 하지 마세요.<br /><span className="text-white/85">Sulab과 시작해 보세요.</span>
             </h2>
             <p className="text-white/80 text-[15.5px] mt-5">카드 등록 없이 5분 안에 첫 자동화를 만들 수 있습니다.</p>
@@ -795,7 +804,7 @@ function Footer() {
   const socials = ["Twitter", "Instagram", "YouTube", "LinkedIn", "GitHub"];
   return (
     <footer className="bg-white border-t border-slate-200">
-      <div className="max-w-[1180px] mx-auto px-6 py-14 grid lg:grid-cols-[1.4fr_2fr] gap-12">
+      <div className="max-w-[1180px] mx-auto px-6 py-10 md:py-14 grid lg:grid-cols-[1.4fr_2fr] gap-8 md:gap-12">
         <div>
           <Logo />
           <p className="text-[14px] text-slate-500 mt-4 max-w-[300px] leading-relaxed">
@@ -837,7 +846,7 @@ function Footer() {
 /* ── App ─────────────────────────────────────────────────── */
 export default function LandingPage() {
   return (
-    <div className="bg-white text-slate-900 antialiased">
+    <div className="bg-white text-slate-900 antialiased overflow-x-hidden">
       <Nav />
       <Hero />
       <LogoStrip />
