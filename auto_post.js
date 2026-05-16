@@ -134,9 +134,17 @@ async function generateContent({ keyword, newsTitle }, isInfoMode) {
     const encodedPrompt = encodeURIComponent(data.imagePrompt);
     const thumbnailHtml = `<div style="text-align: center; margin-bottom: 20px;"><img src="https://image.pollinations.ai/prompt/${encodedPrompt}?width=800&height=400&nologo=true" alt="${keyword} 관련 이미지" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></div>`;
     
+    // 시력이 안 좋은 사람도 쉽게 읽을 수 있도록 가독성 전용 래퍼(wrapper) 추가
+    const styledHtml = `
+      <div style="font-size: 18px; line-height: 1.8; color: #222; font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif; word-break: keep-all; letter-spacing: -0.5px;">
+        ${thumbnailHtml}
+        ${cleanedHtml}
+      </div>
+    `;
+
     return {
       title: isInfoMode ? `${keyword} 완벽 정리` : `${keyword} 이슈 총정리`, // 내부 저장용
-      htmlBody: thumbnailHtml + '\n' + cleanedHtml
+      htmlBody: styledHtml
     };
   } catch (error) {
     console.error('콘텐츠 생성 실패:', error);
