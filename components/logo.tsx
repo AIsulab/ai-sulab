@@ -6,7 +6,7 @@ export function Logo({ light = false, size = 28 }: { light?: boolean; size?: num
   return (
     <Image
       src="/sulab-logo-wide.png"
-      alt="Sulab"
+      alt="로고"
       width={width}
       height={height}
       style={{ height, width: "auto" }}

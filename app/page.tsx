@@ -71,7 +71,7 @@ function ProductPreview() {
             <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
             <div className="mx-auto h-5 px-3 rounded-md bg-white ring-1 ring-slate-200 text-[11px] text-slate-500 flex items-center gap-1.5">
-              <Lock className="w-3 h-3" /> app.sulab.ai/workflows/new-customer
+              <Lock className="w-3 h-3" /> app.yourteam.ai/workflows/new-customer
             </div>
           </div>
           {/* fake app */}
@@ -218,9 +218,9 @@ function LogoStrip() {
   return (
     <section className="border-y border-slate-100 bg-slate-50/60">
       <div className="max-w-[1180px] mx-auto px-6 py-7 md:py-8">
-        <p className="text-center text-[12px] text-slate-400 font-medium mb-5 md:mb-0 md:hidden">15,000+ 팀이 Sulab을 신뢰합니다</p>
+        <p className="text-center text-[12px] text-slate-400 font-medium mb-5 md:mb-0 md:hidden">15,000+ 팀이 신뢰합니다</p>
         <div className="flex items-center md:justify-between flex-wrap justify-center gap-x-7 gap-y-3 md:gap-x-0 md:gap-y-0">
-          <span className="hidden md:inline text-[12px] text-slate-500 font-medium shrink-0">15,000+ 팀이 Sulab을 신뢰합니다</span>
+          <span className="hidden md:inline text-[12px] text-slate-500 font-medium shrink-0">15,000+ 팀이 신뢰합니다</span>
           <div className="flex items-center justify-center gap-6 md:gap-8 lg:gap-10 flex-wrap">
             {items.map(n => (
               <span key={n} className="font-display font-bold text-slate-400 text-[15px] md:text-[16px] tracking-tight opacity-80 hover:opacity-100 transition cursor-default">{n}</span>
@@ -265,7 +265,7 @@ function Problem() {
         <div className="mt-10 relative overflow-hidden rounded-2xl hero-violet grain text-white px-6 md:px-10 py-7 md:py-8 flex items-center justify-between flex-wrap gap-4">
           <div className="relative z-10">
             <div className="text-[12.5px] font-medium opacity-80">한 번에 해결</div>
-            <div className="font-display font-bold text-[20px] md:text-[24px] mt-1">Sulab의 AI 자동화를 5분만 써 보세요.</div>
+            <div className="font-display font-bold text-[20px] md:text-[24px] mt-1">AI 자동화를 5분만 써 보세요.</div>
           </div>
           <Link href="/login" className="relative z-10 inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-white text-violet-700 font-semibold text-[14px] hover:bg-violet-50 transition">
             지금 무료로 시작 <ArrowRight className="w-4 h-4" />
@@ -598,7 +598,7 @@ function HighlightStrip() {
 /* ── DarkStats + Testimonials ────────────────────────────── */
 function DarkStats() {
   const cases = [
-    { q: "Sulab으로 댓글 응대 시간을 90% 줄였어요. 이제 본업에 집중합니다.", n: "김지원", r: "패션 브랜드 · 마케팅 리드" },
+    { q: "댓글 응대 시간을 90% 줄였어요. 이제 본업에 집중합니다.", n: "김지원", r: "패션 브랜드 · 마케팅 리드" },
     { q: "매주 자동 리포트가 슬랙으로 와요. 의사결정이 정말 빨라졌습니다.", n: "박서연", r: "D2C 스타트업 · CEO" },
     { q: "개발자 없이 워크플로우를 직접 만들었습니다. 코드를 모르는데도요.", n: "이도현", r: "에이전시 · AE" },
     { q: "고객 응대 품질이 일관되어서 좋아요. AI가 브랜드 톤을 잘 잡아줘요.", n: "최유진", r: "뷰티 브랜드 · 운영팀장" },
@@ -611,7 +611,7 @@ function DarkStats() {
         <div className="text-center max-w-[680px] mx-auto">
           <span className="inline-flex px-3 py-1 rounded-full bg-white/10 ring-1 ring-white/15 text-white/80 text-[12.5px] font-medium">고객 사례</span>
           <h2 className="font-display font-extrabold text-[28px] sm:text-[34px] md:text-[44px] leading-[1.08] mt-4 tracking-tight">
-            Sulab을 만난 팀들의<br /><span className="gradient-text">생산성 실화 1년.</span>
+            함께한 팀들의<br /><span className="gradient-text">생산성 실화 1년.</span>
           </h2>
         </div>
         <div className="mt-10 grid grid-cols-2 gap-3 md:gap-5 max-w-[760px] mx-auto">
@@ -730,7 +730,7 @@ function Pricing() {
 function FAQ() {
   const items = [
     { q: "결제하면 바로 사용할 수 있나요?", a: "네. 결제 즉시 모든 기능을 이용할 수 있으며, 7일 무료 체험 기간 동안 언제든 취소할 수 있습니다." },
-    { q: "AI 응답의 품질은 어느 정도인가요?", a: "Sulab은 GPT-4o와 자체 한국어 모델을 함께 사용합니다. 브랜드 톤을 학습시키면 사람과 구분이 어려운 수준의 응대가 가능합니다." },
+    { q: "AI 응답의 품질은 어느 정도인가요?", a: "GPT-4o와 자체 한국어 모델을 함께 사용합니다. 브랜드 톤을 학습시키면 사람과 구분이 어려운 수준의 응대가 가능합니다." },
     { q: "데이터는 안전하게 보관되나요?", a: "모든 데이터는 AES-256으로 암호화되며, AWS 서울 리전에 저장됩니다. SOC2 Type II 준수 (Enterprise)." },
     { q: "팀 단위로 사용할 수 있나요?", a: "Pro는 5명, Team은 20명까지 함께 사용할 수 있으며, Enterprise는 무제한 팀원을 지원합니다." },
     { q: "개발자 없이도 쓸 수 있나요?", a: "네. 워크플로우 빌더는 코드 없이 드래그앤드롭으로 동작합니다. 필요하면 Webhook과 REST API도 제공합니다." },
@@ -775,7 +775,7 @@ function FinalCTA() {
           <div className="relative z-10 max-w-[680px] mx-auto">
             <span className="inline-flex px-3 py-1 rounded-full bg-white/15 ring-1 ring-white/20 text-white text-[12.5px] font-medium">7일 무료 체험</span>
             <h2 className="font-display font-extrabold text-[28px] sm:text-[36px] md:text-[52px] leading-[1.05] mt-5 tracking-tight">
-              마케팅, 더 이상 직접 하지 마세요.<br /><span className="text-white/85">Sulab과 시작해 보세요.</span>
+              마케팅, 더 이상 직접 하지 마세요.<br /><span className="text-white/85">지금 바로 시작해 보세요.</span>
             </h2>
             <p className="text-white/80 text-[15.5px] mt-5">카드 등록 없이 5분 안에 첫 자동화를 만들 수 있습니다.</p>
             <div className="mt-8 flex items-center justify-center gap-2 flex-wrap">
@@ -808,7 +808,7 @@ function Footer() {
         <div>
           <Logo />
           <p className="text-[14px] text-slate-500 mt-4 max-w-[300px] leading-relaxed">
-            AI로 더 쉽게 성장하는 비즈니스. Sulab은 마케팅 · CS · 운영을 자동화합니다.
+            AI로 더 쉽게 성장하는 비즈니스. 마케팅 · CS · 운영을 자동화합니다.
           </p>
           <div className="flex items-center gap-2 mt-6">
             {socials.map(s => (
@@ -833,7 +833,7 @@ function Footer() {
       </div>
       <div className="border-t border-slate-100">
         <div className="max-w-[1180px] mx-auto px-6 py-5 flex items-center justify-between flex-wrap gap-2">
-          <span className="text-[12px] text-slate-500">© 2026 Sulab Inc. · 서울특별시 강남구 · 사업자등록번호 000-00-00000</span>
+          <span className="text-[12px] text-slate-500">© 2026 · 서울특별시 강남구 · 사업자등록번호 000-00-00000</span>
           <span className="text-[12px] text-slate-500 inline-flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dot-pulse" /> 모든 시스템 정상
           </span>

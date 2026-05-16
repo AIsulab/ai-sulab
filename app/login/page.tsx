@@ -142,7 +142,7 @@ export default function LoginPage() {
           </h1>
           <p className="mt-5 text-white/80 text-[15px] leading-relaxed max-w-[440px]">
             반복 업무는 자동화하고, 의사결정은 더 빠르게.
-            Sulab의 워크플로우 AI가 마케팅 · CS · 운영을 24시간 대신합니다.
+            워크플로우 AI가 마케팅 · CS · 운영을 24시간 대신합니다.
           </p>
           <div className="mt-8 flex flex-wrap gap-2 max-w-[460px]">
             {CHIPS.map((t) => (
@@ -277,7 +277,7 @@ export default function LoginPage() {
         </div>
 
         <footer className="px-8 lg:px-12 py-6 text-center text-[12px] text-slate-400">
-          이용약관 · 개인정보처리방침 · © 2026 Sulab Inc.
+          이용약관 · 개인정보처리방침 · © 2026
         </footer>
       </section>
     </div>

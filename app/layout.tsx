@@ -11,9 +11,9 @@ const notoSansKr = Noto_Sans_KR({
 const pretendardCdn = "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css";
 
 export const metadata: Metadata = {
-  title: "SULAB | AI 콘텐츠 자동화 SaaS",
+  title: "AI 콘텐츠 자동화 SaaS",
   description:
-    "SULAB은 카드뉴스, 블로그, SNS 콘텐츠를 빠르게 생성하고 저장하는 AI 자동화 SaaS입니다.",
+    "카드뉴스, 블로그, SNS 콘텐츠를 빠르게 생성하고 저장하는 AI 자동화 SaaS입니다.",
 };
 
 export default function RootLayout({

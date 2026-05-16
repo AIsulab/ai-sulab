@@ -147,7 +147,7 @@ function HeroSection({ user }: { user: User | null }) {
           오늘도 좋은 하루 보내세요{greeting ? `, ${greeting}` : ""}.
         </h1>
         <p className="text-slate-500 text-[15.5px] mt-4 max-w-[560px] mx-auto leading-relaxed">
-          Sulab은 마케팅 · CS · 운영 워크플로우를 AI로 자동화합니다.
+          마케팅 · CS · 운영 워크플로우를 AI로 자동화합니다.
           새 워크플로우를 만들거나, 추천 템플릿으로 30초 만에 시작해 보세요.
         </p>
         <div className="mt-7 flex items-center justify-center gap-2 flex-wrap">
@@ -410,7 +410,7 @@ export default function DashboardPage() {
         <div className="max-w-[1240px] mx-auto px-6 py-6 flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-3">
             <Logo size={22} />
-            <span className="text-[12px] text-slate-400">© 2026 Sulab Inc. All rights reserved.</span>
+            <span className="text-[12px] text-slate-400">© 2026 Inc. All rights reserved.</span>
           </div>
           <div className="flex items-center gap-4 text-[12.5px] text-slate-500">
             {["상태 페이지", "변경 로그", "고객 지원"].map((t) => (
