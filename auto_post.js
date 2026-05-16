@@ -99,32 +99,12 @@ async function generateContent({ keyword, newsTitle }) {
 }
 
 // 3. 구글 블로그(Blogger)로 포스트 발행하기
-async function publishToBlogger(newContent, keyword) {
-  const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN, BLOGGER_BLOG_ID } = process.env;
-
-  if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_REFRESH_TOKEN || !BLOGGER_BLOG_ID) {
-    throw new Error('❌ Blogger API 인증 정보(.env)가 누락되었습니다. 클라이언트 ID, 시크릿, 리프레시 토큰, 블로그 ID를 모두 확인하세요.');
-  }
-
-  console.log(`💾 Blogger(블로그 ID: ${BLOGGER_BLOG_ID})에 포스팅 중...`);
-
-  const oauth2Client = new google.auth.OAuth2(
-    GOOGLE_CLIENT_ID,
-    GOOGLE_CLIENT_SECRET
-  );
-
-  oauth2Client.setCredentials({
-    refresh_token: GOOGLE_REFRESH_TOKEN
-  });
-
-  const blogger = google.blogger({
-    version: 'v3',
-    auth: oauth2Client
-  });
+async function publishToBlogger(newContent, keyword, blogger, blogId) {
+  console.log(`💾 Blogger(블로그 ID: ${blogId})에 포스팅 중...`);
 
   try {
     const res = await blogger.posts.insert({
-      blogId: BLOGGER_BLOG_ID,
+      blogId: blogId,
       isDraft: false, // true로 하면 임시저장(비공개) 상태로 올라갑니다.
       requestBody: {
         title: newContent.title,
@@ -142,15 +122,42 @@ async function publishToBlogger(newContent, keyword) {
 
 // 메인 실행 함수
 async function main() {
-  if (!process.env.GEMINI_API_KEY) {
-    console.error('❌ GEMINI_API_KEY가 설정되지 않았습니다. 실행을 중단합니다.');
+  const { GEMINI_API_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN, BLOGGER_BLOG_ID } = process.env;
+
+  if (!GEMINI_API_KEY || !GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_REFRESH_TOKEN || !BLOGGER_BLOG_ID) {
+    console.error('❌ API 키 또는 Blogger 인증 정보(.env)가 누락되었습니다. 실행을 중단합니다.');
     return;
   }
 
+  // Blogger API 초기화
+  const oauth2Client = new google.auth.OAuth2(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET);
+  oauth2Client.setCredentials({ refresh_token: GOOGLE_REFRESH_TOKEN });
+  const blogger = google.blogger({ version: 'v3', auth: oauth2Client });
+
   try {
+    // 1. 트렌드 데이터 수집
     const trendData = await getTrendingKeyword();
+    const expectedTitle = `${trendData.keyword} 이슈 총정리`;
+
+    // 2. 중복 방지 (최근 게시물 검색)
+    console.log('🔍 중복 게시물 여부 확인 중...');
+    const recentPostsRes = await blogger.posts.list({
+      blogId: BLOGGER_BLOG_ID,
+      maxResults: 10,
+      fetchBodies: false // 본문은 가져오지 않아 속도 최적화
+    });
+    
+    const recentPosts = recentPostsRes.data.items || [];
+    const isDuplicate = recentPosts.some(post => post.title === expectedTitle);
+    
+    if (isDuplicate) {
+      console.log(`⚠️ 이미 포스팅된 주제입니다 ('${expectedTitle}'). 이번 스케줄은 스킵합니다. 💤`);
+      return; // 중복일 경우 프로그램 정상 종료
+    }
+
+    // 3. 본문 생성 및 포스팅
     const newContent = await generateContent(trendData);
-    await publishToBlogger(newContent, trendData.keyword);
+    await publishToBlogger(newContent, trendData.keyword, blogger, BLOGGER_BLOG_ID);
     
     console.log('🚀 Blogger 파이프라인 실행 완료!');
   } catch (err) {
