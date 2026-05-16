@@ -1,24 +1,37 @@
 {
-  "name": "sulab-store",
+  "name": "sulab-app",
+  "version": "0.1.0",
   "private": true,
-  "version": "1.0.0",
-  "type": "module",
   "scripts": {
-    "build": "node build.js",
-    "clean": "node -e \"import('node:fs/promises').then(fs=>fs.rm('dist',{recursive:true,force:true}))\""
-  },
-  "devDependencies": {
-    "sharp": "^0.34.5"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "firebase:login": "firebase login",
+    "firebase:projects": "firebase projects:list",
+    "firebase:use": "firebase use",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:rules": "firebase deploy --only firestore:rules",
+    "deploy:all": "firebase deploy"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.96.0",
     "@google/genai": "^2.3.0",
-    "axios": "^1.16.1",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "fluent-ffmpeg": "^2.1.3",
-    "google-tts-api": "^2.0.2",
-    "googleapis": "^171.4.0",
-    "open": "^11.0.0",
-    "rss-parser": "^3.13.0"
+    "firebase": "^12.13.0",
+    "firebase-admin": "^13.10.0",
+    "next": "^14.2.35",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.35",
+    "firebase-tools": "^15.18.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }

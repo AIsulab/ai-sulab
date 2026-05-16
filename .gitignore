@@ -1,6 +1,53 @@
-node_modules/
-dist/
-.env
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+/dist
+
+# misc
+.DS_Store
+*.pem
+
+# Firebase service account keys
+*-firebase-adminsdk-*.json
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# sulab-app (Next.js 앱 원본 — 루트로 통합 완료)
+/sulab-app/
+
+# old static site files (보관용)
 shorts_audio.mp3
 shorts_bg.jpg
 shorts_final.mp4
+dev-server*.log
+firebase-debug.log
