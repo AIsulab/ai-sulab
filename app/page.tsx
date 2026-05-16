@@ -430,7 +430,7 @@ export default function LandingPage() {
       </header>
 
       {/* ── HERO ────────────────────────────────────────── */}
-      <section className="relative overflow-hidden pt-36 pb-24">
+      <section className="relative pt-36 pb-24">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(124,58,237,0.12),transparent)]" />
         <div className="absolute top-1/3 left-1/4 -z-10 w-96 h-96 rounded-full bg-violet-300/10 blur-3xl" />
         <div className="absolute top-1/4 right-1/4 -z-10 w-64 h-64 rounded-full bg-emerald-300/10 blur-3xl" />
@@ -467,8 +467,8 @@ export default function LandingPage() {
         </div>
 
         {/* Product Preview */}
-        <div className="mx-auto max-w-5xl px-5 lg:px-8 mt-16">
-          <div className="relative rounded-[1.5rem] border border-slate-200 bg-white shadow-2xl shadow-slate-900/10 overflow-hidden">
+        <div className="relative mx-auto max-w-5xl px-5 lg:px-8 mt-16 pb-8">
+          <div className="rounded-[1.5rem] border border-slate-200 bg-white shadow-2xl shadow-slate-900/10 overflow-hidden">
             <div className="bg-slate-50 border-b border-slate-200 px-5 py-3.5 flex items-center gap-3">
               <div className="flex gap-1.5">
                 <div className="w-3 h-3 rounded-full bg-rose-400" />
@@ -520,10 +520,10 @@ export default function LandingPage() {
           </div>
 
           {/* Floating chips */}
-          <div className="absolute left-[8%] top-[60%] hidden lg:flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 shadow-lg text-[12px] font-medium text-slate-700">
+          <div className="absolute bottom-0 left-10 hidden lg:flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 shadow-lg text-[12px] font-medium text-slate-700">
             <Zap className="w-4 h-4 text-amber-500" /> 워크플로우 자동화
           </div>
-          <div className="absolute right-[6%] top-[52%] hidden lg:flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 shadow-lg text-[12px] font-medium text-slate-700">
+          <div className="absolute bottom-0 right-10 hidden lg:flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 shadow-lg text-[12px] font-medium text-slate-700">
             <Shield className="w-4 h-4 text-emerald-500" /> 데이터 보안 SOC2
           </div>
         </div>
