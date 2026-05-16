@@ -24,7 +24,7 @@ const parser = new Parser({
   }
 });
 
-// 1. 구글 트렌드에서 핫한 키워드와 관련 뉴스 제목 가져오기
+// 1. 구글 트렌드에서 핫한 키워드와 관련 뉴스 제목 가져오기 (오전/이슈용)
 async function getTrendingKeyword() {
   console.log('🔍 트렌드 검색 중...');
   try {
@@ -47,30 +47,76 @@ async function getTrendingKeyword() {
   return { keyword: 'AI 자동화', newsTitle: 'AI 자동화 시대의 도래' }; // 실패 시 기본값
 }
 
-// 2. Gemini API로 블로그 포스트(SEO 최적화된 HTML) 생성하기
-async function generateContent({ keyword, newsTitle }) {
-  console.log(`✍️ '${keyword}' (이슈: ${newsTitle}) 키워드로 블로그 포스트 작성 중...`);
+// 1.5. 유용한 정보성 키워드 가져오기 (오후용)
+function getInformationKeyword() {
+  const topics = [
+    "청년 정부지원금 혜택",
+    "소상공인 대출 및 지원 혜택",
+    "직장인 연말정산 및 세금 절약 꿀팁",
+    "무주택자 주거 및 부동산 지원 정책",
+    "신혼부부 및 육아/출산 지원금",
+    "대중교통비 할인 혜택 (K-패스 등)",
+    "병원비/건강보험 환급 혜택",
+    "저소득층 및 취약계층 복지 혜택",
+    "내게 맞는 숨은 정부지원금 찾기 방법"
+  ];
+  // 날짜(일차)를 기준으로 돌아가면서 선택 (매일 다른 주제)
+  const today = new Date();
+  const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+  const selectedIndex = dayOfYear % topics.length;
+  const keyword = topics[selectedIndex];
   
-  const prompt = `
-    당신은 구글 검색 상위 노출(SEO)과 트래픽 유입에 능통한 '정보성 블로그 전문 에디터'입니다.
-    오늘의 핫 트렌드 키워드: "${keyword}"
-    화제가 된 뉴스/이슈: "${newsTitle}"
-    
-    이 키워드/이슈에 대해 사람들이 검색엔진에서 가장 궁금해할 정보(예: 지원금 신청 방법, 대상, 혜택, 핵심 요약, 사건의 전말 등)를 아주 읽기 쉽고 친절하게 정리하는 블로그 포스트 HTML을 작성해 주세요. 네이버 블로그의 인기 정보성 글처럼 가독성이 뛰어나고 체류 시간을 늘릴 수 있는 구조여야 합니다.
-    
-    조건:
-    1. <h1> 태그로 클릭을 유도하는 매력적인 제목
-    2. <h2> 태그로 소제목 구분 (핵심 요약, 상세 정보, 마무리 등)
-    3. 본문 내 중요 단어는 <strong>, <mark> 태그로 강조
-    4. <html>, <head>, <body> 태그는 절대 포함하지 마세요. 순수 본문(<h1>, <p> 등)만 작성하세요.
-    5. 초상권 침해나 저작권 이슈가 없도록, 본문의 내용을 상징적으로 나타낼 수 있는 안전하고 비유적인 '영문 이미지 생성 프롬프트(imagePrompt)'를 하나 작성해주세요. (예: 특정 인물 이름 대신 "A cinematic professional news studio background", "An abstract representation of internet trends", "A beautiful generic cityscape")
+  return { keyword, newsTitle: "유용한 실생활 정보 및 혜택 정리" };
+}
 
-    출력 형식 (반드시 아래 JSON 형식으로만 출력하세요):
-    {
-      "imagePrompt": "영문 이미지 프롬프트",
-      "htmlContent": "<h1>...생성된 HTML 본문...</h1>"
-    }
-  `;
+// 2. Gemini API로 블로그 포스트(SEO 최적화된 HTML) 생성하기
+async function generateContent({ keyword, newsTitle }, isInfoMode) {
+  console.log(`✍️ '${keyword}' 키워드로 블로그 포스트 작성 중... (모드: ${isInfoMode ? '정보성' : '이슈성'})`);
+  
+  let prompt = '';
+  
+  if (isInfoMode) {
+    prompt = `
+      당신은 구글 검색 상위 노출(SEO)과 트래픽 유입에 능통한 '정보성 블로그 전문 에디터'입니다.
+      오늘 독자들에게 전달할 꿀팁/정보 카테고리: "${keyword}"
+      
+      위 카테고리에 해당하는 실제적이고 구체적인 대한민국의 혜택, 지원금, 혹은 유용한 생활 정보 한 가지를 임의로 선정하여, 일반인들이 몰라서 놓치기 쉬운 부분을 아주 읽기 쉽고 친절하게 정리하는 블로그 포스트 HTML을 작성해 주세요. 네이버 블로그의 인기 정보성 글처럼 가독성이 뛰어나고 체류 시간을 늘릴 수 있는 구조여야 합니다.
+      
+      조건:
+      1. <h1> 태그로 클릭을 유도하는 매력적인 제목 (예: "2026년 몰라서 못 받는 OOO 혜택, 신청 방법 총정리!")
+      2. <h2> 태그로 소제목 구분 (지원 대상, 혜택 내용, 신청 방법 및 주의사항, 꿀팁 등)
+      3. 본문 내 중요 단어는 <strong>, <mark> 태그로 강조
+      4. <html>, <head>, <body> 태그는 절대 포함하지 마세요. 순수 본문(<h1>, <p> 등)만 작성하세요.
+      5. 초상권 침해나 저작권 이슈가 없도록, 본문의 내용을 상징적으로 나타낼 수 있는 안전하고 비유적인 '영문 이미지 생성 프롬프트(imagePrompt)'를 하나 작성해주세요. (예: "A bright glowing piggy bank", "An abstract representation of health insurance")
+
+      출력 형식 (반드시 아래 JSON 형식으로만 출력하세요):
+      {
+        "imagePrompt": "영문 이미지 프롬프트",
+        "htmlContent": "<h1>...생성된 HTML 본문...</h1>"
+      }
+    `;
+  } else {
+    prompt = `
+      당신은 구글 검색 상위 노출(SEO)과 트래픽 유입에 능통한 '정보성 블로그 전문 에디터'입니다.
+      오늘의 핫 트렌드 키워드: "${keyword}"
+      화제가 된 뉴스/이슈: "${newsTitle}"
+      
+      이 키워드/이슈에 대해 사람들이 검색엔진에서 가장 궁금해할 정보(예: 지원금 신청 방법, 대상, 혜택, 핵심 요약, 사건의 전말 등)를 아주 읽기 쉽고 친절하게 정리하는 블로그 포스트 HTML을 작성해 주세요. 네이버 블로그의 인기 정보성 글처럼 가독성이 뛰어나고 체류 시간을 늘릴 수 있는 구조여야 합니다.
+      
+      조건:
+      1. <h1> 태그로 클릭을 유도하는 매력적인 제목
+      2. <h2> 태그로 소제목 구분 (핵심 요약, 상세 정보, 마무리 등)
+      3. 본문 내 중요 단어는 <strong>, <mark> 태그로 강조
+      4. <html>, <head>, <body> 태그는 절대 포함하지 마세요. 순수 본문(<h1>, <p> 등)만 작성하세요.
+      5. 초상권 침해나 저작권 이슈가 없도록, 본문의 내용을 상징적으로 나타낼 수 있는 안전하고 비유적인 '영문 이미지 생성 프롬프트(imagePrompt)'를 하나 작성해주세요. (예: 특정 인물 이름 대신 "A cinematic professional news studio background", "An abstract representation of internet trends", "A beautiful generic cityscape")
+
+      출력 형식 (반드시 아래 JSON 형식으로만 출력하세요):
+      {
+        "imagePrompt": "영문 이미지 프롬프트",
+        "htmlContent": "<h1>...생성된 HTML 본문...</h1>"
+      }
+    `;
+  }
 
   try {
     const response = await ai.models.generateContent({
@@ -89,7 +135,7 @@ async function generateContent({ keyword, newsTitle }) {
     const thumbnailHtml = `<div style="text-align: center; margin-bottom: 20px;"><img src="https://image.pollinations.ai/prompt/${encodedPrompt}?width=800&height=400&nologo=true" alt="${keyword} 관련 이미지" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></div>`;
     
     return {
-      title: `${keyword} 이슈 총정리`, // 내부 저장용
+      title: isInfoMode ? `${keyword} 완벽 정리` : `${keyword} 이슈 총정리`, // 내부 저장용
       htmlBody: thumbnailHtml + '\n' + cleanedHtml
     };
   } catch (error) {
@@ -99,8 +145,10 @@ async function generateContent({ keyword, newsTitle }) {
 }
 
 // 3. 구글 블로그(Blogger)로 포스트 발행하기
-async function publishToBlogger(newContent, keyword, blogger, blogId) {
+async function publishToBlogger(newContent, keyword, blogger, blogId, isInfoMode) {
   console.log(`💾 Blogger(블로그 ID: ${blogId})에 포스팅 중...`);
+
+  const labels = isInfoMode ? [keyword, "정부지원금", "생활꿀팁", "정보"] : [keyword, "트렌드", "이슈정리"];
 
   try {
     const res = await blogger.posts.insert({
@@ -109,7 +157,7 @@ async function publishToBlogger(newContent, keyword, blogger, blogId) {
       requestBody: {
         title: newContent.title,
         content: newContent.htmlBody,
-        labels: [keyword, "트렌드", "이슈정리"]
+        labels: labels
       }
     });
     
@@ -134,12 +182,26 @@ async function main() {
   oauth2Client.setCredentials({ refresh_token: GOOGLE_REFRESH_TOKEN });
   const blogger = google.blogger({ version: 'v3', auth: oauth2Client });
 
-  try {
-    // 1. 트렌드 데이터 수집
-    const trendData = await getTrendingKeyword();
-    const expectedTitle = `${trendData.keyword} 이슈 총정리`;
+  // 한국 시간(KST) 기준 시간대 계산
+  const kstHour = (new Date().getUTCHours() + 9) % 24;
+  const isMorning = kstHour >= 5 && kstHour < 14; // 오전 5시 ~ 오후 2시 사이는 오전(이슈) 모드
 
-    // 2. 중복 방지 (최근 게시물 검색)
+  let topicData;
+  let isInfoMode = false;
+
+  if (isMorning) {
+    console.log('🌅 [오전 스케줄] 실시간 트렌드 이슈 포스팅 모드입니다.');
+    topicData = await getTrendingKeyword();
+  } else {
+    console.log('🌇 [오후 스케줄] 유용한 정보/정부지원금 포스팅 모드입니다.');
+    topicData = getInformationKeyword();
+    isInfoMode = true;
+  }
+
+  try {
+    const expectedTitle = isInfoMode ? `${topicData.keyword} 완벽 정리` : `${topicData.keyword} 이슈 총정리`;
+
+    // 중복 방지 (최근 게시물 검색)
     console.log('🔍 중복 게시물 여부 확인 중...');
     const recentPostsRes = await blogger.posts.list({
       blogId: BLOGGER_BLOG_ID,
@@ -155,9 +217,9 @@ async function main() {
       return; // 중복일 경우 프로그램 정상 종료
     }
 
-    // 3. 본문 생성 및 포스팅
-    const newContent = await generateContent(trendData);
-    await publishToBlogger(newContent, trendData.keyword, blogger, BLOGGER_BLOG_ID);
+    // 본문 생성 및 포스팅
+    const newContent = await generateContent(topicData, isInfoMode);
+    await publishToBlogger(newContent, topicData.keyword, blogger, BLOGGER_BLOG_ID, isInfoMode);
     
     console.log('🚀 Blogger 파이프라인 실행 완료!');
   } catch (err) {
