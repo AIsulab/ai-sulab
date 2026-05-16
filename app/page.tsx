@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ContentGenerator } from "@/components/content-generator";
-import { AuthButton } from "@/components/auth-button";
 
 const metrics = [
   ["콘텐츠 생성", "3종"],
@@ -43,7 +42,12 @@ export default function Home() {
             대시보드
           </Link>
         </nav>
-        <AuthButton />
+        <Link
+          href="/login"
+          className="focus-ring rounded-full bg-white px-4 py-2 text-sm font-bold text-[#151023] transition hover:bg-violet-100"
+        >
+          로그인
+        </Link>
       </header>
 
       <section className="mx-auto grid w-full max-w-7xl items-center gap-10 px-5 pb-10 pt-12 lg:grid-cols-[1.02fr_0.98fr] lg:px-8 lg:pb-20 lg:pt-20">

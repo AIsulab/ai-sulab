@@ -8,6 +8,8 @@ const notoSansKr = Noto_Sans_KR({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
+const pretendardCdn = "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css";
+
 export const metadata: Metadata = {
   title: "SULAB | AI 콘텐츠 자동화 SaaS",
   description:
@@ -24,7 +26,17 @@ export default function RootLayout({
       lang="ko"
       className={`${notoSansKr.variable} h-full scroll-smooth antialiased`}
     >
-      <body className="min-h-full bg-[#090812] text-white">{children}</body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" as="style" crossOrigin="anonymous" href={pretendardCdn} />
+      </head>
+      <body
+        className="min-h-full text-white"
+        style={{ fontFamily: "'Pretendard Variable', Pretendard, var(--font-sans-kr), system-ui, sans-serif" }}
+      >
+        {children}
+      </body>
     </html>
   );
 }
