@@ -23,7 +23,7 @@ const NAV_LINKS = [
 function Nav() {
   const [open, setOpen] = useState(false);
   return (
-    <header className="sticky top-3 z-50 px-3">
+    <header className="fixed top-3 left-0 right-0 z-50 px-3">
       <div className="max-w-[1180px] mx-auto bg-white/85 backdrop-blur-xl ring-1 ring-slate-200/70 rounded-2xl shadow-sm shadow-slate-900/[0.03]">
         <div className="h-14 px-4 lg:px-5 flex items-center justify-between">
           <div className="flex items-center gap-8">
@@ -175,7 +175,7 @@ function ProductPreview() {
 /* ── Hero ────────────────────────────────────────────────── */
 function Hero() {
   return (
-    <section className="relative pt-12 pb-24">
+    <section className="relative pt-28 pb-24">
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[700px] rounded-full bg-violet-200/40 blur-[120px]" />
         <div className="absolute top-40 right-10 w-[400px] h-[400px] rounded-full bg-fuchsia-200/40 blur-[100px]" />
