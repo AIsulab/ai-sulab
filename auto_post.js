@@ -1,150 +1,135 @@
 import fs from 'fs/promises';
 import path from 'path';
-import Parser from 'rss-parser';
+import { fileURLToPath } from 'url';
+import * as cheerio from 'cheerio';
 import { GoogleGenAI } from '@google/genai';
 import { google } from 'googleapis';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-// ---------------------------------------------------------
-// ⚠️ 사용 전 주의사항 (User TODO)
-// 1. .env 파일에 아래의 키들을 넣으세요:
-//    GEMINI_API_KEY=
-//    GOOGLE_CLIENT_ID=
-//    GOOGLE_CLIENT_SECRET=
-//    GOOGLE_REFRESH_TOKEN=
-//    BLOGGER_BLOG_ID=
-// ---------------------------------------------------------
-
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-const parser = new Parser({
-  customFields: {
-    item: ['ht:news_item']
-  }
-});
 
-// 1. 구글 트렌드에서 핫한 키워드와 관련 뉴스 제목 가져오기 (오전/이슈용)
-async function getTrendingKeyword() {
-  console.log('🔍 트렌드 검색 중...');
+// verified_programs.json에서 오늘의 슬롯에 맞는 프로그램 선택
+async function getInformationKeyword() {
+  const filePath = path.join(__dirname, 'verified_programs.json');
+  const data = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+
+  const now = new Date();
+  const kstNow = new Date(now.getTime() + 9 * 3600 * 1000);
+  const kstHour = kstNow.getUTCHours();
+  const slotIndex = (kstHour >= 5 && kstHour < 14) ? 0 : 1;
+
+  const yearStart = new Date(Date.UTC(kstNow.getUTCFullYear(), 0, 1));
+  const dayOfYear = Math.floor((kstNow - yearStart) / 86400000) + 1;
+
+  const idx = (dayOfYear * 2 + slotIndex) % data.length;
+  const slot = slotIndex === 0 ? '오전' : '오후';
+  console.log(`📅 [${slot} 슬롯] day=${dayOfYear}, idx=${idx} → ${data[idx].title}`);
+  return data[idx];
+}
+
+// 정부 공식 사이트에서 실제 본문 텍스트 추출
+async function fetchSourceContent(url) {
   try {
-    const feed = await parser.parseURL('https://trends.google.co.kr/trending/rss?geo=KR');
-    if (feed.items && feed.items.length > 0) {
-      const item = feed.items[0];
-      const keyword = item.title;
-      let newsTitle = '';
-      
-      // 트렌드와 관련된 뉴스 제목 추출 (AI에게 문맥을 주기 위함)
-      if (item['ht:news_item'] && item['ht:news_item']['ht:news_item_title']) {
-        newsTitle = item['ht:news_item']['ht:news_item_title'][0] || '';
-      }
-      
-      return { keyword, newsTitle };
-    }
-  } catch (error) {
-    console.error('트렌드 가져오기 실패:', error);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+    const res = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        'Accept-Language': 'ko-KR,ko;q=0.9',
+      },
+    });
+    clearTimeout(timeout);
+    const html = await res.text();
+    const $ = cheerio.load(html);
+    $('script, style, nav, footer, header, iframe, noscript').remove();
+    const text = $('body').text().replace(/\s+/g, ' ').trim().slice(0, 6000);
+    console.log(`✅ 출처 페이지 로드 성공 (${text.length}자)`);
+    return text || null;
+  } catch (e) {
+    console.log(`⚠️ 출처 페이지 가져오기 실패 (${url}): ${e.message}`);
+    return null;
   }
-  return { keyword: 'AI 자동화', newsTitle: 'AI 자동화 시대의 도래' }; // 실패 시 기본값
 }
 
-// 1.5. 유용한 정보성 키워드 가져오기 (오후용)
-function getInformationKeyword() {
-  const topics = [
-    "청년 정부지원금 혜택",
-    "소상공인 대출 및 지원 혜택",
-    "직장인 연말정산 및 세금 절약 꿀팁",
-    "무주택자 주거 및 부동산 지원 정책",
-    "신혼부부 및 육아/출산 지원금",
-    "대중교통비 할인 혜택 (K-패스 등)",
-    "병원비/건강보험 환급 혜택",
-    "저소득층 및 취약계층 복지 혜택",
-    "내게 맞는 숨은 정부지원금 찾기 방법"
-  ];
-  // 날짜(일차)를 기준으로 돌아가면서 선택 (매일 다른 주제)
-  const today = new Date();
-  const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
-  const selectedIndex = dayOfYear % topics.length;
-  const keyword = topics[selectedIndex];
-  
-  return { keyword, newsTitle: "유용한 실생활 정보 및 혜택 정리" };
-}
+// Gemini로 SEO 최적화된 블로그 포스트 생성
+async function generateContent(program, sourceContent) {
+  console.log(`✍️ '${program.title}' 콘텐츠 생성 중...`);
 
-// 2. Gemini API로 블로그 포스트(SEO 최적화된 HTML) 생성하기
-async function generateContent({ keyword, newsTitle }, isInfoMode) {
-  console.log(`✍️ '${keyword}' 키워드로 블로그 포스트 작성 중... (모드: ${isInfoMode ? '정보성' : '이슈성'})`);
-  
-  let prompt = '';
-  
-  if (isInfoMode) {
-    prompt = `
-      당신은 구글 검색 상위 노출(SEO)과 트래픽 유입에 능통한 '정보성 블로그 전문 에디터'입니다.
-      오늘 독자들에게 전달할 꿀팁/정보 카테고리: "${keyword}"
-      
-      위 카테고리에 해당하는 실제적이고 구체적인 대한민국의 혜택, 지원금, 혹은 유용한 생활 정보 한 가지를 임의로 선정하여, 일반인들이 몰라서 놓치기 쉬운 부분을 아주 읽기 쉽고 친절하게 정리하는 블로그 포스트 HTML을 작성해 주세요. 네이버 블로그의 인기 정보성 글처럼 가독성이 뛰어나고 체류 시간을 늘릴 수 있는 구조여야 합니다.
-      
-      조건:
-      1. <h1> 태그로 클릭을 유도하는 매력적인 제목 (예: "2026년 몰라서 못 받는 OOO 혜택, 신청 방법 총정리!")
-      2. <h2> 태그로 소제목 구분 (지원 대상, 혜택 내용, 신청 방법 및 주의사항, 꿀팁 등)
-      3. 본문 내 중요 단어는 <strong>, <mark> 태그로 강조
-      4. <html>, <head>, <body> 태그는 절대 포함하지 마세요. 순수 본문(<h1>, <p> 등)만 작성하세요.
-      5. 초상권 침해나 저작권 이슈가 없도록, 본문의 내용을 상징적으로 나타낼 수 있는 안전하고 비유적인 '영문 이미지 생성 프롬프트(imagePrompt)'를 하나 작성해주세요. (예: "A bright glowing piggy bank", "An abstract representation of health insurance")
+  const prompt = `당신은 정부 정책과 복지 혜택을 전문적으로 정리하는 콘텐츠 에디터입니다.
+독자에게 실질적으로 도움이 되는 깊이 있는 글을 작성합니다.
 
-      출력 형식 (반드시 아래 JSON 형식으로만 출력하세요):
-      {
-        "imagePrompt": "영문 이미지 프롬프트",
-        "htmlContent": "<h1>...생성된 HTML 본문...</h1>"
-      }
-    `;
-  } else {
-    prompt = `
-      당신은 구글 검색 상위 노출(SEO)과 트래픽 유입에 능통한 '정보성 블로그 전문 에디터'입니다.
-      오늘의 핫 트렌드 키워드: "${keyword}"
-      화제가 된 뉴스/이슈: "${newsTitle}"
-      
-      이 키워드/이슈에 대해 사람들이 검색엔진에서 가장 궁금해할 정보(예: 지원금 신청 방법, 대상, 혜택, 핵심 요약, 사건의 전말 등)를 아주 읽기 쉽고 친절하게 정리하는 블로그 포스트 HTML을 작성해 주세요. 네이버 블로그의 인기 정보성 글처럼 가독성이 뛰어나고 체류 시간을 늘릴 수 있는 구조여야 합니다.
-      
-      조건:
-      1. <h1> 태그로 클릭을 유도하는 매력적인 제목
-      2. <h2> 태그로 소제목 구분 (핵심 요약, 상세 정보, 마무리 등)
-      3. 본문 내 중요 단어는 <strong>, <mark> 태그로 강조
-      4. <html>, <head>, <body> 태그는 절대 포함하지 마세요. 순수 본문(<h1>, <p> 등)만 작성하세요.
-      5. 초상권 침해나 저작권 이슈가 없도록, 본문의 내용을 상징적으로 나타낼 수 있는 안전하고 비유적인 '영문 이미지 생성 프롬프트(imagePrompt)'를 하나 작성해주세요. (예: 특정 인물 이름 대신 "A cinematic professional news studio background", "An abstract representation of internet trends", "A beautiful generic cityscape")
+엄격한 사실 기반 작성 규칙:
+- 아래 제공되는 '참고 자료'에 명시된 내용만을 근거로 작성할 것
+- 참고 자료에 없는 구체적 숫자, 금액, 기한, 자격 조건은 절대 추측하거나 지어내지 말 것
+- 참고 자료가 불충분한 부분은 "공식 사이트에서 최신 정보 확인 필요"로 안내할 것
+- 부정확한 정보를 쓰느니 일반적 설명만 하는 것이 낫다
 
-      출력 형식 (반드시 아래 JSON 형식으로만 출력하세요):
-      {
-        "imagePrompt": "영문 이미지 프롬프트",
-        "htmlContent": "<h1>...생성된 HTML 본문...</h1>"
-      }
-    `;
-  }
+프로그램 정보:
+- 제목: ${program.title}
+- 카테고리: ${program.category}
+- 대상: ${program.targetAudience}
+- 공식 출처: ${program.sourceUrl}
+
+참고 자료 (공식 사이트에서 가져온 실제 내용):
+${sourceContent || '참고 자료를 가져오지 못함 - 일반적인 안내만 작성할 것'}
+
+작성 요구사항:
+1. 제목: <h1>로 SEO 최적화된 매력적 제목 (40-60자, 연도/숫자 포함 권장)
+2. 도입부: <p>로 2-3문장. 독자가 어떤 정보를 얻을 수 있는지 명확히 제시
+3. 목차: <h2>목차</h2> 다음에 <ul>로 본문 섹션 링크
+4. 본문 구조:
+   - <h2>지원 대상</h2> - 자격 요건을 <ul>로 명확히
+   - <h2>지원 내용 및 혜택</h2> - 구체적 금액/혜택을 <ul> 또는 <table>로
+   - <h2>신청 방법</h2> - 단계별 절차를 <ol>로
+   - <h2>준비 서류</h2> - <ul>로
+   - <h2>주의사항 및 자주 묻는 질문</h2> - Q&A 형식
+   - <h2>마무리</h2> - 핵심 요약과 행동 유도
+5. 분량: 본문 텍스트 기준 2500자 이상 (한글)
+6. 강조: 중요 수치, 기한, 조건은 <strong> 또는 <mark>로
+7. 출처 표시: 본문 마지막에 <p>📌 자세한 내용 및 최신 정보: <a href="${program.sourceUrl}" target="_blank">${program.title} 공식 페이지</a></p>
+8. 금지: <html>, <head>, <body> 태그 / 추측성 정보 / 부정확한 숫자
+
+이미지 프롬프트 (imagePrompt) 규칙:
+- 본문 주제를 시각적으로 직접 표현하는 구체적이고 실사적인 영문 프롬프트
+- 실존 인물 묘사 금지, 브랜드 로고 금지
+- "abstract", "metaphorical", "symbolic", "generic" 같은 표현 절대 사용 금지
+- 한국적 맥락이 자연스러울 때는 "Korean" 키워드 포함
+- 반드시 마지막에 스타일 키워드 포함: "photorealistic, editorial photography, professional composition, cinematic lighting, high detail, 8k"
+
+출력 형식 (반드시 JSON으로만 출력, 마크다운 백틱 사용 금지):
+{
+  "title": "h1 안에 들어갈 텍스트만 추출한 제목",
+  "imagePrompt": "영문 이미지 프롬프트",
+  "htmlContent": "<h1>...</h1>...전체 HTML 본문..."
+}`;
 
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
-        responseMimeType: "application/json",
-      }
+        responseMimeType: 'application/json',
+      },
     });
-    
+
     const data = JSON.parse(response.text);
-    let cleanedHtml = data.htmlContent.replace(/<\/?body>/gi, '').trim(); // body 태그 혹시라도 있으면 제거
-    
-    // Pollinations.ai 무료 이미지 생성 API 사용 (초상권 침해 없는 안전한 프롬프트 기반)
+    const cleanedHtml = data.htmlContent.replace(/<\/?(html|head|body)[^>]*>/gi, '').trim();
+
     const encodedPrompt = encodeURIComponent(data.imagePrompt);
-    const thumbnailHtml = `<div style="text-align: center; margin-bottom: 20px;"><img src="https://image.pollinations.ai/prompt/${encodedPrompt}?width=800&height=400&nologo=true" alt="${keyword} 관련 이미지" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></div>`;
-    
-    // 시력이 안 좋은 사람도 쉽게 읽을 수 있도록 가독성 전용 래퍼(wrapper) 추가
-    const styledHtml = `
-      <div style="font-size: 18px; line-height: 1.8; color: #222; font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif; word-break: keep-all; letter-spacing: -0.5px;">
-        ${thumbnailHtml}
-        ${cleanedHtml}
-      </div>
-    `;
+    const thumbnailHtml = `<div style="text-align: center; margin-bottom: 20px;"><img src="https://image.pollinations.ai/prompt/${encodedPrompt}?width=1200&height=630&model=flux&nologo=true&enhance=true" alt="${program.title} 관련 이미지" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></div>`;
+
+    const styledHtml = `<div style="font-size: 18px; line-height: 1.8; color: #222; font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif; word-break: keep-all; letter-spacing: -0.5px;">
+  ${thumbnailHtml}
+  ${cleanedHtml}
+</div>`;
 
     return {
-      title: isInfoMode ? `${keyword} 완벽 정리` : `${keyword} 이슈 총정리`, // 내부 저장용
-      htmlBody: styledHtml
+      title: data.title,
+      htmlBody: styledHtml,
     };
   } catch (error) {
     console.error('콘텐츠 생성 실패:', error);
@@ -152,23 +137,22 @@ async function generateContent({ keyword, newsTitle }, isInfoMode) {
   }
 }
 
-// 3. 구글 블로그(Blogger)로 포스트 발행하기
-async function publishToBlogger(newContent, keyword, blogger, blogId, isInfoMode) {
+// Blogger에 포스트 발행
+async function publishToBlogger(newContent, program, blogger, blogId) {
   console.log(`💾 Blogger(블로그 ID: ${blogId})에 포스팅 중...`);
 
-  const labels = isInfoMode ? [keyword, "정부지원금", "생활꿀팁", "정보"] : [keyword, "트렌드", "이슈정리"];
+  const labels = [program.title, program.category, '정부지원금', '정책정보', '혜택안내'];
 
   try {
     const res = await blogger.posts.insert({
       blogId: blogId,
-      isDraft: false, // true로 하면 임시저장(비공개) 상태로 올라갑니다.
+      isDraft: false,
       requestBody: {
         title: newContent.title,
         content: newContent.htmlBody,
-        labels: labels
-      }
+        labels: labels,
+      },
     });
-    
     console.log(`✅ 구글 블로그 발행 성공! 글 확인: ${res.data.url}`);
   } catch (error) {
     console.error('❌ 구글 블로그 발행 실패:', error.message);
@@ -182,7 +166,7 @@ async function main() {
 
   if (!GEMINI_API_KEY || !GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_REFRESH_TOKEN || !BLOGGER_BLOG_ID) {
     console.error('❌ API 키 또는 Blogger 인증 정보(.env)가 누락되었습니다. 실행을 중단합니다.');
-    return;
+    process.exit(1);
   }
 
   // Blogger API 초기화
@@ -190,46 +174,37 @@ async function main() {
   oauth2Client.setCredentials({ refresh_token: GOOGLE_REFRESH_TOKEN });
   const blogger = google.blogger({ version: 'v3', auth: oauth2Client });
 
-  // 한국 시간(KST) 기준 시간대 계산
-  const kstHour = (new Date().getUTCHours() + 9) % 24;
-  const isMorning = kstHour >= 5 && kstHour < 14; // 오전 5시 ~ 오후 2시 사이는 오전(이슈) 모드
+  // 오늘의 프로그램 선택
+  const program = await getInformationKeyword();
 
-  let topicData;
-  let isInfoMode = false;
+  // 중복 체크 (최근 게시물 제목 기반)
+  console.log('🔍 중복 게시물 여부 확인 중...');
+  const recentPostsRes = await blogger.posts.list({
+    blogId: BLOGGER_BLOG_ID,
+    maxResults: 20,
+    fetchBodies: false,
+  });
 
-  if (isMorning) {
-    console.log('🌅 [오전 스케줄] 실시간 트렌드 이슈 포스팅 모드입니다.');
-    topicData = await getTrendingKeyword();
-  } else {
-    console.log('🌇 [오후 스케줄] 유용한 정보/정부지원금 포스팅 모드입니다.');
-    topicData = getInformationKeyword();
-    isInfoMode = true;
+  const recentPosts = recentPostsRes.data.items || [];
+  const isDuplicate = recentPosts.some(post => post.title && post.title.includes(program.title));
+
+  if (isDuplicate) {
+    console.log(`⚠️ 이미 포스팅된 프로그램입니다 ('${program.title}'). 이번 스케줄은 스킵합니다. 💤`);
+    return;
   }
 
   try {
-    const expectedTitle = isInfoMode ? `${topicData.keyword} 완벽 정리` : `${topicData.keyword} 이슈 총정리`;
+    // 출처 페이지 크롤링
+    const sourceContent = await fetchSourceContent(program.sourceUrl);
+    console.log(`📄 출처 fetch ${sourceContent ? '성공' : '실패'} → ${program.sourceUrl}`);
 
-    // 중복 방지 (최근 게시물 검색)
-    console.log('🔍 중복 게시물 여부 확인 중...');
-    const recentPostsRes = await blogger.posts.list({
-      blogId: BLOGGER_BLOG_ID,
-      maxResults: 10,
-      fetchBodies: false // 본문은 가져오지 않아 속도 최적화
-    });
-    
-    const recentPosts = recentPostsRes.data.items || [];
-    const isDuplicate = recentPosts.some(post => post.title === expectedTitle);
-    
-    if (isDuplicate) {
-      console.log(`⚠️ 이미 포스팅된 주제입니다 ('${expectedTitle}'). 이번 스케줄은 스킵합니다. 💤`);
-      return; // 중복일 경우 프로그램 정상 종료
-    }
+    // 콘텐츠 생성
+    const newContent = await generateContent(program, sourceContent);
 
-    // 본문 생성 및 포스팅
-    const newContent = await generateContent(topicData, isInfoMode);
-    await publishToBlogger(newContent, topicData.keyword, blogger, BLOGGER_BLOG_ID, isInfoMode);
-    
-    console.log('🚀 Blogger 파이프라인 실행 완료!');
+    // 블로그 발행
+    await publishToBlogger(newContent, program, blogger, BLOGGER_BLOG_ID);
+
+    console.log('🚀 파이프라인 실행 완료!');
   } catch (err) {
     console.error('🚨 파이프라인 실행 중 오류 발생:', err);
     process.exit(1);
