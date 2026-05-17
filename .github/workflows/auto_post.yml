@@ -4,7 +4,29 @@ on:
   schedule:
     # 매일 한국 시간 기준 아침 8시(UTC 23:00)와 오후 6시(UTC 09:00)에 실행
     - cron: '0 23,9 * * *'
-  workflow_dispatch: # 수동으로도 실행할 수 있도록 버튼 생성
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Post mode (auto or custom)'
+        required: true
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - custom
+      keyword:
+        description: 'Custom Keyword (used if mode is custom)'
+        required: false
+        type: string
+      topic:
+        description: 'Custom Topic (used if mode is custom)'
+        required: false
+        type: string
+      publish_now:
+        description: 'Publish immediately (true/false)'
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   post:
@@ -29,4 +51,8 @@ jobs:
         GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
         GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
         BLOGGER_BLOG_ID: ${{ secrets.BLOGGER_BLOG_ID }}
+        POST_MODE: ${{ inputs.mode || 'auto' }}
+        CUSTOM_KEYWORD: ${{ inputs.keyword || '' }}
+        CUSTOM_TOPIC: ${{ inputs.topic || '' }}
+        PUBLISH_NOW: ${{ inputs.publish_now }}
       run: node auto_post.js

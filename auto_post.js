@@ -424,7 +424,7 @@ Google 검색 도구를 활용하여 위 프로그램의 2026년 현재 시점 �
 
 
 // Blogger에 포스트 발행
-async function publishToBlogger(newContent, program, blogger, blogId) {
+async function publishToBlogger(newContent, program, blogger, blogId, publishNow) {
   console.log(`💾 Blogger(블로그 ID: ${blogId})에 포스팅 중...`);
 
   // 콘텐츠 품질 종합 검증 (강화된 로직)
@@ -443,7 +443,7 @@ async function publishToBlogger(newContent, program, blogger, blogId) {
   try {
     const res = await blogger.posts.insert({
       blogId: blogId,
-      isDraft: false,
+      isDraft: publishNow === 'false' ? true : false,
       requestBody: {
         title: newContent.title,
         content: newContent.htmlBody,
@@ -460,7 +460,7 @@ async function publishToBlogger(newContent, program, blogger, blogId) {
 
 // 메인 실행 함수
 async function main() {
-  const { GEMINI_API_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN, BLOGGER_BLOG_ID } = process.env;
+  const { GEMINI_API_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN, BLOGGER_BLOG_ID, POST_MODE, CUSTOM_KEYWORD, CUSTOM_TOPIC, PUBLISH_NOW } = process.env;
 
   if (!GEMINI_API_KEY || !GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_REFRESH_TOKEN || !BLOGGER_BLOG_ID) {
     console.error('❌ API 키 또는 Blogger 인증 정보(.env)가 누락되었습니다. 실행을 중단합니다.');
@@ -473,7 +473,27 @@ async function main() {
   const blogger = google.blogger({ version: 'v3', auth: oauth2Client });
 
   // 오늘의 프로그램 선택
-  const program = await getInformationKeyword();
+  let program;
+  const isCustomMode = POST_MODE === 'custom';
+
+  if (isCustomMode) {
+    console.log(`🛠️ 수동 커스텀 모드 실행: 키워드='${CUSTOM_KEYWORD}', 주제='${CUSTOM_TOPIC}'`);
+    if (!CUSTOM_TOPIC) {
+      console.error('❌ 커스텀 모드에서는 CUSTOM_TOPIC이 필수입니다.');
+      process.exit(1);
+    }
+    program = {
+      title: CUSTOM_TOPIC,
+      category: CUSTOM_KEYWORD || '기타',
+      targetAudience: '일반 대상',
+      coreSummary: `${CUSTOM_KEYWORD ? CUSTOM_KEYWORD + ' 관련 ' : ''}${CUSTOM_TOPIC}`,
+      sourceUrl: '', // 커스텀 모드이므로 URL 없음
+      officialSiteName: '검색 기반 정보'
+    };
+  } else {
+    console.log('🤖 자동 스케줄 모드 실행');
+    program = await getInformationKeyword();
+  }
 
   // 중복 체크 (최근 게시물 제목 기반)
   console.log('🔍 중복 게시물 여부 확인 중...');
@@ -506,7 +526,7 @@ async function main() {
     }
 
     // 블로그 발행 (품질 검증 포함)
-    await publishToBlogger(newContent, program, blogger, BLOGGER_BLOG_ID);
+    await publishToBlogger(newContent, program, blogger, BLOGGER_BLOG_ID, PUBLISH_NOW);
 
     console.log('🚀 파이프라인 실행 완료!');
   } catch (err) {
