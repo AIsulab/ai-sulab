@@ -11,9 +11,17 @@ dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-// 지수형 백오프 로직이 포함된 Gemini API 호출 래퍼
+// 지수형 백오프 로직(Retry-After 메타데이터 + 지터 포함)이 포함된 Gemini API 호출 래퍼
 async function callGeminiWithRetry(prompt, maxRetries = 3) {
-  const backoffDelays = [30000, 60000, 120000]; // 30초, 60초, 120초
+  const defaultBackoffDelays = [30000, 60000, 120000]; // 30초, 60초, 120초
+  
+  // 지터(jitter) 추가: ±10% 랜덤 변동
+  const addJitter = (delayMs) => {
+    const jitterPercent = 0.1; // 10%
+    const jitterRange = delayMs * jitterPercent;
+    const randomJitter = (Math.random() - 0.5) * 2 * jitterRange;
+    return Math.max(1000, delayMs + randomJitter); // 최소 1초 보장
+  };
   
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
@@ -36,11 +44,33 @@ async function callGeminiWithRetry(prompt, maxRetries = 3) {
                                error.message?.includes('quota');
       
       if (isRateLimitError && attempt < maxRetries) {
-        const waitTime = backoffDelays[attempt];
-        const waitSecs = waitTime / 1000;
+        // Retry-After 메타데이터 확인 (초 단위)
+        let retryAfter = null;
+        if (error.headers?.['retry-after']) {
+          const retryAfterValue = error.headers['retry-after'];
+          // 숫자인 경우 초, 날짜인 경우 ISO 8601 형식
+          if (!isNaN(retryAfterValue)) {
+            retryAfter = parseInt(retryAfterValue) * 1000;
+          } else {
+            const retryDate = new Date(retryAfterValue);
+            if (!isNaN(retryDate.getTime())) {
+              retryAfter = Math.max(0, retryDate.getTime() - Date.now());
+            }
+          }
+        }
+        
+        // retryDelay 또는 다른 메타데이터 확인
+        if (!retryAfter && error.retryDelay) {
+          retryAfter = error.retryDelay;
+        }
+        
+        // 메타데이터가 있으면 사용, 없으면 기본값 사용 (지터 추가)
+        const waitTime = retryAfter || addJitter(defaultBackoffDelays[attempt]);
+        const waitSecs = (waitTime / 1000).toFixed(1);
+        
         console.log(`⚠️ API 과부하 (상태: ${statusCode}). ${waitSecs}초 후 ${attempt + 1}차 재시도합니다...`);
         
-        // 지정된 시간 대기
+        // 계산된 시간 대기
         await new Promise(resolve => setTimeout(resolve, waitTime));
       } else if (isRateLimitError) {
         console.error(`❌ API 과부하로 인해 최대 재시도 횟수(${maxRetries})를 초과했습니다. 발행을 스킵합니다.`);
@@ -106,6 +136,98 @@ function extractJson(text) {
   const end = stripped.lastIndexOf('}');
   if (start === -1 || end === -1) throw new Error('응답에서 JSON을 찾을 수 없습니다');
   return JSON.parse(stripped.slice(start, end + 1));
+}
+
+// 콘텐츠 품질 종합 검증 헬퍼 함수
+function validateContentQuality(htmlBody) {
+  const validationResults = {
+    passed: true,
+    reasons: []
+  };
+
+  // 1. HTML 태그 제거 후 순문본 길이 확인
+  const plainText = htmlBody
+    .replace(/<script[^>]*>.*?<\/script>/gi, '')
+    .replace(/<style[^>]*>.*?<\/style>/gi, '')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .trim();
+  
+  const plainTextLength = plainText.length;
+  const minTextLength = 2800; // 최소 2,800자
+  
+  if (plainTextLength < minTextLength) {
+    validationResults.passed = false;
+    validationResults.reasons.push(
+      `📏 순문본 길이 미달: ${plainTextLength}자 (최소: ${minTextLength}자)`
+    );
+  }
+
+  // 2. H2 섹션 개수 확인
+  const h2Count = (htmlBody.match(/<h2[^>]*>/gi) || []).length;
+  const minH2 = 4; // 최소 4개 필수
+  
+  if (h2Count < minH2) {
+    validationResults.passed = false;
+    validationResults.reasons.push(
+      `📚 H2 섹션 부족: ${h2Count}개 (최소: ${minH2}개)`
+    );
+  }
+
+  // 3. FAQ 섹션 존재 여부 확인
+  const faqPattern = /(<h2[^>]*>.*?(FAQ|자주.*?묻|frequently|question).*?<\/h2>|<h3[^>]*>.*?Q\d+\.|Q\d+\.)/gi;
+  const hasFaqSection = faqPattern.test(htmlBody);
+  
+  if (!hasFaqSection) {
+    validationResults.passed = false;
+    validationResults.reasons.push(
+      `❓ FAQ 섹션 없음: "자주 묻는 질문" 또는 Q1, Q2 등의 Q&A 구조 필요`
+    );
+  }
+
+  // 4. 비교표(table) 존재 여부 확인
+  const hasTable = /<table[^>]*>.*?<\/table>/is.test(htmlBody);
+  
+  if (!hasTable) {
+    validationResults.passed = false;
+    validationResults.reasons.push(
+      `📊 비교표 없음: 지원 내용이나 혜택 비교를 위한 <table> 필요`
+    );
+  }
+
+  // 5. 결론/요약 섹션 존재 여부 확인
+  const hasConclusionSection = /(<h2[^>]*>.*?(마무리|결론|요약|Summary|Conclusion|마지막).*?<\/h2>|<h2[^>]*>✨|<p[^>]*>.*?(이.*정보.*중요|행동.*유도|신청.*시간|확인.*권장).*?<\/p>)/gi.test(htmlBody);
+  
+  if (!hasConclusionSection) {
+    validationResults.passed = false;
+    validationResults.reasons.push(
+      `📝 결론/요약 섹션 없음: "마무리" 또는 행동 유도 문구 필요`
+    );
+  }
+
+  // 6. 기존 flagCount 검증 (약한 정보 표현)
+  const qualityFlags = [
+    "확인할 수 없습니다",
+    "명시되어 있지 않습니다",
+    "참고 자료에",
+    "제공된 정보로"
+  ];
+  const flagCount = qualityFlags.reduce((count, flag) => {
+    const matches = htmlBody.match(new RegExp(flag, 'g'));
+    return count + (matches ? matches.length : 0);
+  }, 0);
+  
+  if (flagCount >= 3) {
+    validationResults.passed = false;
+    validationResults.reasons.push(
+      `⚠️ 약한 정보 표현 과다: ${flagCount}회 (한계점: 3회 이상)`
+    );
+  }
+
+  return validationResults;
 }
 
 // Gemini로 Google Search Grounding 기반 블로그 포스트 생성
@@ -305,21 +427,15 @@ Google 검색 도구를 활용하여 위 프로그램의 2026년 현재 시점 �
 async function publishToBlogger(newContent, program, blogger, blogId) {
   console.log(`💾 Blogger(블로그 ID: ${blogId})에 포스팅 중...`);
 
-  // 콘텐츠 품질 검증
-  const qualityFlags = [
-    "확인할 수 없습니다",
-    "명시되어 있지 않습니다",
-    "참고 자료에",
-    "제공된 정보로"
-  ];
-  const flagCount = qualityFlags.reduce((count, flag) => {
-    const matches = newContent.htmlBody.match(new RegExp(flag, 'g'));
-    return count + (matches ? matches.length : 0);
-  }, 0);
-
-  if (flagCount >= 3) {
-    console.error(`⚠️ 콘텐츠 품질 미달 (검증 부족 표현 ${flagCount}회 등장). 발행 스킵.`);
-    return; // 발행하지 않고 정상 종료
+  // 콘텐츠 품질 종합 검증 (강화된 로직)
+  const qualityValidation = validateContentQuality(newContent.htmlBody);
+  
+  if (!qualityValidation.passed) {
+    console.error(`❌ 콘텐츠 품질 검증 실패. 발행을 스킵합니다.`);
+    qualityValidation.reasons.forEach(reason => {
+      console.error(`   ${reason}`);
+    });
+    return; // 안전하게 종료
   }
 
   const labels = [program.title, program.category, '정부지원금', '정책정보', '혜택안내'];
