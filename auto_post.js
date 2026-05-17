@@ -11,6 +11,48 @@ dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
+// 지수형 백오프 로직이 포함된 Gemini API 호출 래퍼
+async function callGeminiWithRetry(prompt, maxRetries = 3) {
+  const backoffDelays = [30000, 60000, 120000]; // 30초, 60초, 120초
+  
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      // Google Search Grounding 활성화
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+          tools: [{ googleSearch: {} }],
+        },
+      });
+      
+      return response;
+    } catch (error) {
+      const statusCode = error.status || error.code;
+      const isRateLimitError = statusCode === 429 || statusCode === 503 || 
+                               error.message?.includes('429') || 
+                               error.message?.includes('503') ||
+                               error.message?.includes('RESOURCE_EXHAUSTED') ||
+                               error.message?.includes('quota');
+      
+      if (isRateLimitError && attempt < maxRetries) {
+        const waitTime = backoffDelays[attempt];
+        const waitSecs = waitTime / 1000;
+        console.log(`⚠️ API 과부하 (상태: ${statusCode}). ${waitSecs}초 후 ${attempt + 1}차 재시도합니다...`);
+        
+        // 지정된 시간 대기
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+      } else if (isRateLimitError) {
+        console.error(`❌ API 과부하로 인해 최대 재시도 횟수(${maxRetries})를 초과했습니다. 발행을 스킵합니다.`);
+        throw new Error('API_RETRY_EXHAUSTED: 최대 재시도 횟수 초과');
+      } else {
+        // Rate limit이 아닌 다른 에러는 즉시 throw
+        throw error;
+      }
+    }
+  }
+}
+
 // verified_programs.json에서 오늘의 슬롯에 맞는 프로그램 선택
 async function getInformationKeyword() {
   const filePath = path.join(__dirname, 'verified_programs.json');
@@ -202,13 +244,8 @@ Google 검색 도구를 활용하여 위 프로그램의 2026년 현재 시점 �
 
   try {
     // Google Search Grounding 활성화 (responseMimeType과 병행 불가하여 수동 JSON 파싱)
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
-        tools: [{ googleSearch: {} }],
-      },
-    });
+    // 지수형 백오프를 포함한 재시도 로직 사용
+    const response = await callGeminiWithRetry(prompt, 3);
 
     const data = extractJson(response.text);
     const cleanedHtml = data.htmlContent.replace(/<\/?(html|head|body)[^>]*>/gi, '').trim();
@@ -253,6 +290,11 @@ Google 검색 도구를 활용하여 위 프로그램의 2026년 현재 시점 �
       htmlBody: styledHtml,
     };
   } catch (error) {
+    // 재시도 횟수 초과로 인한 에러는 로그 후 정상 종료
+    if (error.message?.includes('API_RETRY_EXHAUSTED')) {
+      console.error('🚨 Gemini API 최대 재시도 횟수 초과. 이번 스케줄 발행을 스킵합니다.');
+      return null;
+    }
     console.error('콘텐츠 생성 실패:', error);
     throw error;
   }
@@ -340,6 +382,12 @@ async function main() {
 
     // 콘텐츠 생성 (Google Search Grounding)
     const newContent = await generateContent(program, sourceContent);
+
+    // generateContent가 null을 반환한 경우 (API 재시도 초과 등)
+    if (!newContent) {
+      console.log('📌 콘텐츠 생성 불가로 인해 이번 스케줄을 스킵합니다. 💤');
+      return;
+    }
 
     // 블로그 발행 (품질 검증 포함)
     await publishToBlogger(newContent, program, blogger, BLOGGER_BLOG_ID);
