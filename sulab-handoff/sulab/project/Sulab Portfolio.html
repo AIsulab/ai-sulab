@@ -1,0 +1,1317 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>수랩 — 프롬프트 갤러리</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  html, body { font-family: 'Pretendard Variable', Pretendard, Inter, ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; -webkit-font-smoothing: antialiased; background:#0a0a0c; color:#e7e7ea; }
+  .font-display { font-family: 'Pretendard Variable', Pretendard, Inter, sans-serif; letter-spacing: -0.025em; }
+  .font-grotesk { font-family: 'Space Grotesk', 'Pretendard Variable', sans-serif; letter-spacing: -0.02em; }
+  .font-mono-num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+  .gradient-text { background: linear-gradient(90deg,#A78BFA 0%,#F472B6 50%,#FB923C 100%); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .focus-violet:focus { outline: none; box-shadow: 0 0 0 4px rgba(139,92,246,0.25); border-color: #8B5CF6; }
+  .scrollbar-thin::-webkit-scrollbar{height:6px;width:6px}
+  .scrollbar-thin::-webkit-scrollbar-thumb{background:#27272a;border-radius:9999px}
+
+  /* card surfaces */
+  .card-dark { background:#111114; border:1px solid #1e1e22; }
+  .card-dark:hover { border-color:#312e3e; }
+  .glass { background: rgba(20,20,26,0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border:1px solid rgba(255,255,255,0.06); }
+
+  /* shared animations */
+  @keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.85)} }
+  .dot-pulse { animation: pulseDot 1.6s ease-in-out infinite; }
+  @keyframes scaleIn { from{opacity:0; transform: scale(0.96)} to{opacity:1; transform:none} }
+  .scale-in { animation: scaleIn .25s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .fade-in { animation: fadeIn .4s ease both; }
+
+  /* MOTION THUMBNAIL ANIMATIONS — always-on subtle drift, hover intensifies */
+  @keyframes drift { 0%,100%{transform: translate3d(0,0,0)} 50%{transform: translate3d(8px,-6px,0)} }
+  @keyframes drift2 { 0%,100%{transform: translate3d(0,0,0)} 50%{transform: translate3d(-10px,8px,0)} }
+  @keyframes shimmerBg { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
+  @keyframes orbit { from{transform: rotate(0deg) translateX(40px) rotate(0deg)} to{transform: rotate(360deg) translateX(40px) rotate(-360deg)} }
+  @keyframes neonFlicker { 0%,100%{opacity:1} 47%{opacity:1} 48%{opacity:.4} 49%{opacity:1} 51%{opacity:.7} 52%{opacity:1} }
+  @keyframes rainFall { from{transform: translateY(-100%)} to{transform: translateY(100%)} }
+  @keyframes scrollFeed { 0%{transform: translateY(0)} 100%{transform: translateY(-50%)} }
+  @keyframes typeBlink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
+  @keyframes pan { 0%{transform: scale(1.08) translateX(0)} 50%{transform: scale(1.12) translateX(-3%)} 100%{transform: scale(1.08) translateX(0)} }
+  @keyframes float { 0%,100%{transform: translateY(0)} 50%{transform: translateY(-4px)} }
+  @keyframes hueShift { 0%,100%{filter: hue-rotate(0deg)} 50%{filter: hue-rotate(20deg)} }
+  @keyframes blink { 50%{opacity:0.3} }
+  @keyframes kenburns { 0%,100%{transform: scale(1.05) translate(0,0)} 50%{transform: scale(1.15) translate(-2%,1%)} }
+  @keyframes paletteShift { 0%{background-position:0% 0%} 100%{background-position:100% 100%} }
+  @keyframes runChart { 0%{stroke-dashoffset:300} 100%{stroke-dashoffset:0} }
+  @keyframes slideUp { 0%{transform: translateY(8%); opacity:0.6} 100%{transform: translateY(0); opacity:1} }
+  @keyframes glow { 0%,100%{filter: brightness(1)} 50%{filter: brightness(1.25)} }
+  @keyframes scenePulse { 0%,25%{opacity:1} 30%,75%{opacity:0.3} 80%,100%{opacity:1} }
+
+  .anim-drift { animation: drift 7s ease-in-out infinite; }
+  .anim-drift2 { animation: drift2 9s ease-in-out infinite; }
+  .anim-shimmer { background-size: 200% 200%; animation: shimmerBg 6s linear infinite; }
+  .anim-pan { animation: pan 14s ease-in-out infinite; }
+  .anim-float { animation: float 3.5s ease-in-out infinite; }
+  .anim-glow { animation: glow 4s ease-in-out infinite; }
+  .anim-hue { animation: hueShift 8s ease-in-out infinite; }
+  .anim-orbit { animation: orbit 10s linear infinite; }
+  .anim-neon { animation: neonFlicker 4s ease-in-out infinite; }
+  .anim-rain { animation: rainFall 1.2s linear infinite; }
+  .anim-scroll-feed { animation: scrollFeed 10s linear infinite; }
+  .anim-type-blink { animation: typeBlink 0.8s steps(1) infinite; }
+  .anim-kenburns { animation: kenburns 12s ease-in-out infinite; }
+  .anim-palette { background-size: 300% 300%; animation: paletteShift 8s ease-in-out infinite alternate; }
+  .anim-slow-blink { animation: blink 2.5s ease-in-out infinite; }
+  .anim-scene { animation: scenePulse 6s ease-in-out infinite; }
+
+  /* hover intensifies — multipliers via group-hover applied inline */
+  .group:hover .anim-pan { animation-duration: 4s; }
+  .group:hover .anim-kenburns { animation-duration: 4s; }
+
+  /* live image: animated abstract photography substitutes — uses CSS gradients shifting */
+  .img-living {
+    background-image: linear-gradient(120deg, var(--c1), var(--c2), var(--c3), var(--c2), var(--c1));
+    background-size: 300% 300%;
+    animation: paletteShift 14s ease-in-out infinite alternate;
+  }
+
+  /* mini browser chrome */
+  .chrome-bar { background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+  /* paywall lock */
+  .locked-blur { filter: blur(5px); user-select: none; pointer-events: none; }
+  .lock-fade-dark { background: linear-gradient(180deg, transparent 0%, rgba(10,10,12,0.5) 30%, rgba(10,10,12,0.92) 65%, #0a0a0c 100%); }
+  .lock-fade-light { background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.6) 30%, rgba(255,255,255,0.95) 65%, #ffffff 100%); }
+
+  /* selection */
+  ::selection { background: rgba(167,139,250,0.35); color:#fff; }
+
+  /* premium ring */
+  .premium-ring {
+    background: linear-gradient(135deg, rgba(167,139,250,0.7), rgba(244,114,182,0.7), rgba(251,146,60,0.7));
+  }
+
+  /* dotgrid bg used on thumbnails */
+  .dotgrid { background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px); background-size: 14px 14px; }
+
+  /* shrink-when-many for nav */
+  .nav-host header { box-shadow: 0 1px 0 rgba(255,255,255,0.05); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script type="text/babel" data-presets="react" src="partials/sulab-nav.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+
+const { useState, useEffect, useRef, useMemo } = React;
+
+function Icon({ name, className = "w-5 h-5", strokeWidth = 1.75 }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (ref.current && window.lucide) {
+      ref.current.innerHTML = "";
+      const key = name.replace(/(^|-)(\w)/g, (_, __, c) => c.toUpperCase());
+      const svg = window.lucide.createElement(window.lucide.icons[key] || window.lucide.icons.Circle);
+      svg.setAttribute("class", className);
+      svg.setAttribute("stroke-width", strokeWidth);
+      ref.current.appendChild(svg);
+    }
+  }, [name, className, strokeWidth]);
+  return <span ref={ref} className="inline-flex" />;
+}
+
+// ============================================================
+// MOTION THUMBNAILS — each is a self-contained mini-scene
+// Always-on subtle motion + intensified on hover (.group:hover children change duration)
+// ============================================================
+const Thumbs = {
+  // 1) SaaS landing — full website screenshot feel
+  saasLanding: () =>
+  <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 anim-pan">
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 50% at 30% 0%, rgba(167,139,250,0.5), transparent 60%), radial-gradient(ellipse 60% 60% at 80% 100%, rgba(244,114,182,0.4), transparent 60%), #0e0a1a" }}></div>
+        {/* chrome bar */}
+        <div className="absolute top-2 left-2 right-2 h-4 rounded chrome-bar flex items-center gap-1 px-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-white/15"></span>
+          <span className="w-1.5 h-1.5 rounded-full bg-white/15"></span>
+          <span className="w-1.5 h-1.5 rounded-full bg-white/15"></span>
+          <div className="ml-1.5 flex-1 h-2 rounded bg-white/5"></div>
+        </div>
+        {/* nav row */}
+        <div className="absolute top-9 left-3 right-3 flex items-center justify-between">
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 rounded bg-gradient-to-br from-violet-400 to-fuchsia-400"></div>
+            <div className="h-1 w-6 bg-white/40 rounded-full"></div>
+          </div>
+          <div className="flex gap-1">
+            {[1, 2, 3].map((i) => <div key={i} className="h-1 w-3 bg-white/20 rounded-full"></div>)}
+          </div>
+          <div className="h-3 w-8 rounded bg-violet-500"></div>
+        </div>
+        {/* hero copy */}
+        <div className="absolute left-3 right-3 top-[40%] -translate-y-1/2">
+          <div className="h-1 w-12 bg-violet-400/60 rounded-full mb-1.5 anim-shimmer" style={{ backgroundImage: "linear-gradient(90deg, #a78bfa 0%, #f472b6 50%, #a78bfa 100%)" }}></div>
+          <div className="h-2.5 w-full bg-white rounded mb-1"></div>
+          <div className="h-2.5 w-3/4 bg-white rounded mb-2"></div>
+          <div className="h-1.5 w-2/3 bg-white/50 rounded mb-3"></div>
+          <div className="flex gap-1.5">
+            <div className="h-4 w-12 rounded-md bg-gradient-to-r from-violet-500 to-fuchsia-500 anim-glow"></div>
+            <div className="h-4 w-10 rounded-md bg-white/10 ring-1 ring-white/15"></div>
+          </div>
+        </div>
+        {/* feature cards row at bottom */}
+        <div className="absolute bottom-2 left-2 right-2 grid grid-cols-3 gap-1">
+          {[1, 2, 3].map((i) =>
+        <div key={i} className="h-7 rounded bg-white/[0.04] ring-1 ring-white/10 backdrop-blur-sm p-1">
+              <div className={`w-2 h-2 rounded ${i === 1 ? 'bg-violet-400' : i === 2 ? 'bg-fuchsia-400' : 'bg-orange-400'}`}></div>
+              <div className="h-0.5 w-3/4 bg-white/30 rounded-full mt-1"></div>
+            </div>
+        )}
+        </div>
+      </div>
+    </div>,
+
+
+  // 2) D2C e-commerce — product grid scrolling feel
+  d2cShop: () =>
+  <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 bg-white"></div>
+      {/* top header */}
+      <div className="absolute top-0 left-0 right-0 h-6 bg-white border-b border-slate-200 px-2 flex items-center justify-between">
+        <div className="h-2 w-10 bg-slate-800 rounded-sm"></div>
+        <div className="flex gap-1">
+          <div className="w-3 h-3 rounded-full bg-slate-100"></div>
+          <div className="w-3 h-3 rounded-full bg-slate-100"></div>
+        </div>
+      </div>
+      {/* hero photo */}
+      <div className="absolute top-7 left-2 right-2 h-12 rounded overflow-hidden anim-kenburns">
+        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #fda4af 0%, #fbcfe8 40%, #fde68a 100%)" }}></div>
+        {/* simulated photo of model */}
+        <div className="absolute bottom-0 right-3 w-6 h-10 bg-slate-900/30 rounded-t-full"></div>
+        <div className="absolute bottom-0 right-2 w-4 h-7 rounded-t-md" style={{ background: "linear-gradient(180deg, transparent 0%, #92400e 70%)" }}></div>
+        <div className="absolute top-1.5 left-2 text-[6px] font-bold text-white drop-shadow">SS26 LOOKBOOK</div>
+      </div>
+      {/* product grid */}
+      <div className="absolute top-[78px] left-2 right-2 grid grid-cols-3 gap-1">
+        {[
+      ["bg-gradient-to-br from-stone-200 to-stone-300", "₩42,000"],
+      ["bg-gradient-to-br from-amber-100 to-orange-200", "₩68,000"],
+      ["bg-gradient-to-br from-slate-200 to-slate-400", "₩89,000"],
+      ["bg-gradient-to-br from-rose-100 to-pink-200", "₩54,000"],
+      ["bg-gradient-to-br from-emerald-100 to-teal-200", "₩76,000"],
+      ["bg-gradient-to-br from-violet-200 to-fuchsia-200", "₩48,000"]].
+      map(([cls, price], i) =>
+      <div key={i} className={`relative aspect-square rounded ${cls} overflow-hidden anim-float`} style={{ animationDelay: `${i * 0.25}s` }}>
+            <div className="absolute bottom-0.5 left-0.5 text-[5.5px] font-bold text-white drop-shadow">{price}</div>
+          </div>
+      )}
+      </div>
+    </div>,
+
+
+  // 3) Fintech onboarding — 3 phone screens
+  onboard: () =>
+  <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(99,102,241,0.4), #050510 70%)" }}></div>
+      <div className="absolute inset-0 flex items-center justify-center gap-2">
+        {[
+      { acc: "violet", h: "매주 자동\n저축", body: "bg-gradient-to-b from-violet-400 to-fuchsia-500" },
+      { acc: "emerald", h: "은행 연결", body: "bg-gradient-to-b from-emerald-300 to-teal-500" },
+      { acc: "orange", h: "목표 설정", body: "bg-gradient-to-b from-amber-300 to-orange-500" }].
+      map((s, i) =>
+      <div key={i} className={`relative w-12 h-24 rounded-xl bg-slate-900 ring-1 ring-white/10 p-1 anim-float`} style={{ animationDelay: `${i * 0.4}s` }}>
+            <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-4 h-1 rounded-full bg-slate-700"></div>
+            <div className="mt-3 w-full h-12 rounded-md overflow-hidden">
+              <div className={`w-full h-full ${s.body}`}></div>
+            </div>
+            <div className="mt-1 h-1 w-3/4 bg-white/60 rounded-full"></div>
+            <div className="mt-0.5 h-0.5 w-1/2 bg-white/30 rounded-full"></div>
+            <div className="absolute bottom-1 left-1 right-1 h-2 rounded bg-white"></div>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-0.5">
+              {[0, 1, 2].map((d) => <span key={d} className={`w-0.5 h-0.5 rounded-full ${d === i ? 'bg-white' : 'bg-white/30'}`}></span>)}
+            </div>
+          </div>
+      )}
+      </div>
+    </div>,
+
+
+  // 4) PDP — product detail page
+  productPage: () =>
+  <div className="absolute inset-0 overflow-hidden bg-white">
+      {/* top chrome */}
+      <div className="absolute top-0 left-0 right-0 h-5 bg-slate-50 border-b border-slate-200 flex items-center justify-between px-2">
+        <div className="text-[5px] font-bold text-slate-800">← STORE</div>
+        <div className="flex gap-1"><div className="w-2 h-2 rounded-full bg-slate-200"></div><div className="w-2 h-2 rounded-full bg-slate-200"></div></div>
+      </div>
+      {/* gallery */}
+      <div className="absolute top-6 left-2 w-[50%] aspect-square rounded overflow-hidden anim-kenburns" style={{ background: "linear-gradient(135deg, #475569, #1e293b)" }}>
+        <div className="absolute inset-2 rounded bg-gradient-to-br from-orange-300 via-rose-400 to-violet-500 anim-hue"></div>
+      </div>
+      {/* thumbs */}
+      <div className="absolute top-[70%] left-2 w-[50%] flex gap-1">
+        {[1, 2, 3, 4].map((i) => <div key={i} className={`flex-1 aspect-square rounded ${i === 1 ? 'ring-2 ring-violet-500' : 'ring-1 ring-slate-200'} bg-gradient-to-br from-slate-200 to-slate-300`}></div>)}
+      </div>
+      {/* info */}
+      <div className="absolute top-6 right-2 w-[42%]">
+        <div className="text-[5px] text-violet-700 font-bold">BEST</div>
+        <div className="h-1.5 w-full bg-slate-900 rounded mt-1"></div>
+        <div className="h-1.5 w-3/4 bg-slate-900 rounded mt-0.5"></div>
+        <div className="flex items-baseline gap-1 mt-1.5">
+          <div className="h-2 w-10 bg-slate-900 rounded"></div>
+          <div className="h-1 w-6 bg-slate-300 rounded line-through"></div>
+        </div>
+        <div className="text-[5px] text-amber-600 mt-1">★★★★★ 4.9 (1,284)</div>
+        {/* color swatches */}
+        <div className="mt-1.5 flex gap-0.5">
+          {["bg-amber-700", "bg-stone-200", "bg-slate-900", "bg-rose-300"].map((c, i) =>
+        <div key={i} className={`w-2.5 h-2.5 rounded-full ${c} ${i === 0 ? 'ring-1 ring-slate-900' : ''}`}></div>
+        )}
+        </div>
+        {/* size buttons */}
+        <div className="mt-1.5 flex gap-0.5">
+          {["S", "M", "L"].map((s) => <div key={s} className="h-3 px-1 rounded text-[4.5px] flex items-center text-slate-700 ring-1 ring-slate-200">{s}</div>)}
+        </div>
+      </div>
+      {/* sticky bottom CTA */}
+      <div className="absolute bottom-1 left-2 right-2 flex gap-1">
+        <div className="h-3 w-3 rounded bg-slate-100 ring-1 ring-slate-200"></div>
+        <div className="flex-1 h-3 rounded bg-slate-900 flex items-center justify-center text-[5px] font-bold text-white">구매하기</div>
+      </div>
+    </div>,
+
+
+  // 5) Watercolor portrait
+  watercolor: () =>
+  <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 anim-palette" style={{ background: "linear-gradient(135deg, #fee2e2 0%, #fce7f3 25%, #f5d0c5 50%, #fef3c7 75%, #fee2e2 100%)" }}></div>
+      {/* paper texture */}
+      <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(rgba(180,83,9,0.3) 0.5px, transparent 1px)", backgroundSize: "6px 6px" }}></div>
+      <div className="absolute inset-0 flex items-center justify-center anim-float">
+        <svg viewBox="0 0 200 200" className="w-44 h-44 drop-shadow-md">
+          <defs>
+            <radialGradient id="wc-face" cx="0.5" cy="0.4" r="0.55">
+              <stop offset="0%" stopColor="#fef3c7" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="#f87171" stopOpacity="0.35" />
+            </radialGradient>
+            <radialGradient id="wc-bg" cx="0.5" cy="0.5" r="0.8">
+              <stop offset="0%" stopColor="#fde68a" stopOpacity="0.7" />
+              <stop offset="100%" stopColor="#fbcfe8" stopOpacity="0.2" />
+            </radialGradient>
+          </defs>
+          <circle cx="100" cy="90" r="64" fill="url(#wc-bg)" />
+          <ellipse cx="100" cy="85" rx="40" ry="52" fill="url(#wc-face)" />
+          {/* hair */}
+          <path d="M58 70 Q70 30 100 32 Q132 30 142 72 Q140 50 100 48 Q60 50 58 70 Z" fill="#1e293b" opacity="0.8" />
+          {/* eyes */}
+          <ellipse cx="84" cy="80" rx="2.5" ry="1.5" fill="#0f172a" />
+          <ellipse cx="116" cy="80" rx="2.5" ry="1.5" fill="#0f172a" />
+          {/* lips */}
+          <path d="M93 110 Q100 113 107 110 Q103 108 100 108 Q97 108 93 110 Z" fill="#9f1239" />
+          {/* hanbok collar */}
+          <path d="M60 150 Q100 138 140 150 L140 178 Q100 168 60 178 Z" fill="#1e3a8a" opacity="0.85" />
+          <path d="M85 145 Q100 150 115 145 L100 162 Z" fill="#fef3c7" />
+        </svg>
+      </div>
+    </div>,
+
+
+  // 6) Cyberpunk Tokyo
+  cyberpunk: () =>
+  <div className="absolute inset-0 overflow-hidden bg-slate-950">
+      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #0f0220 0%, #1a0a3e 50%, #4a0f5e 100%)" }}></div>
+      {/* rain */}
+      <div className="absolute inset-0 overflow-hidden opacity-30">
+        {[10, 25, 40, 55, 70, 85, 18, 33, 48, 63, 78, 93].map((x, i) =>
+      <div key={i} className="absolute w-px h-12 bg-gradient-to-b from-transparent via-cyan-200 to-transparent anim-rain" style={{ left: `${x}%`, animationDelay: `${i % 4 * -0.3}s`, animationDuration: `${0.8 + i % 3 * 0.2}s` }}></div>
+      )}
+      </div>
+      {/* moon */}
+      <div className="absolute top-3 right-4 w-7 h-7 rounded-full bg-pink-300 anim-glow" style={{ boxShadow: "0 0 30px 12px rgba(244,114,182,0.4)" }}></div>
+      {/* neon signs */}
+      <div className="absolute top-6 left-3 anim-neon">
+        <div className="text-[8px] font-bold text-pink-400" style={{ textShadow: "0 0 6px #ec4899" }}>東京</div>
+      </div>
+      <div className="absolute top-12 left-3 anim-slow-blink">
+        <div className="text-[6px] font-bold text-cyan-300" style={{ textShadow: "0 0 5px #22d3ee" }}>2099</div>
+      </div>
+      <div className="absolute top-8 right-3 anim-neon" style={{ animationDelay: "-1s" }}>
+        <div className="text-[7px] font-bold text-violet-300" style={{ textShadow: "0 0 6px #a78bfa" }}>NEON</div>
+      </div>
+      {/* buildings */}
+      <div className="absolute bottom-0 left-0 right-0 flex items-end gap-0.5 px-0.5">
+        {[28, 46, 38, 58, 32, 52, 42, 64, 36, 50, 44, 56].map((h, i) =>
+      <div key={i} className="flex-1 bg-slate-950 ring-1 ring-fuchsia-900/40" style={{ height: h + "px" }}>
+            <div className="grid grid-cols-2 gap-px p-px h-full">
+              {Array.from({ length: Math.floor(h / 3) }).map((_, j) =>
+          <div key={j} className={`w-full ${(i + j) % 3 === 0 ? 'bg-pink-400/70' : (i + j) % 3 === 1 ? 'bg-cyan-300/50' : 'bg-amber-300/40'} anim-slow-blink`} style={{ height: "1px", animationDelay: `${j * 0.13 + i * 0.07}s` }}></div>
+          )}
+            </div>
+          </div>
+      )}
+      </div>
+      {/* lone figure */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 w-2 h-5 bg-slate-950 rounded-t"></div>
+    </div>,
+
+
+  // 7) Food photography
+  food: () =>
+  <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 50%, #57534e 0%, #1c1917 100%)" }}></div>
+      {/* wood grain */}
+      <div className="absolute inset-0 opacity-30" style={{ backgroundImage: "repeating-linear-gradient(0deg, rgba(120,53,15,0.25) 0px, rgba(120,53,15,0.25) 1px, transparent 1px, transparent 4px)" }}></div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="anim-float" style={{ animationDuration: "5s" }}>
+          <svg viewBox="0 0 200 200" className="w-44 h-44 drop-shadow-2xl">
+            <defs>
+              <radialGradient id="plate2" cx="0.5" cy="0.5" r="0.5">
+                <stop offset="0%" stopColor="#fafaf9" />
+                <stop offset="100%" stopColor="#a8a29e" />
+              </radialGradient>
+            </defs>
+            <circle cx="100" cy="100" r="76" fill="url(#plate2)" />
+            <circle cx="100" cy="100" r="76" fill="none" stroke="rgba(28,25,23,0.6)" strokeWidth="1.5" />
+            {/* pasta */}
+            <g transform="translate(100 100)" stroke="#facc15" strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.95">
+              <path d="M-40 -10 Q-20 10 20 -8 Q40 -20 30 10" />
+              <path d="M-30 5 Q0 20 30 0 Q40 -15 20 -20" />
+              <path d="M-35 -15 Q-10 0 20 10 Q40 18 30 -10" />
+              <path d="M-20 15 Q10 5 35 15 Q20 30 -10 25" />
+            </g>
+            {/* tomatoes */}
+            <circle cx="118" cy="90" r="10" fill="#dc2626" />
+            <circle cx="121" cy="87" r="3" fill="#f87171" />
+            <circle cx="82" cy="108" r="8" fill="#dc2626" />
+            <circle cx="84" cy="106" r="2.5" fill="#f87171" />
+            {/* basil */}
+            <ellipse cx="98" cy="78" rx="6" ry="11" fill="#16a34a" transform="rotate(20 98 78)" />
+            <ellipse cx="111" cy="118" rx="5" ry="9" fill="#16a34a" transform="rotate(-30 111 118)" />
+            {/* truffle shavings */}
+            <ellipse cx="92" cy="98" rx="3.5" ry="1.5" fill="#1c1917" transform="rotate(35 92 98)" />
+            <ellipse cx="108" cy="104" rx="3" ry="1.3" fill="#1c1917" transform="rotate(-20 108 104)" />
+            <ellipse cx="100" cy="116" rx="3.2" ry="1.4" fill="#1c1917" transform="rotate(60 100 116)" />
+          </svg>
+        </div>
+      </div>
+      {/* steam */}
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-white/10 blur-md anim-drift"></div>
+    </div>,
+
+
+  // 8) Instagram-style ad post
+  igCopy: () =>
+  <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #831843 100%)" }}></div>
+      <div className="absolute inset-x-6 inset-y-3 rounded-xl bg-white shadow-2xl overflow-hidden">
+        {/* IG header */}
+        <div className="flex items-center gap-1.5 px-2 py-1.5">
+          <div className="w-5 h-5 rounded-full p-px premium-ring">
+            <div className="w-full h-full rounded-full bg-white p-px">
+              <div className="w-full h-full rounded-full bg-gradient-to-br from-rose-400 to-fuchsia-500"></div>
+            </div>
+          </div>
+          <div className="text-[6.5px] font-bold text-slate-800">brandlab.kr</div>
+          <span className="ml-auto text-[5.5px] text-slate-400">···</span>
+        </div>
+        {/* photo */}
+        <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-rose-200 via-pink-300 to-fuchsia-300 anim-kenburns">
+          <div className="absolute bottom-2 left-2 right-2 flex justify-between">
+            <div className="h-1 w-12 bg-white/70 rounded-full"></div>
+            <div className="text-[5.5px] text-white font-bold">SS26 ✦</div>
+          </div>
+        </div>
+        {/* actions */}
+        <div className="px-2 py-1 flex items-center gap-1.5">
+          <Icon name="heart" className="w-2.5 h-2.5 text-rose-500" strokeWidth={2.5} />
+          <Icon name="message-circle" className="w-2.5 h-2.5 text-slate-700" strokeWidth={2.5} />
+          <Icon name="send" className="w-2.5 h-2.5 text-slate-700" strokeWidth={2.5} />
+          <Icon name="bookmark" className="w-2.5 h-2.5 text-slate-700 ml-auto" strokeWidth={2.5} />
+        </div>
+        {/* likes */}
+        <div className="px-2 text-[5.5px] font-bold text-slate-800">좋아요 1,284개</div>
+        {/* caption */}
+        <div className="px-2 mt-0.5 space-y-0.5">
+          <div className="h-1 w-full bg-slate-200 rounded-full"></div>
+          <div className="h-1 w-5/6 bg-slate-200 rounded-full"></div>
+          <div className="h-1 w-3/5 bg-violet-300 rounded-full"></div>
+        </div>
+      </div>
+      {/* likes burst */}
+      <div className="absolute bottom-6 left-6 anim-float">
+        <Icon name="heart" className="w-4 h-4 text-rose-500" strokeWidth={2.5} />
+      </div>
+    </div>,
+
+
+  // 9) SEO Blog
+  seoBlog: () =>
+  <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #0c0a1a 0%, #1e1b4b 100%)" }}></div>
+      <div className="absolute inset-3 rounded-lg bg-white p-3 shadow-2xl overflow-hidden">
+        <div className="text-[5.5px] uppercase tracking-wider text-violet-700 font-bold">아티클 · SEO</div>
+        <div className="h-2 w-full bg-slate-900 rounded mt-1"></div>
+        <div className="h-2 w-3/4 bg-slate-900 rounded mt-0.5"></div>
+        <div className="flex items-center gap-1 mt-1.5">
+          <div className="w-3 h-3 rounded-full bg-violet-300"></div>
+          <div className="h-1 w-10 bg-slate-300 rounded-full"></div>
+          <div className="h-0.5 w-6 bg-slate-200 rounded-full ml-auto"></div>
+        </div>
+        {/* body */}
+        <div className="mt-2 space-y-1 overflow-hidden h-12 relative">
+          <div className="anim-scroll-feed space-y-1">
+            {Array.from({ length: 14 }).map((_, i) =>
+          <div key={i} className={`h-1 ${i % 4 === 0 ? 'w-5/6' : i % 4 === 1 ? 'w-full' : i % 4 === 2 ? 'w-2/3' : 'w-4/5'} ${i % 5 === 0 ? 'bg-violet-200' : 'bg-slate-200'} rounded-full`}></div>
+          )}
+            {Array.from({ length: 14 }).map((_, i) =>
+          <div key={"b" + i} className={`h-1 ${i % 4 === 0 ? 'w-5/6' : i % 4 === 1 ? 'w-full' : i % 4 === 2 ? 'w-2/3' : 'w-4/5'} ${i % 5 === 0 ? 'bg-violet-200' : 'bg-slate-200'} rounded-full`}></div>
+          )}
+          </div>
+        </div>
+        {/* tags */}
+        <div className="absolute bottom-1.5 left-2 right-2 flex gap-0.5 flex-wrap">
+          {["#SEO", "#마케팅", "#콘텐츠", "#네이버"].map((t) =>
+        <span key={t} className="px-1 py-px rounded text-[5px] bg-violet-100 text-violet-700">{t}</span>
+        )}
+        </div>
+      </div>
+    </div>,
+
+
+  // 10) React code editor — typing animation
+  reactCode: () =>
+  <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #020617 0%, #0f0220 100%)" }}></div>
+      {/* tabs */}
+      <div className="absolute top-2 left-2 right-2 flex gap-1">
+        <div className="h-3 px-1.5 rounded-t bg-slate-800 text-[5px] text-slate-300 flex items-center font-mono">Button.tsx</div>
+        <div className="h-3 px-1.5 rounded-t bg-slate-900/50 text-[5px] text-slate-500 flex items-center font-mono">index.ts</div>
+      </div>
+      {/* code */}
+      <div className="absolute top-6 left-2 right-2 bottom-2 rounded bg-slate-900 ring-1 ring-white/5 p-2 font-mono text-[6.5px] leading-[1.5] overflow-hidden">
+        <div className="text-slate-500"># ─ Button.tsx</div>
+        <div><span className="text-pink-300">import</span> <span className="text-slate-300">{`{ cva }`}</span> <span className="text-pink-300">from</span> <span className="text-emerald-300">'cva'</span></div>
+        <div><span className="text-pink-300">import</span> <span className="text-slate-300">{`{ forwardRef }`}</span> <span className="text-pink-300">from</span> <span className="text-emerald-300">'react'</span></div>
+        <div className="mt-1.5">
+          <span className="text-pink-300">export const</span> <span className="text-yellow-200">Button</span> <span className="text-slate-300">= forwardRef((</span>
+        </div>
+        <div className="pl-2 text-orange-300">{`{ variant, size, loading, ...rest }`}<span className="text-slate-300">,</span></div>
+        <div className="pl-2 text-orange-300">ref</div>
+        <div className="text-slate-300">{`) => {`}</div>
+        <div className="pl-2"><span className="text-pink-300">return</span> &lt;<span className="text-sky-300">button</span></div>
+        <div className="pl-4 text-orange-300">ref=<span className="text-slate-300">{`{ref}`}</span></div>
+        <div className="pl-4 text-orange-300">className=<span className="text-slate-300">{`{variants({ variant, size })}`}</span></div>
+        <div className="pl-4 text-orange-300">aria-busy=<span className="text-slate-300">{`{loading}`}</span></div>
+        <div className="pl-4 text-orange-300">{`{...rest}`}<span className="text-pink-300">/&gt;</span></div>
+        <div className="text-slate-300">{`})`}<span className="anim-type-blink text-violet-400">▍</span></div>
+      </div>
+    </div>,
+
+
+  // 11) Pixar character turnaround
+  characterSheet: () =>
+  <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #fef3c7 0%, #fef9c3 50%, #fef3c7 100%)" }}></div>
+      {/* grid lines */}
+      <div className="absolute inset-0 opacity-15" style={{ backgroundImage: "linear-gradient(rgba(0,0,0,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.5) 1px, transparent 1px)", backgroundSize: "24px 24px" }}></div>
+      <div className="absolute inset-0 flex items-center justify-around px-2 anim-float">
+        {[0, 1, 2, 3].map((i) =>
+      <svg key={i} viewBox="0 0 60 110" className="w-12 h-24 drop-shadow-lg" style={{ transform: `rotateY(${i * 30}deg)` }}>
+            {/* head */}
+            <ellipse cx="30" cy="22" rx="13" ry="15" fill="#fde68a" />
+            <ellipse cx="30" cy="22" rx="13" ry="15" fill="none" stroke="#0f172a" strokeWidth="0.5" />
+            {/* hair */}
+            <path d="M17 18 Q30 5 43 18 L43 23 Q30 16 17 23 Z" fill="#1e293b" />
+            {/* eyes */}
+            <circle cx={26 + (i % 2 ? 1 : 0)} cy="22" r="1.5" fill="#0f172a" />
+            <circle cx={34 + (i % 2 ? 1 : 0)} cy="22" r="1.5" fill="#0f172a" />
+            {/* freckles */}
+            <circle cx="24" cy="26" r="0.4" fill="#92400e" />
+            <circle cx="36" cy="26" r="0.4" fill="#92400e" />
+            {/* smile */}
+            <path d="M26 28 Q30 30 34 28" stroke="#9f1239" fill="none" strokeWidth="0.8" strokeLinecap="round" />
+            {/* raincoat */}
+            <path d="M15 40 L45 40 L48 100 L12 100 Z" fill="#facc15" stroke="#a16207" strokeWidth="0.5" />
+            {/* buttons */}
+            <circle cx="30" cy="50" r="1" fill="#92400e" />
+            <circle cx="30" cy="62" r="1" fill="#92400e" />
+            <circle cx="30" cy="74" r="1" fill="#92400e" />
+            {/* boots */}
+            <rect x="16" y="100" width="11" height="8" rx="2" fill="#3b82f6" />
+            <rect x="33" y="100" width="11" height="8" rx="2" fill="#3b82f6" />
+          </svg>
+      )}
+      </div>
+      <div className="absolute top-2 left-2 text-[6px] font-bold text-slate-700 font-mono">CHAR · YUNA / 9YO</div>
+      <div className="absolute bottom-1.5 left-2 right-2 flex justify-around text-[5px] font-bold text-slate-700 font-mono">
+        <span>FRONT</span><span>3/4</span><span>SIDE</span><span>BACK</span>
+      </div>
+    </div>,
+
+
+  // 12) Storyboard
+  storyboard: () =>
+  <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 bg-slate-950"></div>
+      <div className="absolute inset-2 grid grid-cols-2 grid-rows-2 gap-1.5">
+        {[
+      { tint: "from-amber-200 to-rose-400", label: "01 · 인트로" },
+      { tint: "from-sky-300 to-violet-500", label: "02 · 문제 제시" },
+      { tint: "from-emerald-300 to-sky-400", label: "03 · 해결" },
+      { tint: "from-fuchsia-400 to-violet-500", label: "04 · CTA" }].
+      map((s, i) =>
+      <div key={i} className="relative rounded-md ring-1 ring-white/10 overflow-hidden anim-scene" style={{ animationDelay: `${i * 0.4}s` }}>
+            <div className={`absolute inset-0 bg-gradient-to-br ${s.tint} anim-kenburns`} style={{ animationDelay: `${i * 0.5}s` }}></div>
+            {i === 0 && <div className="absolute inset-0 flex items-end p-1.5"><div className="h-2 w-12 rounded-full bg-white/70"></div></div>}
+            {i === 1 && <div className="absolute inset-0 flex items-center justify-center"><div className="w-5 h-5 rounded-full bg-white/30 ring-2 ring-white/60"></div></div>}
+            {i === 2 && <div className="absolute inset-2 rounded bg-white/20 ring-1 ring-white/40 flex items-center justify-center"><div className="text-white text-[6px] font-bold">SOLVED</div></div>}
+            {i === 3 && <div className="absolute inset-0 flex items-center justify-center"><div className="h-3.5 w-12 rounded bg-white text-violet-700 text-[5.5px] font-bold flex items-center justify-center">SHOP NOW</div></div>}
+            <div className="absolute bottom-0.5 left-1 right-1 text-[5px] font-bold text-white/80 font-mono">{s.label}</div>
+          </div>
+      )}
+      </div>
+    </div>
+
+};
+
+// ============================================================
+// ITEMS
+// ============================================================
+const ITEMS = [
+{
+  id: "p01", cat: "웹사이트", tag: "랜딩 페이지", tool: "Claude 4.5 Sonnet",
+  title: "미니멀 SaaS 랜딩 페이지",
+  desc: "보라 그라데이션 + 화이트 카드 베이스의 모던 SaaS 홈. 히어로 · 기능 · 가격 · FAQ 풀패키지.",
+  price: 4900, likes: 218, views: "1.2K", featured: true, buildable: true,
+  mock: "saasLanding",
+  teaser:
+  `You are a senior product designer. Build a single-page SaaS landing for an AI automation product.
+
+Brand: violet primary (#7C3AED → #6D28D9), white base, neutral slate text. Modern Korean tech aesthetic — Pretendard font, generous whitespace, soft shadows, 16-20px rounded corners.
+
+Sections (in order): sticky pill nav, hero with`,
+  locked:
+  ` rotating bullet headline, dual CTA (primary/ghost), logo strip, problem cards (4), alternating feature blocks (4 with mocked screens), integrations grid, dark testimonials section, pricing table (4 tiers), FAQ accordion, final CTA, multi-column footer.
+
+Constraints:
+- Use Tailwind utility classes only — no custom CSS beyond gradients/keyframes
+- Every CTA leads to /signup; secondary leads to /demo
+- Body copy in Korean, headlines mix Korean + English accent words
+- No emoji, no stock photos — use SVG icons + gradient mocks
+- Include subtle entry animations (fade-up, staggered 60ms)
+
+Return as a single Tailwind+React component...`
+},
+{
+  id: "p02", cat: "이미지", tag: "초상화", tool: "Midjourney v6",
+  title: "수채화풍 동양 여성 인물",
+  desc: "은은한 파스텔 톤, 잉크 번짐 효과, 캘리그래피 배경. 잡지 표지·앨범 커버에 적합.",
+  price: 2900, likes: 412, views: "3.8K", featured: true,
+  mock: "watercolor",
+  teaser:
+  `watercolor portrait of a young Korean woman, soft pastel washes, ink bleeding into edges, calligraphic brush strokes,`,
+  locked:
+  ` minimal traditional hanbok in muted indigo, hair pulled back, gentle gaze slightly to the side, neutral background of cream rice paper with faint sumi-e brushwork, soft natural lighting from upper left, delicate skin tones, paper grain texture, hand-painted quality, slight asymmetry, no digital sharpness --ar 3:4 --style raw --stylize 250 --v 6 --quality 2 --niji 0`
+},
+{
+  id: "p03", cat: "웹사이트", tag: "이커머스", tool: "GPT-4o",
+  title: "한국형 D2C 쇼핑몰 홈",
+  desc: "패션·뷰티 D2C에 최적화된 홈. 그리드 컬렉션 + 룩북 + 후기 카루셀.",
+  price: 5900, likes: 184, views: "920", buildable: true,
+  mock: "d2cShop",
+  teaser:
+  `Design a Korean D2C fashion e-commerce homepage. Audience: 20-30s women. Aesthetic: editorial, minimalist, warm`,
+  locked:
+  ` neutrals (cream, sand, terracotta) with a single accent color per season.
+
+Required sections:
+1) Announcement bar (free shipping over 50,000원)
+2) Hero with seasonal lookbook image + tagline (Korean)
+3) Best 4 product grid with hover quick-view
+4) Editorial banner ("이번 주 에디터 픽")
+5) Category strip (outerwear, knit, bottoms, accessories)
+6) Customer photo wall (UGC)
+7) Newsletter signup with 5% off coupon
+8) Footer with payment methods, social, customer service hours
+
+Tech: React + Tailwind, fully responsive, Korean copy throughout, KRW currency...`
+},
+{
+  id: "p04", cat: "이미지", tag: "풍경", tool: "DALL-E 3",
+  title: "네온 사이버펑크 도쿄",
+  desc: "비 오는 밤, 분홍/시안 네온이 물웅덩이에 반사되는 미래 도시.",
+  price: 1900, likes: 538, views: "5.1K", featured: true,
+  mock: "cyberpunk",
+  teaser:
+  `A cinematic cyberpunk Tokyo street at midnight in heavy rain. Towering neon kanji signs in hot pink and electric cyan,`,
+  locked:
+  ` reflecting on wet asphalt and shallow puddles. Low camera angle looking up a narrow alley between dense buildings. Steam rising from grates. A lone figure in a translucent raincoat walks away into the distance, silhouetted by signage. Volumetric haze, lens flare on the brightest signs, soft chromatic aberration. Color palette dominated by magenta and teal with pockets of warm orange from street vendors. Photorealistic, shot on Arri Alexa 65mm, shallow depth of field. --ar 16:9 --style cinematic --quality 2`
+},
+{
+  id: "p05", cat: "카피", tag: "광고 카피", tool: "Claude 4.5 Haiku",
+  title: "패션 브랜드 인스타 캠페인 5종",
+  desc: "캐주얼 톤의 한국어 인스타 캡션 5개 변형 + 해시태그 세트.",
+  price: 1900, likes: 96, views: "640",
+  mock: "igCopy",
+  teaser:
+  `You are an Instagram copywriter for a Korean casual fashion brand targeting Gen Z. Write 5 distinct caption variants for a single seasonal lookbook post.
+
+Tone: warm, slightly poetic,`,
+  locked:
+  ` mixes Korean with 1-2 English accent words. Avoid corporate buzzwords. Each caption: 2-3 short lines, ending with a soft CTA (link in bio / save / share). After each, list 12 hashtags mixing 4 brand tags + 4 trending + 4 niche.
+
+Required outputs:
+- Variant A: "감성적" — atmospheric, weather-driven
+- Variant B: "친근한" — like a friend texting
+- Variant C: "패션 큐레이션" — styling-focused with item names
+- Variant D: "스토리" — first-person, short narrative
+- Variant E: "후킹" — strong hook, list format
+
+Lookbook context: late autumn, oversized knit + wide trousers, warm beige palette...`
+},
+{
+  id: "p06", cat: "웹사이트", tag: "모바일 앱", tool: "Claude 4.5 Sonnet",
+  title: "핀테크 앱 온보딩 플로우",
+  desc: "iOS 스타일 3-step 온보딩 + KYC + 카드 연결. 부드러운 transition.",
+  price: 3900, likes: 142, views: "1.0K", buildable: true,
+  mock: "onboard",
+  teaser:
+  `Design a 3-step onboarding flow for a Korean fintech savings app. iOS native feel, large display headlines, gentle micro-animations between steps.
+
+Step 1: value proposition`,
+  locked:
+  ` ("매주 자동으로 모이는 저축") with hero illustration of coins/leaf metaphor.
+Step 2: account linking — bank picker grid (KB, 신한, 우리, 카카오뱅크, 토스뱅크, NH) with biometric auth.
+Step 3: savings goal — slider (10만~100만) + frequency picker (매주/매월) + estimated return display.
+
+Visual constraints:
+- SF Pro / Pretendard, large 32pt headlines, 17pt body
+- Single accent color (#6366F1)
+- Page indicator dots at bottom
+- "건너뛰기" top-right, primary CTA bottom (sticky, blurred bg)
+- 60% screen reserved for visual, 40% for content
+- Use SVG line illustrations, no photos
+- Korean throughout, except numbers/dates
+
+Implementation: React Native + NativeWind...`
+},
+{
+  id: "p07", cat: "이미지", tag: "음식 사진", tool: "Midjourney v6",
+  title: "고급 레스토랑 파스타 플레이팅",
+  desc: "오버헤드 샷, 자연광, 무광 도자기 위 파스타. 메뉴판/SNS용.",
+  price: 2400, likes: 287, views: "2.3K",
+  mock: "food",
+  teaser:
+  `Overhead food photography of handmade tagliatelle pasta on a matte ceramic off-white plate, natural light from the side,`,
+  locked:
+  ` shot at 90 degrees directly above. Pasta nest twirled by tongs, glossy with butter, topped with shaved black truffle, two cherry tomatoes (one halved), fresh basil leaf, cracked pepper. Plate sits on a linen napkin on dark walnut wood. Negative space on the upper left where a menu title would sit. Soft shadows, no harsh highlights, restrained styling, Michelin-level plating. Photorealistic, shot on Phase One IQ4, 80mm macro, f/5.6. --ar 4:5 --style raw --quality 2 --v 6`
+},
+{
+  id: "p08", cat: "카피", tag: "SEO 콘텐츠", tool: "GPT-4o",
+  title: "SEO 최적화 블로그 글 (2,000자)",
+  desc: "키워드·검색의도 자동 분석 → H1~H3 구조 + 메타 디스크립션까지.",
+  price: 3900, likes: 73, views: "560",
+  mock: "seoBlog",
+  teaser:
+  `You are a Korean SEO content strategist. Given a primary keyword, produce a complete blog article optimized for Naver and Google search.
+
+Input: {primary_keyword}, {target_audience}, {brand_voice}
+
+Process:`,
+  locked:
+  `
+1) Analyze search intent (informational / commercial / transactional)
+2) Identify 5-7 semantically related keywords from Korean SERPs
+3) Outline article with H1, 4-6 H2 sections, H3 subheadings where useful
+4) Write 1800-2200 자 of body content in natural Korean — no stuffing, conversational where appropriate
+5) Include: opening hook (2 lines), TL;DR summary box, internal anchor list, CTA at the end
+6) Generate meta title (≤60자) and description (≤155자)
+7) Suggest 3 alt-text-ready image prompts
+
+Tone rules: write like a knowledgeable friend, not a brochure. Use specific examples...`
+},
+{
+  id: "p09", cat: "코드", tag: "React", tool: "Claude 4.5 Sonnet",
+  title: "접근성 완비 Button 컴포넌트",
+  desc: "shadcn 스타일 + 키보드 / 스크린리더 / 로딩 / 아이콘 슬롯.",
+  price: 2900, likes: 156, views: "1.4K",
+  mock: "reactCode",
+  teaser:
+  `Build a production-grade React Button component using Tailwind + class-variance-authority. The component must pass WCAG 2.2 AA accessibility checks.
+
+Required variants:`,
+  locked:
+  `
+- variant: default | secondary | outline | ghost | destructive | link
+- size: sm | md | lg | icon
+- loading: boolean — replaces children with spinner, keeps width, marks aria-busy
+- leftIcon / rightIcon: ReactNode — proper spacing, decorative aria-hidden
+- asChild: render as a different element via Radix Slot
+
+Behavior:
+- Pressed state via :active, focus ring with focus-visible only
+- Disabled prevents click but stays in tab order, with cursor-not-allowed
+- Loading state ignores onClick
+- Forward ref to underlying button
+- Type-safe props (TS), default type="button"
+
+Deliver: Button.tsx, button.variants.ts, Button.stories.tsx (Storybook), Button.test.tsx (Vitest + Testing Library) with 12+ test cases...`
+},
+{
+  id: "p10", cat: "이미지", tag: "캐릭터", tool: "Midjourney v6",
+  title: "픽사 스타일 캐릭터 시트 4컷",
+  desc: "정면·측면·뒷면·표정 시트. 게임/그림책 IP 개발용.",
+  price: 4900, likes: 321, views: "2.7K",
+  mock: "characterSheet",
+  teaser:
+  `Pixar-style 3D character turnaround sheet on a clean white background. Character: a curious 9-year-old Korean girl named Yuna,`,
+  locked:
+  ` short bob haircut with side bangs, wearing oversized yellow raincoat, knee-high blue rubber boots, holding a small umbrella. Subtle freckles, large expressive eyes.
+
+Sheet composition (single image):
+- Left third: front view, neutral pose, full body
+- Center third: side view, mid-step walking pose
+- Right third: 3/4 back view, looking over shoulder
+- Bottom strip: 4 expression headshots — happy, curious, sad, determined
+
+Style: Pixar / Disney rendering, soft subsurface scattering on skin, slightly stylized proportions (large head, small body), studio lighting, no shadows on the ground. Color script restricted to yellow / blue / cream. --ar 16:9 --style raw --quality 2 --v 6`
+},
+{
+  id: "p11", cat: "콘텐츠", tag: "스토리보드", tool: "Claude 4.5 Sonnet",
+  title: "30초 광고 영상 스토리보드",
+  desc: "신제품 출시 영상 4컷 + 보이스오버 스크립트 + 트랜지션.",
+  price: 3400, likes: 88, views: "510",
+  mock: "storyboard",
+  teaser:
+  `Write a complete 30-second product launch ad storyboard for a Korean DTC brand. Break into 4 shots, each with: shot description, camera move, on-screen text, voice-over (Korean), duration.
+
+Constraints:`,
+  locked:
+  `
+- Total runtime: 30 seconds exactly
+- Aspect: 9:16 vertical for Instagram/TikTok, with safe-area for captions
+- Music: licensable instrumental, no vocals
+- Pacing: shot 1 = 6s establishing, shot 2 = 8s problem, shot 3 = 10s solution/product hero, shot 4 = 6s CTA
+- Voice-over: warm female voice, friend-to-friend tone, avoid corporate language
+- Brand color must appear in at least 3 shots
+- On-screen text: max 8 자 per shot
+- End frame: logo + CTA + URL, 2-second hold
+
+Output also: shot list table, props list, casting brief (1 talent), b-roll suggestions, budget estimate (low / mid / high tier)...`
+},
+{
+  id: "p12", cat: "웹사이트", tag: "상세 페이지", tool: "GPT-4o",
+  title: "이커머스 상품 상세 페이지",
+  desc: "갤러리 + 옵션 선택 + 후기 + 추천. 모바일 최적화 풀패키지.",
+  price: 4400, likes: 124, views: "880", buildable: true,
+  mock: "productPage",
+  teaser:
+  `Design and code a Korean e-commerce product detail page (PDP) optimized for mobile-first conversion. Audience: 20-40s, smartphone primary device.
+
+Above the fold:`,
+  locked:
+  ` swipeable image gallery (5-8 images + 1 video), product title, brand, star rating + review count link, price (with discount strike-through), size/color picker (visual swatches), inventory urgency ("xx개 남음"), 무료배송 badge, sticky "장바구니" + "구매하기" bottom bar.
+
+Below: tabs for 상품정보 / 후기 / 문의 / 배송. 후기 section auto-loads with sort/filter, photo reviews carousel, AI summary card ("후기 한 줄 요약"). 상품정보 uses long-form blocks (image + text) with lazy loading.
+
+Tech stack: Next.js 14 (app router), Server Components for SEO, suspense streaming for reviews. Tailwind + Radix UI primitives. Korean locale, KRW formatting, Toss Payments integration outline...`
+}];
+
+
+const CATS = ["전체", "웹사이트", "이미지", "카피", "코드", "콘텐츠"];
+
+// ============================================================
+// HERO
+// ============================================================
+function Hero({ ownedCount, totalCount }) {
+  return (
+    <section className="relative pt-12 pb-10" data-screen-label="01 Hero">
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[700px] rounded-full bg-violet-700/20 blur-[120px]"></div>
+        <div className="absolute top-20 right-10 w-[400px] h-[400px] rounded-full bg-fuchsia-700/15 blur-[100px]"></div>
+        <div className="absolute top-40 left-10 w-[400px] h-[400px] rounded-full bg-orange-600/10 blur-[100px]"></div>
+      </div>
+      <div className="max-w-[1180px] mx-auto px-6 text-center">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] ring-1 ring-white/10 backdrop-blur text-[12.5px] font-medium text-violet-300 fade-in">
+          <span className="w-1.5 h-1.5 rounded-full bg-violet-400 dot-pulse"></span>
+          수랩 프롬프트 갤러리 · 모션 미리보기
+        </span>
+        <h1 className="font-display font-extrabold text-[40px] md:text-[72px] leading-[1.02] mt-6 tracking-tight max-w-[860px] mx-auto fade-in" style={{ animationDelay: "60ms", color: "rgb(255, 255, 255)" }}>
+          AI의 한계를<br />
+          <span className="gradient-text font-grotesk">UNLOCK.</span>
+        </h1>
+        <p className="text-slate-400 text-[15px] md:text-[17px] mt-6 max-w-[620px] mx-auto leading-relaxed fade-in" style={{ animationDelay: "120ms" }}>
+          움직이는 결과물을 먼저 보고, 마음에 드는 프롬프트만 잠금 해제하세요.
+          웹사이트는 한 번의 클릭으로 실제 빌드까지.
+        </p>
+
+        <div className="mt-8 flex items-center justify-center gap-2 flex-wrap fade-in" style={{ animationDelay: "180ms" }}>
+          <a href="#gallery" className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-white text-slate-900 font-bold text-[14.5px] hover:bg-slate-100 transition shadow-lg shadow-violet-500/30">
+            프롬프트 둘러보기 <Icon name="arrow-down" className="w-4 h-4" />
+          </a>
+          <a href="#membership" className="inline-flex items-center gap-2 h-12 px-5 rounded-xl bg-white/[0.04] ring-1 ring-white/10 backdrop-blur text-white font-medium text-[14.5px] hover:bg-white/[0.07] transition">
+            <Icon name="sparkles" className="w-4 h-4 text-orange-300" /> 멤버십 ₩19,900/월
+          </a>
+        </div>
+
+        <div className="mt-8 inline-flex items-center gap-5 bg-white/[0.04] ring-1 ring-white/10 rounded-full px-5 py-2.5 backdrop-blur fade-in" style={{ animationDelay: "220ms" }}>
+          <span className="text-[12.5px] text-slate-300"><span className="font-mono-num font-bold text-white">{totalCount}</span>개 큐레이션</span>
+          <span className="w-px h-3 bg-white/10"></span>
+          <span className="text-[12.5px] text-slate-300">검증 평균 <span className="font-mono-num font-bold text-amber-300">★4.8</span></span>
+          <span className="w-px h-3 bg-white/10"></span>
+          <span className="text-[12.5px] text-slate-300">내 보관함 <span className="font-mono-num font-bold text-violet-300">{ownedCount}</span></span>
+        </div>
+      </div>
+    </section>);
+
+}
+
+// ============================================================
+// FILTERS
+// ============================================================
+function Filters({ cat, setCat, sort, setSort, query, setQuery, layout, setLayout }) {
+  return (
+    <div className="max-w-[1180px] mx-auto px-6 mb-8" id="gallery">
+      <div className="card-dark rounded-2xl p-3 flex items-center gap-2 flex-wrap">
+        <div className="relative flex-1 min-w-[220px]">
+          <Icon name="search" className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="검색 — 톤, 스타일, 도구…"
+          className="w-full pl-10 pr-3.5 h-10 rounded-lg bg-black/40 ring-1 ring-white/10 text-[13.5px] text-white placeholder-slate-500 focus-violet transition" />
+        </div>
+        <select value={sort} onChange={(e) => setSort(e.target.value)}
+        className="h-10 px-3 rounded-lg bg-black/40 ring-1 ring-white/10 text-[13px] text-slate-200 focus-violet">
+          <option value="featured">추천순</option>
+          <option value="popular">인기순</option>
+          <option value="price-asc">가격 낮은순</option>
+          <option value="price-desc">가격 높은순</option>
+          <option value="newest">최신순</option>
+        </select>
+        <div className="inline-flex p-0.5 rounded-lg bg-black/40 ring-1 ring-white/10">
+          <button onClick={() => setLayout("grid")} className={`w-9 h-9 inline-flex items-center justify-center rounded-md transition ${layout === 'grid' ? 'bg-white/10 text-white' : 'text-slate-500'}`}>
+            <Icon name="layout-grid" className="w-4 h-4" />
+          </button>
+          <button onClick={() => setLayout("list")} className={`w-9 h-9 inline-flex items-center justify-center rounded-md transition ${layout === 'list' ? 'bg-white/10 text-white' : 'text-slate-500'}`}>
+            <Icon name="list" className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+      <div className="mt-3 flex items-center gap-1.5 flex-wrap">
+        {CATS.map((c) =>
+        <button key={c} onClick={() => setCat(c)}
+        className={`h-9 px-4 rounded-full text-[12.5px] font-semibold transition ring-1
+              ${cat === c ? "bg-white text-slate-900 ring-white" : "bg-white/[0.04] text-slate-300 ring-white/10 hover:bg-white/[0.08]"}`}>
+            {c}
+          </button>
+        )}
+      </div>
+    </div>);
+
+}
+
+// ============================================================
+// CARD
+// ============================================================
+function PromptCard({ item, owned, onOpen, layout }) {
+  const Thumb = Thumbs[item.mock];
+
+  if (layout === "list") {
+    return (
+      <article onClick={onOpen} className="group cursor-pointer flex gap-4 rounded-2xl card-dark p-3 hover:shadow-xl hover:shadow-violet-500/10 transition">
+        <div className="relative w-44 aspect-[16/10] rounded-xl overflow-hidden shrink-0 ring-1 ring-white/5">
+          {Thumb && <Thumb />}
+        </div>
+        <div className="flex-1 min-w-0 flex flex-col">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-[10.5px] font-bold px-1.5 py-0.5 rounded bg-white/[0.05] text-white ring-1 ring-white/10">{item.cat}</span>
+            <span className="text-[10.5px] font-medium text-slate-400">{item.tag}</span>
+            {item.featured && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 ring-1 ring-amber-500/30">★ BEST</span>}
+            {item.buildable && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-violet-500/15 text-violet-300 ring-1 ring-violet-500/30 inline-flex items-center gap-0.5"><Icon name="zap" className="w-2.5 h-2.5" strokeWidth={3} />BUILD</span>}
+            {owned && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-500/30 inline-flex items-center gap-0.5"><Icon name="check" className="w-2.5 h-2.5" strokeWidth={3} />보유</span>}
+          </div>
+          <h3 className="font-display font-bold text-[16px] mt-1.5 tracking-tight truncate text-white">{item.title}</h3>
+          <p className="text-[13px] text-slate-400 mt-1 line-clamp-2">{item.desc}</p>
+          <div className="mt-auto flex items-center justify-between pt-2">
+            <div className="flex items-center gap-3 text-[11.5px] text-slate-500">
+              <span className="inline-flex items-center gap-1"><Icon name="heart" className="w-3.5 h-3.5" />{item.likes}</span>
+              <span className="inline-flex items-center gap-1"><Icon name="eye" className="w-3.5 h-3.5" />{item.views}</span>
+              <span className="inline-flex items-center gap-1"><Icon name="cpu" className="w-3.5 h-3.5" />{item.tool}</span>
+            </div>
+            <div className="font-grotesk font-bold text-[15px] font-mono-num text-white">{owned ? <span className="text-emerald-400">UNLOCKED</span> : <>₩{item.price.toLocaleString()}</>}</div>
+          </div>
+        </div>
+      </article>);
+
+  }
+
+  return (
+    <article onClick={onOpen} className="group cursor-pointer rounded-2xl card-dark overflow-hidden hover:shadow-2xl hover:shadow-violet-500/15 hover:-translate-y-1 transition-all">
+      <div className="relative aspect-[16/10] overflow-hidden ring-1 ring-white/5">
+        {Thumb && <Thumb />}
+        <span className="absolute top-2.5 left-2.5 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-sm text-[10px] font-bold text-white ring-1 ring-white/10">{item.tag}</span>
+        <div className="absolute top-2.5 right-2.5 flex gap-1">
+          {item.featured &&
+          <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[9.5px] font-black">
+              <Icon name="star" className="w-2.5 h-2.5" strokeWidth={3} />BEST
+            </span>
+          }
+          {item.buildable &&
+          <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-violet-500 text-white text-[9.5px] font-black">
+              <Icon name="zap" className="w-2.5 h-2.5" strokeWidth={3} />BUILD
+            </span>
+          }
+        </div>
+        {owned &&
+        <span className="absolute bottom-2.5 right-2.5 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-emerald-500 text-slate-950 text-[9.5px] font-black">
+            <Icon name="check" className="w-2.5 h-2.5" strokeWidth={3} />UNLOCKED
+          </span>
+        }
+        {/* hover: motion intensifies hint */}
+        <span className="absolute bottom-2.5 left-2.5 opacity-0 group-hover:opacity-100 transition inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-white/10 backdrop-blur text-[9.5px] font-semibold text-white ring-1 ring-white/15">
+          <Icon name="play" className="w-2.5 h-2.5" strokeWidth={3} />MOTION
+        </span>
+      </div>
+      <div className="p-3.5">
+        <div className="text-[10.5px] uppercase tracking-wider text-slate-500 font-bold inline-flex items-center gap-1.5">
+          <Icon name="cpu" className="w-3 h-3" />{item.tool}
+        </div>
+        <h3 className="font-display font-bold text-[15px] mt-1.5 tracking-tight line-clamp-1 text-white">{item.title}</h3>
+        <p className="text-[12px] text-slate-400 mt-1 line-clamp-2 leading-relaxed h-[32px]">{item.desc}</p>
+        <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between">
+          <div className="flex items-center gap-2.5 text-[11px] text-slate-500">
+            <span className="inline-flex items-center gap-1"><Icon name="heart" className="w-3.5 h-3.5" />{item.likes}</span>
+            <span className="inline-flex items-center gap-1"><Icon name="eye" className="w-3.5 h-3.5" />{item.views}</span>
+          </div>
+          <div className="font-grotesk font-bold text-[15px] font-mono-num text-white">
+            {owned ? <span className="text-emerald-400 text-[12px]">UNLOCKED</span> : <>₩{item.price.toLocaleString()}</>}
+          </div>
+        </div>
+      </div>
+    </article>);
+
+}
+
+// ============================================================
+// DETAIL MODAL
+// ============================================================
+function DetailModal({ item, onClose, owned, onUnlock }) {
+  const [paying, setPaying] = useState(false);
+  const [paid, setPaid] = useState(owned);
+  const [copied, setCopied] = useState(false);
+  const Thumb = Thumbs[item.mock];
+
+  useEffect(() => {setPaid(owned);}, [item, owned]);
+
+  useEffect(() => {
+    const onKey = (e) => {if (e.key === "Escape") onClose();};
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {window.removeEventListener("keydown", onKey);document.body.style.overflow = "";};
+  }, [onClose]);
+
+  function pay() {
+    setPaying(true);
+    setTimeout(() => {
+      setPaying(false);
+      setPaid(true);
+      onUnlock(item.id);
+    }, 1100);
+  }
+
+  function copyPrompt() {
+    const text = item.teaser + item.locked;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      });
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-6 fade-in" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/70 backdrop-blur"></div>
+      <div onClick={(e) => e.stopPropagation()}
+      className="relative w-full max-w-[1000px] max-h-[92vh] sm:max-h-[88vh] bg-[#0d0d10] sm:rounded-3xl rounded-t-3xl overflow-hidden ring-1 ring-white/10 shadow-2xl scale-in flex flex-col">
+        {/* header */}
+        <div className="flex items-start justify-between px-6 pt-6 pb-4 border-b border-white/5">
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="text-[10.5px] font-bold px-1.5 py-0.5 rounded bg-white/[0.06] text-white ring-1 ring-white/10">{item.cat}</span>
+              <span className="text-[10.5px] font-medium text-slate-400">{item.tag}</span>
+              <span className="text-[10.5px] font-medium text-slate-400 inline-flex items-center gap-1">· <Icon name="cpu" className="w-3 h-3" />{item.tool}</span>
+              {item.buildable && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-violet-500/15 text-violet-300 ring-1 ring-violet-500/30 inline-flex items-center gap-0.5"><Icon name="zap" className="w-2.5 h-2.5" strokeWidth={3} />BUILDABLE</span>}
+            </div>
+            <h2 className="font-display font-extrabold text-[22px] mt-2 tracking-tight text-white">{item.title}</h2>
+            <p className="text-[13.5px] text-slate-400 mt-1">{item.desc}</p>
+          </div>
+          <button onClick={onClose} className="w-9 h-9 inline-flex items-center justify-center rounded-lg text-slate-400 hover:bg-white/5 transition shrink-0 ml-3">
+            <Icon name="x" className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="grid lg:grid-cols-[1.05fr_1.1fr] gap-0 overflow-y-auto">
+          {/* visual side */}
+          <div className="bg-black/30 p-6 flex flex-col gap-3 border-r border-white/5">
+            <div className="relative aspect-[16/10] rounded-2xl overflow-hidden ring-1 ring-white/10 shadow-2xl group">
+              {Thumb && <Thumb />}
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {[
+              ["좋아요", item.likes],
+              ["조회수", item.views],
+              ["평점", "★4.8"]].
+              map(([l, v]) =>
+              <div key={l} className="rounded-xl bg-white/[0.03] ring-1 ring-white/5 px-3 py-2 text-center">
+                  <div className="text-[10.5px] text-slate-500">{l}</div>
+                  <div className="font-display font-bold text-[14px] font-mono-num text-white mt-0.5">{v}</div>
+                </div>
+              )}
+            </div>
+            <div className="rounded-xl bg-white/[0.03] ring-1 ring-white/5 p-3">
+              <div className="text-[10.5px] uppercase tracking-wider text-slate-500 font-bold mb-1.5">포함된 항목</div>
+              <ul className="space-y-1.5 text-[12.5px] text-slate-300">
+                <li className="flex items-center gap-1.5"><Icon name="check" className="w-3.5 h-3.5 text-violet-400" />전체 프롬프트 텍스트 (복사 가능)</li>
+                <li className="flex items-center gap-1.5"><Icon name="check" className="w-3.5 h-3.5 text-violet-400" />변수 가이드 + 사용 예시 3종</li>
+                {item.buildable && <li className="flex items-center gap-1.5"><Icon name="zap" className="w-3.5 h-3.5 text-violet-400" />수랩 빌더로 즉시 빌드 가능</li>}
+                <li className="flex items-center gap-1.5"><Icon name="check" className="w-3.5 h-3.5 text-violet-400" />결과물 원본 파일 (해당 시)</li>
+                <li className="flex items-center gap-1.5"><Icon name="check" className="w-3.5 h-3.5 text-violet-400" />상업적 이용 허가</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* prompt side */}
+          <div className="p-6 flex flex-col bg-[#0d0d10]">
+            <div className="flex items-center justify-between mb-3">
+              <div className="inline-flex items-center gap-1.5">
+                <Icon name="terminal" className="w-4 h-4 text-slate-400" />
+                <span className="text-[13px] font-semibold text-white">전체 프롬프트</span>
+              </div>
+              {paid &&
+              <button onClick={copyPrompt} className="inline-flex items-center gap-1 text-[12px] font-medium text-violet-300 hover:text-violet-200">
+                  <Icon name={copied ? "check" : "copy"} className="w-3.5 h-3.5" />{copied ? "복사됨" : "복사"}
+                </button>
+              }
+            </div>
+
+            <div className="relative flex-1 min-h-[300px] rounded-2xl bg-black ring-1 ring-white/5 overflow-hidden">
+              <div className="absolute inset-0 overflow-auto scrollbar-thin p-4 font-mono text-[12.5px] leading-relaxed text-slate-300 whitespace-pre-wrap">
+{item.teaser}
+                {!paid &&
+                <span className="locked-blur">{item.locked}</span>
+                }
+                {paid && item.locked}
+              </div>
+              {!paid &&
+              <>
+                  <div className="absolute left-0 right-0 bottom-0 h-32 lock-fade-dark pointer-events-none"></div>
+                  <div className="absolute inset-x-0 bottom-0 px-4 pb-4">
+                    <div className="rounded-xl bg-[#13131a] ring-1 ring-violet-500/30 shadow-lg shadow-violet-500/10 p-3.5">
+                      <div className="flex items-center gap-2">
+                        <div className="w-9 h-9 rounded-lg bg-violet-500/20 text-violet-300 flex items-center justify-center shrink-0 ring-1 ring-violet-500/30">
+                          <Icon name="lock" className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-[13px] font-bold text-white">전체 프롬프트 잠금 상태</div>
+                          <div className="text-[11.5px] text-slate-400">결제하면 즉시 전체 프롬프트를 복사할 수 있어요.</div>
+                        </div>
+                        <button onClick={pay} disabled={paying}
+                      className="h-9 px-3.5 rounded-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-400 hover:to-fuchsia-400 text-white text-[12.5px] font-bold inline-flex items-center gap-1.5 transition shadow-lg shadow-violet-500/30 shrink-0 disabled:opacity-70">
+                          {paying ? <><Icon name="loader-2" className="w-3.5 h-3.5 animate-spin" />결제 중</> :
+                        <>₩{item.price.toLocaleString()} <Icon name="arrow-right" className="w-3.5 h-3.5" /></>}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              }
+              {paid &&
+              <div className="absolute top-3 right-3 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500 text-slate-950 text-[10.5px] font-black">
+                  <Icon name="check" className="w-3 h-3" strokeWidth={3} />UNLOCKED
+                </div>
+              }
+            </div>
+
+            {/* CTA below */}
+            {!paid ?
+            <div className="mt-4 grid grid-cols-2 gap-2">
+                <button onClick={pay} disabled={paying}
+              className="h-11 rounded-xl bg-white text-slate-900 text-[13px] font-bold inline-flex items-center justify-center gap-1.5 transition hover:bg-slate-100 disabled:opacity-70">
+                  <Icon name="credit-card" className="w-4 h-4" /> 단건 ₩{item.price.toLocaleString()}
+                </button>
+                <button className="h-11 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-400 hover:to-fuchsia-400 text-white text-[13px] font-bold inline-flex items-center justify-center gap-1.5 transition shadow-lg shadow-violet-500/30">
+                  <Icon name="sparkles" className="w-4 h-4" /> 멤버십 ₩19,900/월
+                </button>
+                <div className="col-span-2 text-center text-[11.5px] text-slate-500">멤버십 가입 시 모든 프롬프트 무제한 + 매주 신규 50개</div>
+              </div> :
+
+            <div className="mt-4 grid grid-cols-2 gap-2">
+                {item.buildable ?
+              <button className="col-span-2 h-12 rounded-xl bg-gradient-to-r from-violet-500 via-fuchsia-500 to-orange-400 hover:brightness-110 text-white text-[14px] font-black inline-flex items-center justify-center gap-2 transition shadow-lg shadow-violet-500/30">
+                    <Icon name="zap" className="w-4 h-4" /> 수랩 빌더로 즉시 빌드하기 <Icon name="arrow-right" className="w-4 h-4" />
+                  </button> :
+              null}
+                <button onClick={copyPrompt} className="h-11 rounded-xl bg-white text-slate-900 text-[13px] font-bold inline-flex items-center justify-center gap-1.5 transition hover:bg-slate-100">
+                  <Icon name={copied ? "check" : "copy"} className="w-4 h-4" /> {copied ? "복사됨" : "프롬프트 복사"}
+                </button>
+                <button className="h-11 rounded-xl bg-white/[0.05] ring-1 ring-white/10 hover:bg-white/[0.08] text-white text-[13px] font-medium inline-flex items-center justify-center gap-1.5 transition">
+                  <Icon name="download" className="w-4 h-4" /> .txt 다운로드
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>);
+
+}
+
+// ============================================================
+// FEATURED MASONRY
+// ============================================================
+function FeaturedRow({ items, onOpen }) {
+  return (
+    <section className="max-w-[1180px] mx-auto px-6 mb-10">
+      <div className="grid lg:grid-cols-3 gap-3">
+        {items.slice(0, 3).map((item) => {
+          const Thumb = Thumbs[item.mock];
+          return (
+            <button key={item.id} onClick={() => onOpen(item)}
+            className="group text-left relative rounded-2xl overflow-hidden ring-1 ring-white/5 hover:ring-violet-500/30 hover:shadow-xl hover:shadow-violet-500/15 transition card-dark">
+              <div className="relative aspect-[16/9] overflow-hidden">
+                {Thumb && <Thumb />}
+              </div>
+              <div className="p-3.5">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-amber-500 text-slate-950 inline-flex items-center gap-0.5">
+                    <Icon name="star" className="w-2.5 h-2.5" strokeWidth={3} />BEST
+                  </span>
+                  <span className="text-[10.5px] font-medium text-slate-400">{item.cat} · {item.tool}</span>
+                </div>
+                <h3 className="font-display font-bold text-[15px] mt-1 tracking-tight line-clamp-1 text-white">{item.title}</h3>
+                <div className="mt-2 flex items-center justify-between">
+                  <span className="text-[11.5px] text-slate-500 inline-flex items-center gap-2">
+                    <span className="inline-flex items-center gap-0.5"><Icon name="heart" className="w-3 h-3" />{item.likes}</span>
+                    <span className="inline-flex items-center gap-0.5"><Icon name="eye" className="w-3 h-3" />{item.views}</span>
+                  </span>
+                  <span className="font-grotesk font-bold text-[14px] font-mono-num text-white">₩{item.price.toLocaleString()}</span>
+                </div>
+              </div>
+            </button>);
+
+        })}
+      </div>
+    </section>);
+
+}
+
+// ============================================================
+// APP
+// ============================================================
+function App() {
+  const [cat, setCat] = useState("전체");
+  const [sort, setSort] = useState("featured");
+  const [query, setQuery] = useState("");
+  const [layout, setLayout] = useState("grid");
+  const [open, setOpen] = useState(null);
+  const [owned, setOwned] = useState(() => {
+    try {const stored = localStorage.getItem("sulab.owned");return stored ? JSON.parse(stored) : [];}
+    catch {return [];}
+  });
+
+  const isOwned = (id) => owned.includes(id);
+  function unlock(id) {
+    setOwned((prev) => {
+      const next = prev.includes(id) ? prev : [...prev, id];
+      try {localStorage.setItem("sulab.owned", JSON.stringify(next));} catch {}
+      return next;
+    });
+  }
+
+  const featured = ITEMS.filter((i) => i.featured);
+
+  const filtered = useMemo(() => {
+    let list = ITEMS.slice();
+    if (cat !== "전체") list = list.filter((i) => i.cat === cat);
+    if (query) {
+      const q = query.toLowerCase();
+      list = list.filter((i) => (i.title + i.desc + i.tool + i.tag).toLowerCase().includes(q));
+    }
+    if (sort === "popular") list.sort((a, b) => b.likes - a.likes);else
+    if (sort === "price-asc") list.sort((a, b) => a.price - b.price);else
+    if (sort === "price-desc") list.sort((a, b) => b.price - a.price);else
+    if (sort === "newest") list.reverse();else
+    list.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    return list;
+  }, [cat, query, sort]);
+
+  return (
+    <div className="min-h-screen nav-host">
+      <SulabNav active="portfolio" />
+      <Hero ownedCount={owned.length} totalCount={ITEMS.length} />
+      <FeaturedRow items={featured} onOpen={setOpen} />
+      <Filters cat={cat} setCat={setCat} sort={sort} setSort={setSort} query={query} setQuery={setQuery} layout={layout} setLayout={setLayout} />
+
+      <section className="max-w-[1180px] mx-auto px-6 pb-16" data-screen-label="02 Gallery">
+        {filtered.length === 0 ?
+        <div className="card-dark rounded-2xl p-16 text-center">
+            <div className="text-slate-500 text-[14px]">조건에 맞는 프롬프트가 없습니다.</div>
+          </div> :
+        layout === "grid" ?
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filtered.map((item) =>
+          <PromptCard key={item.id} item={item} owned={isOwned(item.id)} onOpen={() => setOpen(item)} layout="grid" />
+          )}
+          </div> :
+
+        <div className="space-y-3">
+            {filtered.map((item) =>
+          <PromptCard key={item.id} item={item} owned={isOwned(item.id)} onOpen={() => setOpen(item)} layout="list" />
+          )}
+          </div>
+        }
+      </section>
+
+      {/* CTA */}
+      <section id="membership" className="max-w-[1180px] mx-auto px-6 pb-20">
+        <div className="relative overflow-hidden rounded-3xl p-10 md:p-14 text-center ring-1 ring-white/10" style={{ background: "radial-gradient(ellipse at 30% 0%, rgba(167,139,250,0.3), transparent 60%), radial-gradient(ellipse at 70% 100%, rgba(251,146,60,0.25), transparent 60%), #0d0a1a" }}>
+          <div className="absolute -top-24 -left-20 w-[400px] h-[400px] rounded-full bg-violet-500/20 blur-3xl"></div>
+          <div className="absolute -bottom-24 -right-20 w-[400px] h-[400px] rounded-full bg-orange-500/15 blur-3xl"></div>
+          <div className="relative z-10 max-w-[620px] mx-auto">
+            <span className="inline-flex px-3 py-1 rounded-full bg-white/[0.06] ring-1 ring-white/10 text-white text-[12px] font-semibold tracking-wider uppercase">멤버십</span>
+            <h2 className="font-display font-extrabold text-[32px] md:text-[44px] leading-[1.08] mt-4 tracking-tight text-white">
+              매번 결제 대신<br />월 <span className="gradient-text font-grotesk">₩19,900</span>으로 전부.
+            </h2>
+            <p className="text-slate-300 text-[15px] mt-4">모든 프롬프트 무제한 + 매주 신규 50개 + 수랩 빌더 + 상업적 이용.</p>
+            <div className="mt-7 flex items-center justify-center gap-2 flex-wrap">
+              <a href="Sulab Signup.html" className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-white text-slate-900 font-black text-[15px] hover:bg-slate-100 transition shadow-lg shadow-violet-500/30">
+                멤버십 시작 <Icon name="sparkles" className="w-4 h-4" />
+              </a>
+              <a href="Sulab Landing.html#pricing" className="inline-flex items-center gap-2 h-12 px-5 rounded-xl bg-white/[0.06] ring-1 ring-white/15 text-white font-semibold text-[15px] hover:bg-white/10 transition">
+                요금제 비교
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {open && <DetailModal item={open} onClose={() => setOpen(null)} owned={isOwned(open.id)} onUnlock={unlock} />}
+    </div>);
+
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

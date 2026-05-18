@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>수랩 — AI 자동화 SaaS</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+<style>
+  html, body { font-family: 'Pretendard Variable', Pretendard, Inter, ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; -webkit-font-smoothing: antialiased; }
+  .font-display { font-family: 'Pretendard Variable', Pretendard, Inter, sans-serif; letter-spacing: -0.025em; }
+  .font-mono-num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+  /* hero gradient */
+  .hero-violet {
+    background:
+      radial-gradient(120% 80% at 0% 0%, #A78BFA 0%, transparent 60%),
+      radial-gradient(120% 80% at 100% 100%, #6D28D9 0%, transparent 55%),
+      linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+  }
+  .grain::before{
+    content:""; position:absolute; inset:0; pointer-events:none; opacity:.08; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.7'/></svg>");
+  }
+  .neon-card {
+    background: linear-gradient(180deg, rgba(139,92,246,0.10), rgba(139,92,246,0.02));
+    box-shadow:
+      0 0 0 1px rgba(139,92,246,0.35) inset,
+      0 0 40px -10px rgba(139,92,246,0.55),
+      0 30px 60px -30px rgba(0,0,0,0.6);
+  }
+  .neon-ring {
+    box-shadow:
+      0 0 0 1px rgba(139,92,246,0.5) inset,
+      0 0 20px -2px rgba(139,92,246,0.55);
+  }
+  .scrollbar-thin::-webkit-scrollbar{height:6px;width:6px}
+  .scrollbar-thin::-webkit-scrollbar-thumb{background:#e5e7eb;border-radius:9999px}
+  @keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.85)} }
+  .dot-pulse { animation: pulseDot 1.6s ease-in-out infinite; }
+  @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+  .shimmer { background: linear-gradient(90deg, transparent, rgba(139,92,246,0.25), transparent); background-size:200% 100%; animation: shimmer 2.2s linear infinite; }
+  @keyframes flowDash { to { stroke-dashoffset: -24; } }
+  .flow-dash { stroke-dasharray: 6 6; animation: flowDash 1.4s linear infinite; }
+  @keyframes fadeUp { from{opacity:0; transform: translateY(8px)} to{opacity:1; transform:none} }
+  .fade-up { animation: fadeUp .5s ease both; }
+  /* Focus ring */
+  .focus-violet:focus { outline: none; box-shadow: 0 0 0 4px rgba(124,58,237,0.18); border-color: #7C3AED; }
+</style>
+</head>
+<body class="bg-white text-slate-900">
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef, useMemo } = React;
+
+// ---------- Lucide helper ----------
+function Icon({ name, className = "w-5 h-5", strokeWidth = 1.75 }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (ref.current && window.lucide) {
+      ref.current.innerHTML = "";
+      const svg = window.lucide.createElement(window.lucide.icons[
+        name.replace(/(^|-)(\w)/g, (_, __, c) => c.toUpperCase())
+      ] || window.lucide.icons.Circle);
+      svg.setAttribute("class", className);
+      svg.setAttribute("stroke-width", strokeWidth);
+      ref.current.appendChild(svg);
+    }
+  }, [name, className, strokeWidth]);
+  return <span ref={ref} className="inline-flex" />;
+}
+
+// ---------- Brand logo ----------
+function Logo({ light = false, size = 28 }) {
+  return (
+    <img
+      src="assets/sulab-logo.png"
+      alt="sulab"
+      draggable="false"
+      style={{ height: size + "px", width: "auto", filter: light ? "brightness(0) invert(1)" : "none" }}
+      className="block select-none"
+    />
+  );
+}
+
+// ============================================================
+//                   LOGIN  VIEW
+// ============================================================
+function LoginView({ onLogin }) {
+  const [email, setEmail] = useState("");
+  const [pw, setPw] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [remember, setRemember] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
+
+  function submit(e) {
+    e?.preventDefault?.();
+    setErr("");
+    if (!email.includes("@")) { setErr("이메일 형식을 확인해 주세요."); return; }
+    if (pw.length < 4) { setErr("비밀번호는 4자 이상이어야 합니다."); return; }
+    setLoading(true);
+    setTimeout(() => { setLoading(false); onLogin(email); }, 900);
+  }
+
+  return (
+    <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-2" data-screen-label="01 Login">
+      {/* ---------- LEFT : violet hero ---------- */}
+      <aside className="relative hero-violet grain text-white overflow-hidden flex flex-col p-10 lg:p-14 min-h-[420px]">
+        {/* decorative blobs */}
+        <div className="absolute -top-32 -left-24 w-[460px] h-[460px] rounded-full bg-white/15 blur-3xl"></div>
+        <div className="absolute -bottom-40 -right-20 w-[520px] h-[520px] rounded-full bg-violet-300/30 blur-3xl"></div>
+
+        {/* top: logo */}
+        <div className="relative z-10 flex items-center justify-between">
+          <Logo light />
+          <a href="#" className="hidden lg:inline-flex items-center gap-1.5 text-sm text-white/80 hover:text-white transition">
+            <Icon name="globe" className="w-4 h-4"/> 한국어
+          </a>
+        </div>
+
+        {/* middle: headline */}
+        <div className="relative z-10 mt-auto pt-16 max-w-[520px]">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-sm text-[12px] font-medium tracking-wider uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-white dot-pulse"></span>
+            AI Automation Platform
+          </span>
+          <h1 className="font-display font-extrabold text-[44px] lg:text-[56px] leading-[1.05] mt-6">
+            AI로 더 쉽게 성장하는<br/>
+            <span className="text-white/90">비즈니스</span>
+          </h1>
+          <p className="mt-5 text-white/80 text-[15px] leading-relaxed max-w-[440px]">
+            반복 업무는 자동화하고, 의사결정은 더 빠르게.
+            수랩의 워크플로우 AI가 마케팅 · CS · 운영을 24시간 대신합니다.
+          </p>
+
+          {/* mini feature chips */}
+          <div className="mt-8 flex flex-wrap gap-2 max-w-[460px]">
+            {["워크플로우 자동화","고객 응대 AI","리포트 생성","Slack · Notion 연동"].map(t => (
+              <span key={t} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm text-[12.5px] text-white/90 ring-1 ring-white/10">
+                <span className="w-1 h-1 rounded-full bg-white/90"></span>{t}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* bottom: metrics */}
+        <div className="relative z-10 mt-12 grid grid-cols-3 gap-6 max-w-[520px] pt-8 border-t border-white/15">
+          {[
+            { v: "15K+", l: "팀이 사용 중" },
+            { v: "550K+", l: "작업 자동화" },
+            { v: "99.98%", l: "가동률" },
+          ].map(m => (
+            <div key={m.l}>
+              <div className="font-display font-extrabold text-2xl font-mono-num">{m.v}</div>
+              <div className="text-white/70 text-[12.5px] mt-1">{m.l}</div>
+            </div>
+          ))}
+        </div>
+      </aside>
+
+      {/* ---------- RIGHT : login form ---------- */}
+      <section className="relative bg-white flex flex-col">
+        <div className="flex items-center justify-end px-8 lg:px-12 pt-8">
+          <button className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 transition">
+            <Icon name="life-buoy" className="w-4 h-4"/> 도움말
+          </button>
+        </div>
+
+        <div className="flex-1 flex items-center justify-center px-6 lg:px-12 py-12">
+          <div className="w-full max-w-[420px]">
+            <div className="text-center">
+              <div className="inline-flex"><Logo size={32}/></div>
+              <h2 className="font-display font-bold text-[28px] mt-6 tracking-tight">다시 오신 것을 환영합니다</h2>
+              <p className="text-slate-500 text-[14px] mt-1.5">일주일 완전 무료 체험 · 카드 등록 불필요</p>
+            </div>
+
+            <form onSubmit={submit} className="mt-9 space-y-3.5">
+              {/* email */}
+              <label className="block">
+                <span className="block text-[12.5px] font-medium text-slate-700 mb-1.5">이메일</span>
+                <div className="relative">
+                  <Icon name="mail" className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"/>
+                  <input
+                    type="email" value={email} onChange={e=>setEmail(e.target.value)}
+                    placeholder="name@company.com"
+                    className="w-full pl-10 pr-3.5 h-12 rounded-xl border border-slate-200 bg-white text-[14.5px] placeholder-slate-400 focus-violet transition"/>
+                </div>
+              </label>
+
+              {/* password */}
+              <label className="block">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[12.5px] font-medium text-slate-700">비밀번호</span>
+                  <a href="#" className="text-[12.5px] text-violet-600 hover:text-violet-700 font-medium">비밀번호를 잊으셨나요?</a>
+                </div>
+                <div className="relative">
+                  <Icon name="lock" className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"/>
+                  <input
+                    type={showPw ? "text" : "password"} value={pw} onChange={e=>setPw(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full pl-10 pr-11 h-12 rounded-xl border border-slate-200 bg-white text-[14.5px] placeholder-slate-400 focus-violet transition"/>
+                  <button type="button" onClick={()=>setShowPw(s=>!s)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 rounded-md">
+                    <Icon name={showPw ? "eye-off" : "eye"} className="w-4 h-4"/>
+                  </button>
+                </div>
+              </label>
+
+              {err && (
+                <div className="flex items-center gap-2 text-[13px] text-rose-600 bg-rose-50 ring-1 ring-rose-100 rounded-lg px-3 py-2">
+                  <Icon name="alert-circle" className="w-4 h-4"/> {err}
+                </div>
+              )}
+
+              {/* remember */}
+              <label className="flex items-center gap-2 select-none cursor-pointer">
+                <input type="checkbox" checked={remember} onChange={e=>setRemember(e.target.checked)}
+                  className="w-4 h-4 rounded border-slate-300 text-violet-600 focus:ring-violet-500"/>
+                <span className="text-[13px] text-slate-600">로그인 상태 유지</span>
+              </label>
+
+              {/* submit */}
+              <button type="submit" disabled={loading}
+                className="relative w-full h-12 rounded-xl bg-violet-600 hover:bg-violet-700 active:bg-violet-800 text-white font-semibold text-[15px] transition shadow-lg shadow-violet-600/25 disabled:opacity-80 overflow-hidden">
+                {loading ? (
+                  <span className="inline-flex items-center gap-2">
+                    <Icon name="loader-2" className="w-4 h-4 animate-spin"/> 로그인 중…
+                  </span>
+                ) : "로그인"}
+                {loading && <span className="absolute inset-0 shimmer pointer-events-none"></span>}
+              </button>
+            </form>
+
+            {/* divider */}
+            <div className="flex items-center gap-3 my-6">
+              <div className="flex-1 h-px bg-slate-200"></div>
+              <span className="text-[12px] text-slate-400">또는 다음으로 계속</span>
+              <div className="flex-1 h-px bg-slate-200"></div>
+            </div>
+
+            {/* social */}
+            <div className="grid grid-cols-2 gap-2.5">
+              <button className="h-11 rounded-xl bg-white ring-1 ring-slate-200 shadow-sm hover:shadow-md hover:ring-slate-300 transition flex items-center justify-center gap-2 text-[14px] font-medium text-slate-800">
+                <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true">
+                  <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.2 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.3-.4-3.5z"/>
+                  <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.2 29.5 4 24 4 16.3 4 9.7 8.4 6.3 14.7z"/>
+                  <path fill="#4CAF50" d="M24 44c5.4 0 10.3-2.1 14-5.4l-6.5-5.5C29.4 34.7 26.8 35.7 24 35.7c-5.3 0-9.7-3.4-11.3-8.1l-6.5 5C9.6 39.6 16.2 44 24 44z"/>
+                  <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.4l6.5 5.5C40.9 36.4 44 30.7 44 24c0-1.2-.1-2.3-.4-3.5z"/>
+                </svg>
+                Google
+              </button>
+              <button className="h-11 rounded-xl bg-[#FEE500] hover:brightness-95 transition flex items-center justify-center gap-2 text-[14px] font-semibold text-[#191600]">
+                <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="#191600">
+                  <path d="M12 3C6.48 3 2 6.58 2 11c0 2.83 1.86 5.31 4.66 6.77L5.4 21.5c-.1.34.28.62.58.43l4.5-2.96c.5.05 1 .08 1.52.08 5.52 0 10-3.58 10-8s-4.48-8-10-8z"/>
+                </svg>
+                Kakao
+              </button>
+            </div>
+
+            {/* signup */}
+            <p className="text-center text-[13.5px] text-slate-500 mt-8">
+              계정이 없으신가요? <a href="#" className="text-violet-600 hover:text-violet-700 font-semibold">회원 가입</a>
+            </p>
+          </div>
+        </div>
+
+        <footer className="px-8 lg:px-12 py-6 text-center text-[12px] text-slate-400">
+          <span>이용약관 · 개인정보처리방침 · © 2026 수랩 주식회사</span>
+        </footer>
+      </section>
+    </div>
+  );
+}
+
+// ============================================================
+//                   DASHBOARD VIEW
+// ============================================================
+function Dashboard({ user, onLogout }) {
+  return (
+    <div className="min-h-screen bg-slate-50" data-screen-label="02 Dashboard">
+      <DashHeader user={user} onLogout={onLogout}/>
+      <HeroSection user={user}/>
+      <WorkflowSection/>
+      <RunsTable/>
+      <DashFooter/>
+    </div>
+  );
+}
+
+function DashHeader({ user, onLogout }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  return (
+    <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-slate-200/70">
+      <div className="max-w-[1240px] mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="flex items-center gap-8">
+          <Logo/>
+          <nav className="hidden md:flex items-center gap-1 text-[14px]">
+            {[
+              ["대시보드", true],
+              ["워크플로우", false],
+              ["연동", false],
+              ["분석", false],
+              ["설정", false],
+            ].map(([t, active]) => (
+              <a key={t} href="#" className={`px-3 py-1.5 rounded-lg font-medium transition ${active ? "text-violet-700 bg-violet-50" : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/70"}`}>{t}</a>
+            ))}
+          </nav>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <div className="hidden sm:flex items-center gap-2 h-9 px-3 rounded-full bg-violet-50 ring-1 ring-violet-100 text-[12.5px] font-medium text-violet-700">
+            <Icon name="zap" className="w-3.5 h-3.5"/> 크레딧 <span className="font-mono-num font-bold">8,420</span><span className="text-violet-400">/10,000</span>
+          </div>
+          <button className="hidden sm:inline-flex items-center justify-center w-9 h-9 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition relative">
+            <Icon name="bell" className="w-[18px] h-[18px]"/>
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-violet-600 ring-2 ring-white"></span>
+          </button>
+          <div className="relative">
+            <button onClick={()=>setMenuOpen(o=>!o)}
+              className="flex items-center gap-2 pl-1 pr-2 h-9 rounded-full ring-1 ring-slate-200 hover:ring-slate-300 transition">
+              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white text-[12px] font-bold flex items-center justify-center">
+                {(user||"S").slice(0,1).toUpperCase()}
+              </div>
+              <span className="text-[13px] font-medium text-slate-700 hidden md:inline">{user || "user"}</span>
+              <Icon name="chevron-down" className="w-3.5 h-3.5 text-slate-400"/>
+            </button>
+            {menuOpen && (
+              <div className="absolute right-0 top-11 w-56 rounded-xl bg-white ring-1 ring-slate-200 shadow-xl p-1.5 fade-up">
+                <a href="#" className="flex items-center gap-2 px-3 py-2 rounded-lg text-[13.5px] text-slate-700 hover:bg-slate-50"><Icon name="user" className="w-4 h-4 text-slate-400"/>프로필</a>
+                <a href="#" className="flex items-center gap-2 px-3 py-2 rounded-lg text-[13.5px] text-slate-700 hover:bg-slate-50"><Icon name="credit-card" className="w-4 h-4 text-slate-400"/>요금제 / 크레딧</a>
+                <a href="#" className="flex items-center gap-2 px-3 py-2 rounded-lg text-[13.5px] text-slate-700 hover:bg-slate-50"><Icon name="settings" className="w-4 h-4 text-slate-400"/>설정</a>
+                <div className="h-px bg-slate-100 my-1"></div>
+                <button onClick={onLogout} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[13.5px] text-rose-600 hover:bg-rose-50">
+                  <Icon name="log-out" className="w-4 h-4"/>로그아웃
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function HeroSection({ user }) {
+  const features = [
+    { icon: "workflow", title: "워크플로우 빌더", desc: "드래그 한 번으로 자동화 시나리오 구성" , tint: "violet"},
+    { icon: "bot", title: "AI 응답 에이전트", desc: "고객 문의 · 댓글을 24시간 자동 응대" , tint: "indigo"},
+    { icon: "line-chart", title: "실시간 인사이트", desc: "성과를 한 화면에서 추적 · 비교" , tint: "fuchsia"},
+    { icon: "plug", title: "150+ 앱 연동", desc: "Notion · Slack · GA · HubSpot · Webhook" , tint: "sky"},
+  ];
+  const tintMap = {
+    violet:  "bg-violet-100 text-violet-700",
+    indigo:  "bg-indigo-100 text-indigo-700",
+    fuchsia: "bg-fuchsia-100 text-fuchsia-700",
+    sky:     "bg-sky-100 text-sky-700",
+  };
+  return (
+    <section className="max-w-[1240px] mx-auto px-6 pt-14 pb-16">
+      <div className="text-center max-w-[760px] mx-auto">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 ring-1 ring-violet-100 text-violet-700 text-[12.5px] font-medium">
+          <span className="w-1.5 h-1.5 rounded-full bg-violet-600 dot-pulse"></span> 새 워크스페이스가 준비됐어요
+        </span>
+        <h1 className="font-display font-extrabold text-[40px] md:text-[52px] leading-[1.08] mt-5 tracking-tight">
+          반복은 자동화, <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-500">성과는 매일</span><br/>
+          오늘도 좋은 하루 보내세요{user ? `, ${user.split("@")[0]}` : ""}.
+        </h1>
+        <p className="text-slate-500 text-[15.5px] mt-4 max-w-[560px] mx-auto leading-relaxed">
+          수랩은 마케팅 · CS · 운영 워크플로우를 AI로 자동화합니다.
+          새 워크플로우를 만들거나, 추천 템플릿으로 30초 만에 시작해 보세요.
+        </p>
+        <div className="mt-7 flex items-center justify-center gap-2">
+          <button className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-violet-600 hover:bg-violet-700 transition text-white font-semibold text-[14.5px] shadow-lg shadow-violet-600/25">
+            <Icon name="plus" className="w-4 h-4"/> 새 워크플로우 만들기
+          </button>
+          <button className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-white ring-1 ring-slate-200 hover:ring-slate-300 text-slate-800 font-medium text-[14.5px] transition">
+            <Icon name="sparkles" className="w-4 h-4 text-violet-500"/> 템플릿 둘러보기
+          </button>
+        </div>
+      </div>
+
+      {/* feature grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-14">
+        {features.map((f, i) => (
+          <button key={f.title}
+            className="group text-left bg-white rounded-2xl ring-1 ring-slate-200 hover:ring-violet-200 hover:shadow-lg hover:shadow-violet-500/10 transition p-5 fade-up"
+            style={{animationDelay: `${i*60}ms`}}>
+            <div className={`w-10 h-10 rounded-xl ${tintMap[f.tint]} flex items-center justify-center`}>
+              <Icon name={f.icon} className="w-5 h-5"/>
+            </div>
+            <div className="mt-4 font-semibold text-[15px] text-slate-900">{f.title}</div>
+            <p className="text-[13px] text-slate-500 mt-1 leading-relaxed">{f.desc}</p>
+            <div className="mt-4 inline-flex items-center gap-1 text-[12.5px] font-medium text-violet-600 opacity-0 group-hover:opacity-100 transition">
+              열기 <Icon name="arrow-right" className="w-3.5 h-3.5"/>
+            </div>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ---------- Dark workflow section ----------
+function WorkflowSection() {
+  const [active, setActive] = useState(1);
+  const nodes = [
+    { id: 0, title: "트리거", sub: "신규 리드 · Webhook", icon: "zap", state: "done"},
+    { id: 1, title: "AI 분류", sub: "GPT-4o · 의도 분석", icon: "brain", state: "running"},
+    { id: 2, title: "분기 처리", sub: "조건부 라우팅", icon: "git-branch", state: "queued"},
+    { id: 3, title: "응대 발송", sub: "Slack · 이메일", icon: "send", state: "queued"},
+  ];
+  return (
+    <section className="relative bg-[#0B0F19] text-white overflow-hidden">
+      {/* glow */}
+      <div className="absolute -top-32 left-1/3 w-[600px] h-[600px] rounded-full bg-violet-600/25 blur-[120px]"></div>
+      <div className="absolute -bottom-32 right-0 w-[500px] h-[500px] rounded-full bg-fuchsia-600/15 blur-[120px]"></div>
+
+      <div className="relative max-w-[1240px] mx-auto px-6 py-20">
+        <div className="grid lg:grid-cols-[1fr_1.4fr] gap-12 items-center">
+          {/* left copy */}
+          <div>
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full ring-1 ring-violet-400/40 bg-violet-500/10 text-violet-200 text-[12.5px] font-medium">
+              <Icon name="activity" className="w-3.5 h-3.5"/> Live workflow
+            </span>
+            <h2 className="font-display font-extrabold text-[34px] md:text-[42px] leading-[1.08] mt-5 tracking-tight">
+              AI가 지금<br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-fuchsia-300">대신 일하고 있어요.</span>
+            </h2>
+            <p className="text-slate-400 text-[15px] mt-4 max-w-[420px] leading-relaxed">
+              현재 4개의 워크플로우가 실시간으로 실행 중입니다.
+              모든 단계는 자동 모니터링되며, 실패 시 즉시 알림을 보냅니다.
+            </p>
+            <div className="mt-6 grid grid-cols-3 gap-2 max-w-[420px]">
+              {[
+                {l:"실행 중", v:"4", c:"text-violet-300"},
+                {l:"오늘 처리", v:"1,284", c:"text-fuchsia-300"},
+                {l:"성공률", v:"99.4%", c:"text-emerald-300"},
+              ].map(s => (
+                <div key={s.l} className="rounded-xl bg-white/5 ring-1 ring-white/10 px-3 py-2.5">
+                  <div className={`font-display font-extrabold text-[20px] font-mono-num ${s.c}`}>{s.v}</div>
+                  <div className="text-[11.5px] text-slate-400 mt-0.5">{s.l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* right workflow card */}
+          <div className="relative">
+            <div className="neon-card rounded-2xl p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-lg bg-violet-500/20 ring-1 ring-violet-400/40 flex items-center justify-center">
+                    <Icon name="workflow" className="w-4 h-4 text-violet-200"/>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-[14.5px]">신규 고객 응대 · v3</div>
+                    <div className="text-[11.5px] text-slate-400 flex items-center gap-1.5 mt-0.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 dot-pulse"></span>
+                      실행 중 · 14초 전 마지막 트리거
+                    </div>
+                  </div>
+                </div>
+                <button className="text-[12px] text-slate-300 hover:text-white inline-flex items-center gap-1">
+                  <Icon name="external-link" className="w-3.5 h-3.5"/> 자세히
+                </button>
+              </div>
+
+              {/* nodes */}
+              <div className="mt-6 relative">
+                <div className="grid grid-cols-4 gap-3 relative">
+                  {/* connecting line */}
+                  <svg className="absolute left-0 right-0 top-1/2 -translate-y-[18px] w-full h-6 pointer-events-none" viewBox="0 0 400 24" preserveAspectRatio="none" aria-hidden="true">
+                    <line x1="0" y1="12" x2="400" y2="12" stroke="rgba(139,92,246,0.5)" strokeWidth="1.5" className="flow-dash" />
+                  </svg>
+                  {nodes.map((n) => {
+                    const isActive = n.id === active;
+                    const isDone = n.state === "done";
+                    return (
+                      <button key={n.id} onClick={()=>setActive(n.id)}
+                        className={`relative text-left rounded-xl p-3 ring-1 transition
+                        ${isActive ? "bg-violet-500/15 ring-violet-400/60 neon-ring" :
+                          isDone ? "bg-white/5 ring-white/10" : "bg-white/[0.03] ring-white/10 hover:bg-white/5"}`}>
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center
+                          ${isActive ? "bg-violet-500/30 text-violet-100" :
+                            isDone ? "bg-emerald-500/15 text-emerald-300" : "bg-white/10 text-slate-300"}`}>
+                          <Icon name={isDone ? "check" : n.icon} className="w-4 h-4"/>
+                        </div>
+                        <div className="text-[12.5px] font-semibold mt-2.5">{n.title}</div>
+                        <div className="text-[10.5px] text-slate-400 mt-0.5 truncate">{n.sub}</div>
+                        <div className={`mt-2 inline-flex items-center gap-1 text-[10px] font-medium
+                          ${isActive ? "text-violet-200" : isDone ? "text-emerald-300" : "text-slate-500"}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-violet-300 dot-pulse" : isDone ? "bg-emerald-400" : "bg-slate-500"}`}></span>
+                          {isActive ? "running" : isDone ? "done" : "queued"}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* live log */}
+              <div className="mt-6 rounded-xl bg-black/40 ring-1 ring-white/10 p-3.5 font-mono text-[11.5px] leading-relaxed text-slate-300">
+                <div className="flex items-center justify-between text-[10.5px] text-slate-500 mb-2">
+                  <span className="inline-flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-violet-400 dot-pulse"></span> 실시간 로그</span>
+                  <span>{nodes[active].title}</span>
+                </div>
+                <div><span className="text-slate-500">12:42:18</span> <span className="text-emerald-300">✓</span> trigger.received <span className="text-slate-500">id=lead_8421</span></div>
+                <div><span className="text-slate-500">12:42:19</span> <span className="text-violet-300">→</span> classify.intent <span className="text-slate-500">model=gpt-4o</span></div>
+                <div><span className="text-slate-500">12:42:21</span> <span className="text-violet-300">…</span> awaiting response <span className="text-slate-500">conf=0.93</span></div>
+                <div className="text-slate-500">12:42:22 _</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ---------- Runs Table ----------
+function RunsTable() {
+  const [filter, setFilter] = useState("all");
+  const rows = [
+    { id:"RUN-9241", name:"Instagram 댓글 응대", trig:"Webhook · IG", status:"success", credits: 32, dur:"1.2s", time:"방금" },
+    { id:"RUN-9240", name:"리드 분류 · CRM 동기화", trig:"Scheduled · 5min", status:"success", credits: 18, dur:"0.8s", time:"2분 전" },
+    { id:"RUN-9239", name:"주간 리포트 생성", trig:"Cron · Mon 09:00", status:"running", credits: 124, dur:"—", time:"3분 전" },
+    { id:"RUN-9238", name:"고객 NPS 후속 메일", trig:"Form · Typeform", status:"success", credits: 9, dur:"0.4s", time:"12분 전" },
+    { id:"RUN-9237", name:"Slack 알림 · 결제 실패", trig:"Stripe · webhook", status:"failed", credits: 4, dur:"0.3s", time:"34분 전" },
+    { id:"RUN-9236", name:"Notion 데이터 정리", trig:"Manual", status:"success", credits: 56, dur:"2.1s", time:"1시간 전" },
+    { id:"RUN-9235", name:"SEO 키워드 리서치", trig:"Scheduled · daily", status:"success", credits: 84, dur:"4.6s", time:"2시간 전" },
+  ];
+  const visible = filter === "all" ? rows : rows.filter(r => r.status === filter);
+
+  const statusChip = (s) => {
+    if (s === "success") return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[11.5px] font-medium ring-1 ring-emerald-100"><Icon name="check" className="w-3 h-3"/>성공</span>;
+    if (s === "running") return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-violet-50 text-violet-700 text-[11.5px] font-medium ring-1 ring-violet-100"><span className="w-1.5 h-1.5 rounded-full bg-violet-600 dot-pulse"></span>실행 중</span>;
+    return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 text-[11.5px] font-medium ring-1 ring-rose-100"><Icon name="x" className="w-3 h-3"/>실패</span>;
+  };
+
+  return (
+    <section className="max-w-[1240px] mx-auto px-6 py-16">
+      <div className="flex items-end justify-between flex-wrap gap-4">
+        <div>
+          <h3 className="font-display font-bold text-[24px] tracking-tight">최근 실행 내역</h3>
+          <p className="text-slate-500 text-[14px] mt-1">최근 24시간 동안 AI가 처리한 작업입니다.</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="inline-flex p-1 rounded-lg bg-slate-100 ring-1 ring-slate-200/70">
+            {[
+              ["all","전체"],["success","성공"],["running","실행 중"],["failed","실패"],
+            ].map(([k,l]) => (
+              <button key={k} onClick={()=>setFilter(k)}
+                className={`px-3 h-8 rounded-md text-[12.5px] font-medium transition
+                  ${filter===k ? "bg-white shadow-sm text-slate-900 ring-1 ring-slate-200" : "text-slate-500 hover:text-slate-800"}`}>
+                {l}
+              </button>
+            ))}
+          </div>
+          <button className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg bg-white ring-1 ring-slate-200 hover:ring-slate-300 text-[13px] font-medium text-slate-700 transition">
+            <Icon name="download" className="w-3.5 h-3.5"/> 내보내기
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-5 bg-white rounded-2xl ring-1 ring-slate-200 shadow-sm shadow-slate-900/[0.02] overflow-hidden">
+        <div className="overflow-x-auto scrollbar-thin">
+          <table className="w-full text-[13.5px]">
+            <thead>
+              <tr className="text-left text-slate-500 text-[12px] font-medium bg-slate-50/60 border-b border-slate-100">
+                <th className="px-5 py-3 font-medium">실행 ID</th>
+                <th className="px-5 py-3 font-medium">워크플로우</th>
+                <th className="px-5 py-3 font-medium">트리거</th>
+                <th className="px-5 py-3 font-medium">상태</th>
+                <th className="px-5 py-3 font-medium text-right">크레딧</th>
+                <th className="px-5 py-3 font-medium text-right">소요</th>
+                <th className="px-5 py-3 font-medium">시간</th>
+                <th className="px-5 py-3 font-medium"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {visible.map((r, i) => (
+                <tr key={r.id} className={`border-b last:border-b-0 border-slate-100 hover:bg-slate-50/60 transition`}>
+                  <td className="px-5 py-3.5 font-mono text-[12.5px] text-slate-500">{r.id}</td>
+                  <td className="px-5 py-3.5 font-medium text-slate-900">{r.name}</td>
+                  <td className="px-5 py-3.5 text-slate-600">{r.trig}</td>
+                  <td className="px-5 py-3.5">{statusChip(r.status)}</td>
+                  <td className="px-5 py-3.5 text-right font-mono-num text-slate-800">{r.credits}</td>
+                  <td className="px-5 py-3.5 text-right font-mono-num text-slate-600">{r.dur}</td>
+                  <td className="px-5 py-3.5 text-slate-500">{r.time}</td>
+                  <td className="px-5 py-3.5 text-right">
+                    <button className="text-slate-400 hover:text-slate-700 p-1 rounded-md hover:bg-slate-100">
+                      <Icon name="more-horizontal" className="w-4 h-4"/>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {visible.length === 0 && (
+                <tr><td colSpan="8" className="px-5 py-12 text-center text-slate-400">해당 상태의 실행 내역이 없습니다.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex items-center justify-between px-5 py-3 border-t border-slate-100 bg-white">
+          <span className="text-[12px] text-slate-500">총 <span className="font-mono-num font-semibold text-slate-700">{visible.length}</span>개 실행 · 최근 24시간 기준</span>
+          <div className="flex items-center gap-1">
+            <button className="h-7 w-7 inline-flex items-center justify-center rounded-md text-slate-400 hover:bg-slate-100"><Icon name="chevron-left" className="w-4 h-4"/></button>
+            <button className="h-7 px-2.5 inline-flex items-center justify-center rounded-md bg-slate-100 text-slate-800 text-[12px] font-medium">1</button>
+            <button className="h-7 px-2.5 inline-flex items-center justify-center rounded-md text-slate-500 hover:bg-slate-100 text-[12px]">2</button>
+            <button className="h-7 px-2.5 inline-flex items-center justify-center rounded-md text-slate-500 hover:bg-slate-100 text-[12px]">3</button>
+            <button className="h-7 w-7 inline-flex items-center justify-center rounded-md text-slate-500 hover:bg-slate-100"><Icon name="chevron-right" className="w-4 h-4"/></button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DashFooter() {
+  return (
+    <footer className="border-t border-slate-200 bg-white">
+      <div className="max-w-[1240px] mx-auto px-6 py-6 flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center gap-3">
+          <Logo size={22}/>
+          <span className="text-[12px] text-slate-400">© 2026 수랩 주식회사. All rights reserved.</span>
+        </div>
+        <div className="flex items-center gap-4 text-[12.5px] text-slate-500">
+          <a href="#" className="hover:text-slate-800">상태 페이지</a>
+          <a href="#" className="hover:text-slate-800">변경 로그</a>
+          <a href="#" className="hover:text-slate-800">고객 지원</a>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ============================================================
+//                       APP
+// ============================================================
+function App() {
+  const [view, setView] = useState("login"); // 'login' | 'dashboard'
+  const [user, setUser] = useState("");
+  return view === "login"
+    ? <LoginView onLogin={(em)=>{ setUser(em); setView("dashboard"); }}/>
+    : <Dashboard user={user} onLogout={()=>setView("login")}/>;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>

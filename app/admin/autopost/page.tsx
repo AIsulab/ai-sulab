@@ -1,10 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Play, Settings, Terminal, ShieldAlert, CheckCircle2, Clock, Check, RefreshCw, LogOut, ArrowRight } from 'lucide-react';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { getFirebaseAuth } from '@/lib/firebase';
+import { Play, Settings, Terminal, ShieldAlert, CheckCircle2, Clock, RefreshCw, LogOut, ArrowRight } from 'lucide-react';
 
 export default function AdminAutoPostDashboard() {
   const [mode, setMode] = useState<'auto' | 'custom'>('auto');
@@ -13,36 +11,11 @@ export default function AdminAutoPostDashboard() {
   const [publishNow, setPublishNow] = useState(true);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string; url?: string } | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-  
+
   const router = useRouter();
 
-  // 로그인 상태 확인
-  useEffect(() => {
-    const auth = getFirebaseAuth();
-    if (!auth) {
-      router.push("/login?redirect=/admin/autopost");
-      return;
-    }
-
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        router.push("/login?redirect=/admin/autopost");
-      } else {
-        setIsAuthenticated(true);
-        setIsCheckingAuth(false);
-      }
-    });
-
-    return () => unsubscribe();
-  }, [router]);
-
   const handleLogout = async () => {
-    const auth = getFirebaseAuth();
-    if (auth) {
-      await signOut(auth);
-    }
+    await fetch("/api/admin/logout", { method: "POST" });
     router.push("/login");
     router.refresh();
   };
@@ -75,23 +48,6 @@ export default function AdminAutoPostDashboard() {
       setLoading(false);
     }
   };
-
-  // 인증 확인 중이면 로딩 표시
-  if (isCheckingAuth) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="text-center">
-          <div className="w-12 h-12 rounded-full border-4 border-violet-200 border-t-violet-600 animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600 font-medium">로드 중...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // 인증되지 않으면 아무것도 표시하지 않음 (redirect 중)
-  if (!isAuthenticated) {
-    return null;
-  }
 
   return (
     <div className="max-w-[1180px] mx-auto p-4 md:p-8 py-8 md:py-12 fade-up">

@@ -30,7 +30,8 @@
       "WebFetch(domain:mcp.sixshop.io)",
       "PowerShell(claude mcp *)",
       "WebFetch(domain:sulab.store)",
-      "mcp__claude_ai_MCP__common_get_store"
+      "mcp__claude_ai_MCP__common_get_store",
+      "WebFetch(domain:api.anthropic.com)"
     ]
   }
 }
