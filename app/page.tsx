@@ -35,11 +35,10 @@ function Nav() {
             </nav>
           </div>
           <div className="flex items-center gap-2">
-            <Link href="/admin/autopost" className="hidden lg:inline-flex items-center h-9 px-3.5 rounded-lg text-[13px] font-medium text-slate-500 hover:text-slate-800 transition">블로그 자동포스팅 관리</Link>
             <Link href="/login" className="hidden sm:inline-flex items-center h-9 px-3.5 rounded-lg text-[13.5px] font-medium text-slate-700 hover:bg-slate-100 transition">로그인</Link>
-            <Link href="/login" className="inline-flex items-center gap-1.5 h-9 px-3 sm:px-3.5 rounded-lg bg-violet-600 hover:bg-violet-700 text-white text-[13.5px] font-semibold transition shadow-sm shadow-violet-600/25">
-              <span className="sm:hidden">시작하기</span>
-              <span className="hidden sm:inline">무료로 시작하기</span>
+            <Link href="/admin/autopost" className="inline-flex items-center gap-1.5 h-9 px-3 sm:px-3.5 rounded-lg bg-violet-600 hover:bg-violet-700 text-white text-[13.5px] font-semibold transition shadow-sm shadow-violet-600/25">
+              <span className="sm:hidden">관리</span>
+              <span className="hidden sm:inline">블로그 자동포스팅 관리</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
             <button onClick={() => setOpen(o => !o)} className="lg:hidden w-9 h-9 inline-flex items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100">

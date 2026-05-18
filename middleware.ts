@@ -5,14 +5,16 @@ export function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/admin/autopost')) {
     const adminToken = request.cookies.get('admin_token')?.value;
     if (!adminToken) {
-      return NextResponse.redirect(new URL('/admin/login', request.url));
+      const url = new URL('/login', request.url);
+      url.searchParams.set('redirect', request.nextUrl.pathname);
+      return NextResponse.redirect(url);
     }
   }
   
-  if (request.nextUrl.pathname === '/admin/login') {
+  if (request.nextUrl.pathname === '/login') {
     const adminToken = request.cookies.get('admin_token')?.value;
-    if (adminToken) {
-      return NextResponse.redirect(new URL('/admin/autopost', request.url));
+    if (adminToken && request.nextUrl.searchParams.get('redirect')?.startsWith('/admin')) {
+      return NextResponse.redirect(new URL(request.nextUrl.searchParams.get('redirect')!, request.url));
     }
   }
   
@@ -20,5 +22,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/autopost/:path*', '/admin/login'],
+  matcher: ['/admin/autopost/:path*', '/login'],
 };

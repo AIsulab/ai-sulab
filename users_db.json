@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "email": "dlwlstn1234@gmail.com",
+      "name": "이진수 (수랩 SULAB)",
+      "tokens": {
+        "access_token": "[REDACTED_GOOGLE_OAUTH_ACCESS_TOKEN]",
+        "refresh_token": "[REDACTED_GOOGLE_OAUTH_REFRESH_TOKEN]",
+        "expiry_date": 1778934132809
+      },
+      "blogId": "",
+      "isActive": true,
+      "createdAt": "2026-05-16T11:22:14.010Z"
+    }
+  ]
+}
