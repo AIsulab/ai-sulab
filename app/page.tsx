@@ -35,6 +35,7 @@ function Nav() {
             </nav>
           </div>
           <div className="flex items-center gap-2">
+            <Link href="/admin/autopost" className="hidden lg:inline-flex items-center h-9 px-3.5 rounded-lg text-[13px] font-medium text-slate-500 hover:text-slate-800 transition">블로그 자동포스팅 관리</Link>
             <Link href="/login" className="hidden sm:inline-flex items-center h-9 px-3.5 rounded-lg text-[13.5px] font-medium text-slate-700 hover:bg-slate-100 transition">로그인</Link>
             <Link href="/login" className="inline-flex items-center gap-1.5 h-9 px-3 sm:px-3.5 rounded-lg bg-violet-600 hover:bg-violet-700 text-white text-[13.5px] font-semibold transition shadow-sm shadow-violet-600/25">
               <span className="sm:hidden">시작하기</span>
@@ -51,6 +52,7 @@ function Nav() {
             {NAV_LINKS.map(([t, h]) => (
               <a key={t} href={h} className="px-3 py-2.5 rounded-lg text-[14px] text-slate-700 hover:bg-slate-100 font-medium" onClick={() => setOpen(false)}>{t}</a>
             ))}
+            <Link href="/admin/autopost" className="px-3 py-2.5 rounded-lg text-[14px] text-violet-700 hover:bg-slate-100 font-medium" onClick={() => setOpen(false)}>블로그 자동포스팅 관리</Link>
           </div>
         )}
       </div>
